@@ -22,6 +22,7 @@ jobs:
           cat build/min_chunks/min_00.b64 build/min_chunks/min_01.b64 build/min_chunks/min_02.b64 build/min_chunks/min_03.b64 | base64 -d | gzip -d > 'Colonial Legion.cat'
           cat build/gst.b64 | base64 -d | gzip -d > 'Bolt Action - Foxhole.gst'
           python - <<'PY'
+          import copy
           import uuid
           import xml.etree.ElementTree as ET
 
@@ -30,6 +31,8 @@ jobs:
           POINTS = 'b0e5f7a2-33c8-46ce-8f8f-148d8171da43'
           TRANSPORT_CAT = 'fc7f7f70-4bea-5d27-8b5e-cb2ac03797c7'
           TANK_CAT = '0f9945cb-0ce1-521e-8f54-35857994efd8'
+          LIEUTENANT_CAT = '5b361517-ed58-5d60-a6fd-b00e15d7f574'
+          CAPTAIN_MAJOR_CAT = '914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a'
           ET.register_namespace('', CAT_NS)
 
           def q(tag):
@@ -37,6 +40,8 @@ jobs:
 
           def sid(*parts):
               return str(uuid.uuid5(uuid.UUID('6ba7b810-9dad-11d1-80b4-00c04fd430c8'), 'colonial-legion|' + '|'.join(map(str, parts))))
+
+          ARM_CMD_CAT = sid('category', 'Armoured Platoon Commander')
 
           def exp_from_name(n):
               s=n.lower()
@@ -48,6 +53,10 @@ jobs:
           def is_officer_name(name):
               n=name.lower()
               return any(x in n for x in ['2nd lieutenant','1st lieutenant','captain','major'])
+
+          def has_category(se, category_id):
+              cats=se.find(q('categoryLinks'))
+              return cats is not None and any(cl.get('targetId') == category_id for cl in cats.findall(q('categoryLink')))
 
           def squad_size_spec(name):
               n=name.lower(); gw='great war era' in n; exp=exp_from_name(n)
@@ -114,9 +123,39 @@ jobs:
               ET.SubElement(cs,q('constraint'),{'field':'selections','scope':'parent','value':str(value),'percentValue':'false','shared':'false','includeChildSelections':'false','includeChildForces':'false','type':'max','id':constraint_id})
 
           cat=ET.parse('Colonial Legion.cat'); root=cat.getroot(); root.set('type','catalogue')
+          top_entries=root.find(q('selectionEntries'))
+
+          # Create Armoured-Platoon-only officer copies. They deliberately do not retain the
+          # regular Lieutenant/Captain categories, so they cannot appear in infantry or
+          # mechanized selectors. The ordinary officer entries remain unchanged.
+          armoured_commanders_added=0
+          if top_entries is not None:
+              officer_sources=[]
+              for se in top_entries.findall(q('selectionEntry')):
+                  if se.get('type') != 'unit': continue
+                  if has_category(se,LIEUTENANT_CAT) or has_category(se,CAPTAIN_MAJOR_CAT):
+                      officer_sources.append(se)
+              for source in officer_sources:
+                  clone=copy.deepcopy(source)
+                  source_id=source.get('id')
+                  for elem in clone.iter():
+                      if elem.get('id'):
+                          elem.set('id',sid('armoured-commander',source_id,elem.get('id')))
+                  clone.set('id',sid('armoured-commander',source_id))
+                  clone.set('name',source.get('name','Officer') + ' — Armoured Commander')
+                  cats=clone.find(q('categoryLinks'))
+                  if cats is None: cats=ET.SubElement(clone,q('categoryLinks'))
+                  else:
+                      for child in list(cats): cats.remove(child)
+                  ET.SubElement(cats,q('categoryLink'),{
+                      'id':sid('armoured-commander',source_id,'category'),
+                      'name':'Armoured Platoon Commander','hidden':'false',
+                      'targetId':ARM_CMD_CAT,'primary':'true'
+                  })
+                  top_entries.append(clone)
+                  armoured_commanders_added += 1
 
           transport_entries=[]; tank_entries=[]
-          top_entries=root.find(q('selectionEntries'))
           if top_entries is not None:
               for tse in top_entries.findall(q('selectionEntry')):
                   cats=tse.find(q('categoryLinks'))
@@ -151,8 +190,9 @@ jobs:
                       linked+=1
                   if linked: transport_groups_added+=1
 
-              if is_officer_name(name):
-                  cg=ET.SubElement(groups,q('selectionEntryGroup'),{'name':'Armoured Command Vehicle (Armoured Platoon only)','id':sid(se.get('id'),'command-vehicle'),'hidden':'false'})
+              # Only the dedicated Armoured Platoon Commander copies get a command tank.
+              if has_category(se,ARM_CMD_CAT):
+                  cg=ET.SubElement(groups,q('selectionEntryGroup'),{'name':'Command Tank / SPG','id':sid(se.get('id'),'command-vehicle'),'hidden':'false'})
                   add_max(cg,sid(se.get('id'),'command-vehicle','max'),1)
                   links=ET.SubElement(cg,q('entryLinks'))
                   officer_exp=exp_from_name(name); linked=0
@@ -196,46 +236,86 @@ jobs:
                   sticky_added+=1
 
           ET.register_namespace('',CAT_NS); cat.write('Colonial Legion.cat',encoding='UTF-8',xml_declaration=True)
+
           gst=ET.parse('Bolt Action - Foxhole.gst'); ET.register_namespace('',GST_NS); gst_root=gst.getroot(); gst_root.set('type','gameSystem')
           def gq(tag): return f'{{{GST_NS}}}{tag}'
           def child_local(root,name): return next((c for c in root if c.tag.rsplit('}',1)[-1]==name),None)
 
-          categories={'Lieutenant':'5b361517-ed58-5d60-a6fd-b00e15d7f574','Captain / Major':'914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a','Medic':'4e0b9e1a-0360-51cc-a506-097a7efcd44e','Forward Observer':'43e65105-60f7-5bb6-a4ac-02a433a791ee','Infantry Squad':'1db0d511-ab38-5eb8-afa7-97cd18cf7d11','Machine Gun Team':'df95158d-692a-545b-b6da-9fc45eb1f7fa','Mortar Team':'f8cf368a-5e9a-5d56-8e8f-5a5e9a7977b4','Sniper Team':'62025d03-4255-56ea-870e-c3399170789d','Anti-Tank Team':'3cf48c43-9058-564e-901a-e3098be16d2f','Field / Emplaced / Immobile Weapon':'75cd78ea-f7b0-5366-b2b5-cfcaa6ba2fc6','Armoured Car':'6e1678b3-02f8-5430-9f5b-e3da292b8625','Tank / SPG':TANK_CAT,'Transport / Tow':TRANSPORT_CAT}
+          # Add the armoured-command category to the game system so only the Armoured
+          # Platoon selector exposes the cloned commander entries.
+          category_entries=child_local(gst_root,'categoryEntries')
+          if category_entries is None:
+              category_entries=ET.Element(gq('categoryEntries'))
+              force_entries_existing=child_local(gst_root,'forceEntries')
+              if force_entries_existing is not None: gst_root.insert(list(gst_root).index(force_entries_existing),category_entries)
+              else: gst_root.append(category_entries)
+          if not any(c.get('id')==ARM_CMD_CAT for c in list(category_entries)):
+              ET.SubElement(category_entries,gq('categoryEntry'),{'id':ARM_CMD_CAT,'name':'Armoured Platoon Commander','hidden':'false'})
 
-          def add_force(name,limits):
+          categories={'Armoured Platoon Commander':ARM_CMD_CAT,'Lieutenant':LIEUTENANT_CAT,'Captain / Major':CAPTAIN_MAJOR_CAT,'Medic':'4e0b9e1a-0360-51cc-a506-097a7efcd44e','Forward Observer':'43e65105-60f7-5bb6-a4ac-02a433a791ee','Infantry Squad':'1db0d511-ab38-5eb8-afa7-97cd18cf7d11','Machine Gun Team':'df95158d-692a-545b-b6da-9fc45eb1f7fa','Mortar Team':'f8cf368a-5e9a-5d56-8e8f-5a5e9a7977b4','Sniper Team':'62025d03-4255-56ea-870e-c3399170789d','Anti-Tank Team':'3cf48c43-9058-564e-901a-e3098be16d2f','Field / Emplaced / Immobile Weapon':'75cd78ea-f7b0-5366-b2b5-cfcaa6ba2fc6','Armoured Car':'6e1678b3-02f8-5430-9f5b-e3da292b8625','Tank / SPG':TANK_CAT,'Transport / Tow':TRANSPORT_CAT}
+
+          pdf_army_rules={
+              'Close Air Support':'A Colonial Forward Air Observer may call an Air Strike twice per game. Resolve the first normally; after it is resolved the observer may call the second. Rookie pilot results on the Air Strike chart may be re-rolled.',
+              'March of the Legion':'The Colonial Argenti r.II is treated as a carbine. Almost all Colonial infantry squads use carbines as their base weapon, and this is a free upgrade.',
+              'Faith in Armour':'Colonial infantry and artillery within 6 inches of, or being transported or towed by, a friendly vehicle with Damage Value 8+ gain +1 morale. This does not stack from multiple vehicles, but can stack with similar bonuses. Whenever a friendly Colonial DV 8+ vehicle is destroyed, friendly infantry and artillery within 6 inches must take a morale test; on a failure they suffer 1 pin.',
+              'Meticulous Assault (Great War Era)':'Great War Era only. Colonial units ignore the -1 morale penalty on order tests to enter from reserve. Units that outflank may deploy 12 inches farther along their table edge than normal.',
+              'Inspiring Courage (Modern Era)':'Modern Era only. When a Green Colonial unit is upgraded from Inexperienced to Regular after taking a casualty, it gives +1 morale to Inexperienced Green units within 12 inches. This bonus does not stack. A Green unit within 12 inches of a previously upgraded unit becomes Regular on a 4, 5, or 6 when checking for its Green upgrade.',
+              'Armoured Platoon':'Custom Armoured Platoon selector for this data set. Choose exactly one Armoured Platoon Commander using the normal Colonial officer ranks and experience levels. That commander may attach one matching-experience Tank / SPG as the command vehicle. The command vehicle counts toward the platoon total. The platoon requires at least one Infantry Squad and a total of three to six Tank / SPG selections.'
+          }
+          rules=child_local(gst_root,'sharedRules')
+          if rules is None: rules=ET.SubElement(gst_root,gq('sharedRules'))
+          existing_rule_ids={r.get('name'):r.get('id') for r in list(rules)}
+          rule_ids={}
+          for rule_name,description in pdf_army_rules.items():
+              rule_id=existing_rule_ids.get(rule_name) or sid('rule',rule_name)
+              rule_ids[rule_name]=rule_id
+              existing_rule=next((r for r in list(rules) if r.get('name')==rule_name),None)
+              if existing_rule is None:
+                  r=ET.SubElement(rules,gq('rule'),{'id':rule_id,'name':rule_name,'hidden':'false'})
+                  d=ET.SubElement(r,gq('description')); d.text=description
+              else:
+                  d=next((c for c in existing_rule if c.tag.rsplit('}',1)[-1]=='description'),None)
+                  if d is None: d=ET.SubElement(existing_rule,gq('description'))
+                  d.text=description
+
+          def add_force(name,limits,info_rule_names=None):
               force_entries=child_local(gst_root,'forceEntries')
               if force_entries is None:
                   force_entries=ET.Element(gq('forceEntries')); shared=child_local(gst_root,'sharedRules')
                   if shared is not None: gst_root.insert(list(gst_root).index(shared),force_entries)
                   else: gst_root.append(force_entries)
-              if any(fe.get('name')==name for fe in list(force_entries)): return
-              fe=ET.SubElement(force_entries,gq('forceEntry'),{'id':sid('force',name),'name':name,'hidden':'false'}); cls=ET.SubElement(fe,gq('categoryLinks'))
+              fe=next((x for x in list(force_entries) if x.get('name')==name),None)
+              if fe is None:
+                  fe=ET.SubElement(force_entries,gq('forceEntry'),{'id':sid('force',name),'name':name,'hidden':'false'})
+              else:
+                  for c in list(fe):
+                      if c.tag.rsplit('}',1)[-1] in ('categoryLinks','infoLinks'): fe.remove(c)
+              cls=ET.SubElement(fe,gq('categoryLinks'))
               for cat_name,min_v,max_v in limits:
                   cl=ET.SubElement(cls,gq('categoryLink'),{'id':sid('force',name,cat_name),'name':cat_name,'hidden':'false','targetId':categories[cat_name],'primary':'false'})
                   if min_v is None and max_v is None: continue
                   cs=ET.SubElement(cl,gq('constraints'))
                   if min_v is not None: ET.SubElement(cs,gq('constraint'),{'field':'selections','scope':'force','value':str(min_v),'percentValue':'false','shared':'false','includeChildSelections':'true','includeChildForces':'false','type':'min','id':sid('force',name,cat_name,'min')})
                   if max_v is not None: ET.SubElement(cs,gq('constraint'),{'field':'selections','scope':'force','value':str(max_v),'percentValue':'false','shared':'false','includeChildSelections':'true','includeChildForces':'false','type':'max','id':sid('force',name,cat_name,'max')})
+              if info_rule_names:
+                  ils=ET.SubElement(fe,gq('infoLinks'))
+                  for rn in info_rule_names:
+                      ET.SubElement(ils,gq('infoLink'),{'id':sid('force',name,'rule',rn),'name':rn,'hidden':'false','targetId':rule_ids[rn],'type':'rule'})
+              return fe
 
           add_force('Colonial Mechanized / Motorized Platoon',[('Lieutenant',1,1),('Captain / Major',None,1),('Medic',None,1),('Forward Observer',None,1),('Infantry Squad',2,5),('Machine Gun Team',None,1),('Mortar Team',None,1),('Sniper Team',None,1),('Anti-Tank Team',None,1),('Field / Emplaced / Immobile Weapon',None,1),('Armoured Car',None,1),('Tank / SPG',None,1),('Transport / Tow',2,8)])
-          add_force('Colonial Armoured Platoon',[('Lieutenant',1,1),('Captain / Major',None,1),('Forward Observer',None,1),('Infantry Squad',1,2),('Armoured Car',None,2),('Tank / SPG',3,6),('Transport / Tow',None,2)])
-
-          rules=child_local(gst_root,'sharedRules')
-          if rules is None: rules=ET.SubElement(gst_root,gq('sharedRules'))
-          platoon_rules={'Mechanized / Motorized Platoon':'This selector represents the planned mobile infantry formation. Infantry squads may select an attached Transport / Tow entry directly in their unit options; attached transports count as child selections for force constraints.','Armoured Platoon':'This selector represents the planned armoured formation. Select an officer rank as normal and attach one Tank / SPG to that officer as the command vehicle. The command vehicle counts toward the platoon total of three to six Tank / SPG selections. At least one Infantry Squad is required.'}
-          existing={r.get('name') for r in list(rules)}
-          for rule_name,description in platoon_rules.items():
-              if rule_name in existing: continue
-              r=ET.SubElement(rules,gq('rule'),{'id':sid('rule',rule_name),'name':rule_name,'hidden':'false'}); d=ET.SubElement(r,gq('description')); d.text=description
+          add_force('Colonial Armoured Platoon',[('Armoured Platoon Commander',1,1),('Forward Observer',None,1),('Infantry Squad',1,2),('Armoured Car',None,2),('Tank / SPG',3,6),('Transport / Tow',None,2)],['Armoured Platoon','Close Air Support','March of the Legion','Faith in Armour','Meticulous Assault (Great War Era)','Inspiring Courage (Modern Era)'])
 
           gst.write('Bolt Action - Foxhole.gst',encoding='UTF-8',xml_declaration=True)
           for path in ['Colonial Legion.cat','Bolt Action - Foxhole.gst','index.xml']:
               ET.parse(path); print('XML OK:',path)
+          print('Armoured-only commander entries added:',armoured_commanders_added)
           print('Squad-size controls added:',size_added)
           print('Weapon upgrade selections added:',weapon_added)
           print('Sticky-grenade squad upgrades added:',sticky_added)
           print('Infantry transport groups added:',transport_groups_added)
           print('Armoured command-vehicle groups added:',command_vehicle_groups_added)
+          print('PDF Colonial army special rules linked to Armoured Platoon:',len(pdf_army_rules)-1)
           print('Force selectors ensured: Colonial Mechanized / Motorized Platoon, Colonial Armoured Platoon')
           PY
       - name: Commit rebuilt data
@@ -247,6 +327,6 @@ jobs:
           if git diff --cached --quiet; then
             echo 'No generated changes.'
           else
-            git commit -m 'Update armoured platoon commander and limits'
+            git commit -m 'Restrict armoured command tanks and add PDF army rules'
             git push
           fi
