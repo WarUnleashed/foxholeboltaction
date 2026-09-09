@@ -23,9 +23,23 @@ jobs:
           cat build/gst.b64 | base64 -d | gzip -d > 'Bolt Action - Foxhole.gst'
           python - <<'PY'
           import xml.etree.ElementTree as ET
+
+          specs = [
+              ('Colonial Legion.cat', 'http://www.battlescribe.net/schema/catalogueSchema', 'catalogue'),
+              ('Bolt Action - Foxhole.gst', 'http://www.battlescribe.net/schema/gameSystemSchema', 'gameSystem'),
+          ]
+
+          for path, namespace, data_type in specs:
+              ET.register_namespace('', namespace)
+              tree = ET.parse(path)
+              root = tree.getroot()
+              root.set('type', data_type)
+              tree.write(path, encoding='UTF-8', xml_declaration=True)
+
           for path in ['Colonial Legion.cat', 'Bolt Action - Foxhole.gst', 'index.xml']:
-              ET.parse(path)
-              print('XML OK:', path)
+              tree = ET.parse(path)
+              root = tree.getroot()
+              print('XML OK:', path, root.tag, root.attrib.get('type'))
           PY
       - name: Commit rebuilt data
         shell: bash
@@ -36,6 +50,6 @@ jobs:
           if git diff --cached --quiet; then
             echo 'No generated changes.'
           else
-            git commit -m 'Build compatible New Recruit data files'
+            git commit -m 'Build New Recruit-detectable BattleScribe data files'
             git push
           fi
