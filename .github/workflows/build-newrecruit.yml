@@ -29,6 +29,7 @@ jobs:
           GST_NS = 'http://www.battlescribe.net/schema/gameSystemSchema'
           POINTS = 'b0e5f7a2-33c8-46ce-8f8f-148d8171da43'
           TRANSPORT_CAT = 'fc7f7f70-4bea-5d27-8b5e-cb2ac03797c7'
+          TANK_CAT = '0f9945cb-0ce1-521e-8f54-35857994efd8'
           ET.register_namespace('', CAT_NS)
 
           def q(tag):
@@ -43,6 +44,10 @@ jobs:
               if 'veteran' in s: return 'Veteran'
               if 'regular' in s: return 'Regular'
               return None
+
+          def is_officer_name(name):
+              n=name.lower()
+              return any(x in n for x in ['2nd lieutenant','1st lieutenant','captain','major'])
 
           def squad_size_spec(name):
               n=name.lower(); gw='great war era' in n; exp=exp_from_name(n)
@@ -68,7 +73,7 @@ jobs:
 
           def weapon_spec(name):
               n=name.lower(); gw='great war era' in n
-              officer=any(x in n for x in ['2nd lieutenant','1st lieutenant','captain','major'])
+              officer=is_officer_name(name)
               observer='forward observer' in n
               if officer or observer: return 'choose one weapon', [('Pistol',0,1,False),('Submachine gun',0,1,False),('Carbine',0,1,False),('Shotgun',0,1,False),('Assault rifle',0,1,False),('Volta Repeater',0,1,False)], 1
               if 'medic' in n: return 'choose one weapon', [('Pistol',0,1,False),('Unarmed',0,1,False)], 1
@@ -110,15 +115,18 @@ jobs:
 
           cat=ET.parse('Colonial Legion.cat'); root=cat.getroot(); root.set('type','catalogue')
 
-          transport_entries=[]
+          transport_entries=[]; tank_entries=[]
           top_entries=root.find(q('selectionEntries'))
           if top_entries is not None:
               for tse in top_entries.findall(q('selectionEntry')):
                   cats=tse.find(q('categoryLinks'))
-                  if cats is not None and any(cl.get('targetId')==TRANSPORT_CAT for cl in cats.findall(q('categoryLink'))):
-                      transport_entries.append((tse.get('id'),tse.get('name',''),exp_from_name(tse.get('name',''))))
+                  if cats is None: continue
+                  targets={cl.get('targetId') for cl in cats.findall(q('categoryLink'))}
+                  item=(tse.get('id'),tse.get('name',''),exp_from_name(tse.get('name','')))
+                  if TRANSPORT_CAT in targets: transport_entries.append(item)
+                  if TANK_CAT in targets: tank_entries.append(item)
 
-          weapon_added=0; size_added=0; sticky_added=0; transport_groups_added=0
+          weapon_added=0; size_added=0; sticky_added=0; transport_groups_added=0; command_vehicle_groups_added=0
           for se in root.findall('.//' + q('selectionEntry')):
               if se.get('type')!='unit': continue
               name=se.get('name',''); groups=ensure_groups(se)
@@ -142,6 +150,18 @@ jobs:
                       add_max(link,sid(se.get('id'),'transport',target_id,'max'),1)
                       linked+=1
                   if linked: transport_groups_added+=1
+
+              if is_officer_name(name):
+                  cg=ET.SubElement(groups,q('selectionEntryGroup'),{'name':'Armoured Command Vehicle (Armoured Platoon only)','id':sid(se.get('id'),'command-vehicle'),'hidden':'false'})
+                  add_max(cg,sid(se.get('id'),'command-vehicle','max'),1)
+                  links=ET.SubElement(cg,q('entryLinks'))
+                  officer_exp=exp_from_name(name); linked=0
+                  for target_id,target_name,target_exp in tank_entries:
+                      if officer_exp and target_exp and officer_exp != target_exp: continue
+                      link=ET.SubElement(links,q('entryLink'),{'id':sid(se.get('id'),'command-vehicle',target_id),'name':target_name,'hidden':'false','collective':'false','import':'true','targetId':target_id,'type':'selectionEntry'})
+                      add_max(link,sid(se.get('id'),'command-vehicle',target_id,'max'),1)
+                      linked+=1
+                  if linked: command_vehicle_groups_added+=1
 
               spec=weapon_spec(name)
               if not spec: continue
@@ -180,7 +200,7 @@ jobs:
           def gq(tag): return f'{{{GST_NS}}}{tag}'
           def child_local(root,name): return next((c for c in root if c.tag.rsplit('}',1)[-1]==name),None)
 
-          categories={'Lieutenant':'5b361517-ed58-5d60-a6fd-b00e15d7f574','Captain / Major':'914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a','Medic':'4e0b9e1a-0360-51cc-a506-097a7efcd44e','Forward Observer':'43e65105-60f7-5bb6-a4ac-02a433a791ee','Infantry Squad':'1db0d511-ab38-5eb8-afa7-97cd18cf7d11','Machine Gun Team':'df95158d-692a-545b-b6da-9fc45eb1f7fa','Mortar Team':'f8cf368a-5e9a-5d56-8e8f-5a5e9a7977b4','Sniper Team':'62025d03-4255-56ea-870e-c3399170789d','Anti-Tank Team':'3cf48c43-9058-564e-901a-e3098be16d2f','Field / Emplaced / Immobile Weapon':'75cd78ea-f7b0-5366-b2b5-cfcaa6ba2fc6','Armoured Car':'6e1678b3-02f8-5430-9f5b-e3da292b8625','Tank / SPG':'0f9945cb-0ce1-521e-8f54-35857994efd8','Transport / Tow':TRANSPORT_CAT}
+          categories={'Lieutenant':'5b361517-ed58-5d60-a6fd-b00e15d7f574','Captain / Major':'914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a','Medic':'4e0b9e1a-0360-51cc-a506-097a7efcd44e','Forward Observer':'43e65105-60f7-5bb6-a4ac-02a433a791ee','Infantry Squad':'1db0d511-ab38-5eb8-afa7-97cd18cf7d11','Machine Gun Team':'df95158d-692a-545b-b6da-9fc45eb1f7fa','Mortar Team':'f8cf368a-5e9a-5d56-8e8f-5a5e9a7977b4','Sniper Team':'62025d03-4255-56ea-870e-c3399170789d','Anti-Tank Team':'3cf48c43-9058-564e-901a-e3098be16d2f','Field / Emplaced / Immobile Weapon':'75cd78ea-f7b0-5366-b2b5-cfcaa6ba2fc6','Armoured Car':'6e1678b3-02f8-5430-9f5b-e3da292b8625','Tank / SPG':TANK_CAT,'Transport / Tow':TRANSPORT_CAT}
 
           def add_force(name,limits):
               force_entries=child_local(gst_root,'forceEntries')
@@ -198,11 +218,11 @@ jobs:
                   if max_v is not None: ET.SubElement(cs,gq('constraint'),{'field':'selections','scope':'force','value':str(max_v),'percentValue':'false','shared':'false','includeChildSelections':'true','includeChildForces':'false','type':'max','id':sid('force',name,cat_name,'max')})
 
           add_force('Colonial Mechanized / Motorized Platoon',[('Lieutenant',1,1),('Captain / Major',None,1),('Medic',None,1),('Forward Observer',None,1),('Infantry Squad',2,5),('Machine Gun Team',None,1),('Mortar Team',None,1),('Sniper Team',None,1),('Anti-Tank Team',None,1),('Field / Emplaced / Immobile Weapon',None,1),('Armoured Car',None,1),('Tank / SPG',None,1),('Transport / Tow',2,8)])
-          add_force('Colonial Armoured Platoon',[('Lieutenant',None,1),('Forward Observer',None,1),('Infantry Squad',None,2),('Armoured Car',None,2),('Tank / SPG',3,5),('Transport / Tow',None,2)])
+          add_force('Colonial Armoured Platoon',[('Lieutenant',1,1),('Captain / Major',None,1),('Forward Observer',None,1),('Infantry Squad',1,2),('Armoured Car',None,2),('Tank / SPG',3,6),('Transport / Tow',None,2)])
 
           rules=child_local(gst_root,'sharedRules')
           if rules is None: rules=ET.SubElement(gst_root,gq('sharedRules'))
-          platoon_rules={'Mechanized / Motorized Platoon':'This selector represents the planned mobile infantry formation. Infantry squads may select an attached Transport / Tow entry directly in their unit options; attached transports count as child selections for force constraints.','Armoured Platoon':'This selector represents the planned armoured formation. Select three to five Tank / SPG entries. The data set does not currently model a separate command-vehicle upgrade, so nominate one selected vehicle as the platoon command vehicle when required by the scenario or rules being used.'}
+          platoon_rules={'Mechanized / Motorized Platoon':'This selector represents the planned mobile infantry formation. Infantry squads may select an attached Transport / Tow entry directly in their unit options; attached transports count as child selections for force constraints.','Armoured Platoon':'This selector represents the planned armoured formation. Select an officer rank as normal and attach one Tank / SPG to that officer as the command vehicle. The command vehicle counts toward the platoon total of three to six Tank / SPG selections. At least one Infantry Squad is required.'}
           existing={r.get('name') for r in list(rules)}
           for rule_name,description in platoon_rules.items():
               if rule_name in existing: continue
@@ -215,6 +235,7 @@ jobs:
           print('Weapon upgrade selections added:',weapon_added)
           print('Sticky-grenade squad upgrades added:',sticky_added)
           print('Infantry transport groups added:',transport_groups_added)
+          print('Armoured command-vehicle groups added:',command_vehicle_groups_added)
           print('Force selectors ensured: Colonial Mechanized / Motorized Platoon, Colonial Armoured Platoon')
           PY
       - name: Commit rebuilt data
@@ -226,6 +247,6 @@ jobs:
           if git diff --cached --quiet; then
             echo 'No generated changes.'
           else
-            git commit -m 'Add infantry transport and sticky grenade options'
+            git commit -m 'Update armoured platoon commander and limits'
             git push
           fi
