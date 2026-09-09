@@ -43,8 +43,6 @@ jobs:
               if 'regular' in s: return 'Regular'
               return None
 
-          # Returns base models, max additional models, points/additional model.
-          # Values are copied from Armies of the Colonial Legion Alpha 0.1.
           def squad_size_spec(name):
               n=name.lower(); gw='great war era' in n; exp=exp_from_name(n)
               if 'recruit squad' in n and gw: return (5,5,7)
@@ -62,58 +60,37 @@ jobs:
               if 'cavalry squad' in n: return (3,7,13 if exp=='Veteran' else 10)
               if 'paratrooper squad' in n: return (5,5,14)
               if 'drafted squad' in n and not gw: return (5,15,4)
-              if 'partisan squad' in n:
-                  return (4,6,7 if exp=='Inexperienced' else (14 if exp=='Veteran' else 10))
+              if 'partisan squad' in n: return (4,6,7 if exp=='Inexperienced' else (14 if exp=='Veteran' else 10))
               if 'republic rangers squad' in n and not gw: return (2,8,15)
               if 'swords of maro squad' in n and not gw: return (5,5,14)
               return None
 
-          # Each weapon tuple is (name, points, source maximum, is_additional_weapon).
           def weapon_spec(name):
               n=name.lower(); gw='great war era' in n
               officer=any(x in n for x in ['2nd lieutenant','1st lieutenant','captain','major'])
               observer='forward observer' in n
-              if officer or observer:
-                  return 'choose one weapon', [('Pistol',0,1,False),('Submachine gun',0,1,False),('Carbine',0,1,False),('Shotgun',0,1,False),('Assault rifle',0,1,False),('Volta Repeater',0,1,False)], 1
-              if 'medic' in n:
-                  return 'choose one weapon', [('Pistol',0,1,False),('Unarmed',0,1,False)], 1
-              if 'recruit squad' in n and gw:
-                  return 'base: Carbines', [('Volta Repeater',0,10,False),('NCO submachine gun',3,1,False),('Pistol',-3,1,False),('Light machine gun',20,1,False)], None
-              if 'regular infantry squad' in n and gw:
-                  return 'base: Carbines', [('Volta Repeater',0,10,False),('NCO submachine gun',3,1,False),('Pistol',-3,1,False),('Light machine gun',20,1,False)], None
-              if 'veteran infantry squad' in n and gw:
-                  return 'base: Carbines', [('Volta Repeater',0,10,False),('Submachine gun',3,3,False),('Pistol',-3,1,False),('Light machine gun',20,1,False)], None
-              if 'drafted squad' in n and gw:
-                  return 'base: Volta Repeaters', [('Carbine',0,20,False),('Light machine gun',20,1,False)], None
-              if 'republic rangers squad' in n and gw:
-                  return 'base: Carbines', [('Submachine gun',3,3,False),('Shotgun',3,4,False),('Volta Repeater',0,10,False),('Pistol',-3,1,False),('Malone light machine gun',20,1,False),('Grenade launcher (alongside rifle)',20,1,True)], None
-              if 'swords of maro squad' in n and gw:
-                  return 'base: Carbines', [('Submachine gun',3,3,False),('Shotgun',3,3,False),('Volta Repeater',0,10,False),('Pistol',-3,2,False),('Light machine gun',20,2,False)], None
-              if 'recruit squad' in n and not gw:
-                  return 'base: Carbines', [('NCO Volta Repeater',0,1,False),('NCO submachine gun',3,1,False),('Shotgun',3,2,False),('Pistol',-3,1,False),('Light machine gun',20,1,False)], None
-              if 'regular infantry squad' in n and not gw:
-                  return 'base: Carbines', [('Submachine gun',3,2,False),('Shotgun',3,3,False),('Volta Repeater',0,3,False),('Pistol',-3,1,False),('Light machine gun',20,1,False),('Ignifist (additional weapon)',3,4,True)], None
-              if 'veteran infantry squad' in n and not gw:
-                  return 'base: Carbines', [('Submachine gun',3,7,False),('Shotgun',3,10,False),('Volta Repeater',0,10,False),('Pistol',-3,2,False),('Light machine gun',20,2,False),('Ignifist (additional weapon)',3,4,True)], None
-              if 'reconnaissance squad' in n:
-                  return 'base: Carbines', [('Submachine gun',3,5,False),('Shotgun',3,5,False),('Assault rifle',5,3,False)], None
-              if 'engineer squad' in n:
-                  return 'base: Carbines', [('Submachine gun',3,7,False),('Shotgun',3,10,False),('Assault rifle',5,7,False),('Volta Repeater',0,10,False),('Pistol',-3,2,False),('Light machine gun',20,1,False),('Flamethrower',20,1,False),('Ignifist (additional weapon)',3,4,True)], None
-              if 'marine squad' in n:
-                  return 'base: Carbines', [('Submachine gun',3,10,False),('Shotgun',3,10,False),('Pistol',-3,3,False),('Light machine gun',20,3,False),('Ignifist (additional weapon)',3,4,True)], None
-              if 'cavalry squad' in n:
-                  return 'base: Cavalry Carbines', [('Submachine gun',3,3,False),('Pistol',-3,10,False),('Light machine gun',20,1,False)], None
-              if 'paratrooper squad' in n:
-                  return 'base: Carbines', [('Submachine gun',3,10,False),('Shotgun',3,10,False),('Pistol',-3,2,False),('Light machine gun',20,2,False),('Ignifist (additional weapon)',3,4,True)], None
-              if 'drafted squad' in n and not gw:
-                  return 'base: Rifles', [('NCO submachine gun',3,1,False),('Pistol',-3,1,False),('Light machine gun',20,1,False)], None
+              if officer or observer: return 'choose one weapon', [('Pistol',0,1,False),('Submachine gun',0,1,False),('Carbine',0,1,False),('Shotgun',0,1,False),('Assault rifle',0,1,False),('Volta Repeater',0,1,False)], 1
+              if 'medic' in n: return 'choose one weapon', [('Pistol',0,1,False),('Unarmed',0,1,False)], 1
+              if 'recruit squad' in n and gw: return 'base: Carbines', [('Volta Repeater',0,10,False),('NCO submachine gun',3,1,False),('Pistol',-3,1,False),('Light machine gun',20,1,False)], None
+              if 'regular infantry squad' in n and gw: return 'base: Carbines', [('Volta Repeater',0,10,False),('NCO submachine gun',3,1,False),('Pistol',-3,1,False),('Light machine gun',20,1,False)], None
+              if 'veteran infantry squad' in n and gw: return 'base: Carbines', [('Volta Repeater',0,10,False),('Submachine gun',3,3,False),('Pistol',-3,1,False),('Light machine gun',20,1,False)], None
+              if 'drafted squad' in n and gw: return 'base: Volta Repeaters', [('Carbine',0,20,False),('Light machine gun',20,1,False)], None
+              if 'republic rangers squad' in n and gw: return 'base: Carbines', [('Submachine gun',3,3,False),('Shotgun',3,4,False),('Volta Repeater',0,10,False),('Pistol',-3,1,False),('Malone light machine gun',20,1,False),('Grenade launcher (alongside rifle)',20,1,True)], None
+              if 'swords of maro squad' in n and gw: return 'base: Carbines', [('Submachine gun',3,3,False),('Shotgun',3,3,False),('Volta Repeater',0,10,False),('Pistol',-3,2,False),('Light machine gun',20,2,False)], None
+              if 'recruit squad' in n and not gw: return 'base: Carbines', [('NCO Volta Repeater',0,1,False),('NCO submachine gun',3,1,False),('Shotgun',3,2,False),('Pistol',-3,1,False),('Light machine gun',20,1,False)], None
+              if 'regular infantry squad' in n and not gw: return 'base: Carbines', [('Submachine gun',3,2,False),('Shotgun',3,3,False),('Volta Repeater',0,3,False),('Pistol',-3,1,False),('Light machine gun',20,1,False),('Ignifist (additional weapon)',3,4,True)], None
+              if 'veteran infantry squad' in n and not gw: return 'base: Carbines', [('Submachine gun',3,7,False),('Shotgun',3,10,False),('Volta Repeater',0,10,False),('Pistol',-3,2,False),('Light machine gun',20,2,False),('Ignifist (additional weapon)',3,4,True)], None
+              if 'reconnaissance squad' in n: return 'base: Carbines', [('Submachine gun',3,5,False),('Shotgun',3,5,False),('Assault rifle',5,3,False)], None
+              if 'engineer squad' in n: return 'base: Carbines', [('Submachine gun',3,7,False),('Shotgun',3,10,False),('Assault rifle',5,7,False),('Volta Repeater',0,10,False),('Pistol',-3,2,False),('Light machine gun',20,1,False),('Flamethrower',20,1,False),('Ignifist (additional weapon)',3,4,True)], None
+              if 'marine squad' in n: return 'base: Carbines', [('Submachine gun',3,10,False),('Shotgun',3,10,False),('Pistol',-3,3,False),('Light machine gun',20,3,False),('Ignifist (additional weapon)',3,4,True)], None
+              if 'cavalry squad' in n: return 'base: Cavalry Carbines', [('Submachine gun',3,3,False),('Pistol',-3,10,False),('Light machine gun',20,1,False)], None
+              if 'paratrooper squad' in n: return 'base: Carbines', [('Submachine gun',3,10,False),('Shotgun',3,10,False),('Pistol',-3,2,False),('Light machine gun',20,2,False),('Ignifist (additional weapon)',3,4,True)], None
+              if 'drafted squad' in n and not gw: return 'base: Rifles', [('NCO submachine gun',3,1,False),('Pistol',-3,1,False),('Light machine gun',20,1,False)], None
               if 'partisan squad' in n:
                   lmg_max=1 if 'inexperienced' in n else 3
                   return 'base: Carbines', [('Submachine gun',3,5,False),('Shotgun',3,5,False),('Assault rifle',5,5,False),('Volta Repeater',0,5,False),('Pistol',-3,3,False),('Light machine gun',20,lmg_max,False)], None
-              if 'republic rangers squad' in n and not gw:
-                  return 'base: Carbines', [('Submachine gun',3,7,False),('Shotgun',3,10,False),('Assault rifle',5,10,False),('Volta Repeater',0,10,False),('Pistol',-3,1,False),('Light machine gun',20,1,False)], None
-              if 'swords of maro squad' in n and not gw:
-                  return 'base: Carbines', [('Submachine gun',3,10,False),('Shotgun',3,10,False),('Assault rifle',5,10,False),('Volta Repeater',0,10,False),('Pistol',-3,2,False),('Light machine gun',20,2,False)], None
+              if 'republic rangers squad' in n and not gw: return 'base: Carbines', [('Submachine gun',3,7,False),('Shotgun',3,10,False),('Assault rifle',5,10,False),('Volta Repeater',0,10,False),('Pistol',-3,1,False),('Light machine gun',20,1,False)], None
+              if 'swords of maro squad' in n and not gw: return 'base: Carbines', [('Submachine gun',3,10,False),('Shotgun',3,10,False),('Assault rifle',5,10,False),('Volta Repeater',0,10,False),('Pistol',-3,2,False),('Light machine gun',20,2,False)], None
               return None
 
           def ensure_groups(se):
@@ -135,60 +112,73 @@ jobs:
           for se in root.findall('.//' + q('selectionEntry')):
               if se.get('type')!='unit': continue
               name=se.get('name',''); groups=ensure_groups(se)
-              size=squad_size_spec(name)
-              add_man_id=None
+              size=squad_size_spec(name); add_man_id=None
               if size:
                   base,max_extra,each_pts=size
                   sg=ET.SubElement(groups,q('selectionEntryGroup'),{'name':f'Squad Size (base {base} models)','id':sid(se.get('id'),'squad-size'),'hidden':'false'})
-                  sentries=ET.SubElement(sg,q('selectionEntries'))
-                  add_man_id=sid(se.get('id'),'additional-man')
+                  sentries=ET.SubElement(sg,q('selectionEntries')); add_man_id=sid(se.get('id'),'additional-man')
                   up=ET.SubElement(sentries,q('selectionEntry'),{'type':'upgrade','import':'true','name':'Additional man','hidden':'false','id':add_man_id})
                   add_max(up,sid(se.get('id'),'additional-man','max'),max_extra)
-                  costs=ET.SubElement(up,q('costs')); ET.SubElement(costs,q('cost'),{'name':'pts','typeId':POINTS,'value':str(float(each_pts))})
-                  size_added+=1
-
+                  costs=ET.SubElement(up,q('costs')); ET.SubElement(costs,q('cost'),{'name':'pts','typeId':POINTS,'value':str(float(each_pts))}); size_added+=1
               spec=weapon_spec(name)
               if not spec: continue
-              label,weapons,fixed_group_max=spec
-              replacements=[w for w in weapons if not w[3]]
-              extras=[w for w in weapons if w[3]]
-
+              label,weapons,fixed_group_max=spec; replacements=[w for w in weapons if not w[3]]; extras=[w for w in weapons if w[3]]
               wg=ET.SubElement(groups,q('selectionEntryGroup'),{'name':'Weapon Replacements ('+label+')','id':sid(se.get('id'),'weapons'),'hidden':'false'})
               group_constraint_id=sid(se.get('id'),'weapons','group-max')
-              if fixed_group_max is not None:
-                  add_max(wg,group_constraint_id,fixed_group_max)
+              if fixed_group_max is not None: add_max(wg,group_constraint_id,fixed_group_max)
               elif size:
-                  base,max_extra,each_pts=size
-                  add_max(wg,group_constraint_id,base)
-                  # Dynamically increase the total number of replacement choices by one
-                  # for every Additional man selected, so weapon replacements can never
-                  # exceed the current squad size.
-                  mods=ET.SubElement(wg,q('modifiers'))
-                  mod=ET.SubElement(mods,q('modifier'),{'type':'increment','field':group_constraint_id,'value':'1'})
-                  reps=ET.SubElement(mod,q('repeats'))
+                  base,max_extra,each_pts=size; add_max(wg,group_constraint_id,base)
+                  mods=ET.SubElement(wg,q('modifiers')); mod=ET.SubElement(mods,q('modifier'),{'type':'increment','field':group_constraint_id,'value':'1'}); reps=ET.SubElement(mod,q('repeats'))
                   ET.SubElement(reps,q('repeat'),{'field':'selections','scope':'parent','value':'1','percentValue':'false','shared':'true','includeChildSelections':'true','includeChildForces':'false','childId':add_man_id,'repeats':'1','roundUp':'false'})
               wentries=ET.SubElement(wg,q('selectionEntries'))
               for wname,pts,maximum,_ in replacements:
-                  up=ET.SubElement(wentries,q('selectionEntry'),{'type':'upgrade','import':'true','name':wname,'hidden':'false','id':sid(se.get('id'),'weapon',wname)})
-                  add_max(up,sid(se.get('id'),'weapon',wname,'max'),maximum)
-                  costs=ET.SubElement(up,q('costs')); ET.SubElement(costs,q('cost'),{'name':'pts','typeId':POINTS,'value':str(float(pts))})
-                  weapon_added+=1
-
+                  up=ET.SubElement(wentries,q('selectionEntry'),{'type':'upgrade','import':'true','name':wname,'hidden':'false','id':sid(se.get('id'),'weapon',wname)}); add_max(up,sid(se.get('id'),'weapon',wname,'max'),maximum)
+                  costs=ET.SubElement(up,q('costs')); ET.SubElement(costs,q('cost'),{'name':'pts','typeId':POINTS,'value':str(float(pts))}); weapon_added+=1
               if extras:
-                  eg=ET.SubElement(groups,q('selectionEntryGroup'),{'name':'Additional Weapons','id':sid(se.get('id'),'additional-weapons'),'hidden':'false'})
-                  eentries=ET.SubElement(eg,q('selectionEntries'))
+                  eg=ET.SubElement(groups,q('selectionEntryGroup'),{'name':'Additional Weapons','id':sid(se.get('id'),'additional-weapons'),'hidden':'false'}); eentries=ET.SubElement(eg,q('selectionEntries'))
                   for wname,pts,maximum,_ in extras:
-                      up=ET.SubElement(eentries,q('selectionEntry'),{'type':'upgrade','import':'true','name':wname,'hidden':'false','id':sid(se.get('id'),'weapon',wname)})
-                      add_max(up,sid(se.get('id'),'weapon',wname,'max'),maximum)
-                      costs=ET.SubElement(up,q('costs')); ET.SubElement(costs,q('cost'),{'name':'pts','typeId':POINTS,'value':str(float(pts))})
-                      weapon_added+=1
+                      up=ET.SubElement(eentries,q('selectionEntry'),{'type':'upgrade','import':'true','name':wname,'hidden':'false','id':sid(se.get('id'),'weapon',wname)}); add_max(up,sid(se.get('id'),'weapon',wname,'max'),maximum)
+                      costs=ET.SubElement(up,q('costs')); ET.SubElement(costs,q('cost'),{'name':'pts','typeId':POINTS,'value':str(float(pts))}); weapon_added+=1
 
           ET.register_namespace('',CAT_NS); cat.write('Colonial Legion.cat',encoding='UTF-8',xml_declaration=True)
-          gst=ET.parse('Bolt Action - Foxhole.gst'); ET.register_namespace('',GST_NS); gst.getroot().set('type','gameSystem'); gst.write('Bolt Action - Foxhole.gst',encoding='UTF-8',xml_declaration=True)
+          gst=ET.parse('Bolt Action - Foxhole.gst'); ET.register_namespace('',GST_NS); gst_root=gst.getroot(); gst_root.set('type','gameSystem')
+          def gq(tag): return f'{{{GST_NS}}}{tag}'
+          def child_local(root,name): return next((c for c in root if c.tag.rsplit('}',1)[-1]==name),None)
+
+          categories={'Lieutenant':'5b361517-ed58-5d60-a6fd-b00e15d7f574','Captain / Major':'914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a','Medic':'4e0b9e1a-0360-51cc-a506-097a7efcd44e','Forward Observer':'43e65105-60f7-5bb6-a4ac-02a433a791ee','Infantry Squad':'1db0d511-ab38-5eb8-afa7-97cd18cf7d11','Machine Gun Team':'df95158d-692a-545b-b6da-9fc45eb1f7fa','Mortar Team':'f8cf368a-5e9a-5d56-8e8f-5a5e9a7977b4','Sniper Team':'62025d03-4255-56ea-870e-c3399170789d','Anti-Tank Team':'3cf48c43-9058-564e-901a-e3098be16d2f','Field / Emplaced / Immobile Weapon':'75cd78ea-f7b0-5366-b2b5-cfcaa6ba2fc6','Armoured Car':'6e1678b3-02f8-5430-9f5b-e3da292b8625','Tank / SPG':'0f9945cb-0ce1-521e-8f54-35857994efd8','Transport / Tow':'fc7f7f70-4bea-5d27-8b5e-cb2ac03797c7'}
+
+          def add_force(name,limits):
+              force_entries=child_local(gst_root,'forceEntries')
+              if force_entries is None:
+                  force_entries=ET.Element(gq('forceEntries')); shared=child_local(gst_root,'sharedRules')
+                  if shared is not None: gst_root.insert(list(gst_root).index(shared),force_entries)
+                  else: gst_root.append(force_entries)
+              if any(fe.get('name')==name for fe in list(force_entries)): return
+              fe=ET.SubElement(force_entries,gq('forceEntry'),{'id':sid('force',name),'name':name,'hidden':'false'}); cls=ET.SubElement(fe,gq('categoryLinks'))
+              for cat_name,min_v,max_v in limits:
+                  cl=ET.SubElement(cls,gq('categoryLink'),{'id':sid('force',name,cat_name),'name':cat_name,'hidden':'false','targetId':categories[cat_name],'primary':'false'})
+                  if min_v is None and max_v is None: continue
+                  cs=ET.SubElement(cl,gq('constraints'))
+                  if min_v is not None: ET.SubElement(cs,gq('constraint'),{'field':'selections','scope':'force','value':str(min_v),'percentValue':'false','shared':'false','includeChildSelections':'true','includeChildForces':'false','type':'min','id':sid('force',name,cat_name,'min')})
+                  if max_v is not None: ET.SubElement(cs,gq('constraint'),{'field':'selections','scope':'force','value':str(max_v),'percentValue':'false','shared':'false','includeChildSelections':'true','includeChildForces':'false','type':'max','id':sid('force',name,cat_name,'max')})
+
+          add_force('Colonial Mechanized / Motorized Platoon',[('Lieutenant',1,1),('Captain / Major',None,1),('Medic',None,1),('Forward Observer',None,1),('Infantry Squad',2,5),('Machine Gun Team',None,1),('Mortar Team',None,1),('Sniper Team',None,1),('Anti-Tank Team',None,1),('Field / Emplaced / Immobile Weapon',None,1),('Armoured Car',None,1),('Tank / SPG',None,1),('Transport / Tow',2,8)])
+          add_force('Colonial Armoured Platoon',[('Lieutenant',None,1),('Forward Observer',None,1),('Infantry Squad',None,2),('Armoured Car',None,2),('Tank / SPG',3,5),('Transport / Tow',None,2)])
+
+          rules=child_local(gst_root,'sharedRules')
+          if rules is None: rules=ET.SubElement(gst_root,gq('sharedRules'))
+          platoon_rules={'Mechanized / Motorized Platoon':'This selector represents the planned mobile infantry formation. Select at least two Infantry Squads and at least two Transport / Tow entries; New Recruit cannot enforce one transport per squad or transport capacity, so assign enough transport capacity to carry the infantry selected.','Armoured Platoon':'This selector represents the planned armoured formation. Select three to five Tank / SPG entries. The data set does not currently model a separate command-vehicle upgrade, so nominate one selected vehicle as the platoon command vehicle when required by the scenario or rules being used.'}
+          existing={r.get('name') for r in list(rules)}
+          for rule_name,description in platoon_rules.items():
+              if rule_name in existing: continue
+              r=ET.SubElement(rules,gq('rule'),{'id':sid('rule',rule_name),'name':rule_name,'hidden':'false'}); d=ET.SubElement(r,gq('description')); d.text=description
+
+          gst.write('Bolt Action - Foxhole.gst',encoding='UTF-8',xml_declaration=True)
           for path in ['Colonial Legion.cat','Bolt Action - Foxhole.gst','index.xml']:
               ET.parse(path); print('XML OK:',path)
           print('Squad-size controls added:',size_added)
           print('Weapon upgrade selections added:',weapon_added)
+          print('Force selectors ensured: Colonial Mechanized / Motorized Platoon, Colonial Armoured Platoon')
           PY
       - name: Commit rebuilt data
         shell: bash
