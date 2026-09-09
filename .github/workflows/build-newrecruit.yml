@@ -184,11 +184,79 @@ jobs:
                       weapon_added+=1
 
           ET.register_namespace('',CAT_NS); cat.write('Colonial Legion.cat',encoding='UTF-8',xml_declaration=True)
-          gst=ET.parse('Bolt Action - Foxhole.gst'); ET.register_namespace('',GST_NS); gst.getroot().set('type','gameSystem'); gst.write('Bolt Action - Foxhole.gst',encoding='UTF-8',xml_declaration=True)
+
+          gst=ET.parse('Bolt Action - Foxhole.gst')
+          ET.register_namespace('',GST_NS)
+          gst_root=gst.getroot(); gst_root.set('type','gameSystem')
+
+          def gq(tag):
+              return f'{{{GST_NS}}}{tag}'
+
+          categories = {
+              'Lieutenant': '5b361517-ed58-5d60-a6fd-b00e15d7f574',
+              'Captain / Major': '914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a',
+              'Medic': '4e0b9e1a-0360-51cc-a506-097a7efcd44e',
+              'Forward Observer': '43e65105-60f7-5bb6-a4ac-02a433a791ee',
+              'Infantry Squad': '1db0d511-ab38-5eb8-afa7-97cd18cf7d11',
+              'Machine Gun Team': 'df95158d-692a-545b-b6da-9fc45eb1f7fa',
+              'Mortar Team': 'f8cf368a-5e9a-5d56-8e8f-5a5e9a7977b4',
+              'Sniper Team': '62025d03-4255-56ea-870e-c3399170789d',
+              'Anti-Tank Team': '3cf48c43-9058-564e-901a-e3098be16d2f',
+              'Field / Emplaced / Immobile Weapon': '75cd78ea-f7b0-5366-b2b5-cfcaa6ba2fc6',
+              'Armoured Car': '6e1678b3-02f8-5430-9f5b-e3da292b8625',
+              'Tank / SPG': '0f9945cb-0ce1-521e-8f54-35857994efd8',
+              'Transport / Tow': 'fc7f7f70-4bea-5d27-8b5e-cb2ac03797c7',
+          }
+
+          def add_force(name, limits):
+              force_entries=gst_root.find(gq('forceEntries'))
+              if force_entries is None:
+                  force_entries=ET.SubElement(gst_root,gq('forceEntries'))
+              if any(fe.get('name')==name for fe in force_entries.findall(gq('forceEntry'))):
+                  return
+              fe=ET.SubElement(force_entries,gq('forceEntry'),{'id':sid('force',name),'name':name,'hidden':'false'})
+              cls=ET.SubElement(fe,gq('categoryLinks'))
+              for cat_name,min_v,max_v in limits:
+                  cl=ET.SubElement(cls,gq('categoryLink'),{'id':sid('force',name,cat_name),'name':cat_name,'hidden':'false','targetId':categories[cat_name],'primary':'false'})
+                  if min_v is None and max_v is None:
+                      continue
+                  cs=ET.SubElement(cl,gq('constraints'))
+                  if min_v is not None:
+                      ET.SubElement(cs,gq('constraint'),{'field':'selections','scope':'force','value':str(min_v),'percentValue':'false','shared':'false','includeChildSelections':'true','includeChildForces':'false','type':'min','id':sid('force',name,cat_name,'min')})
+                  if max_v is not None:
+                      ET.SubElement(cs,gq('constraint'),{'field':'selections','scope':'force','value':str(max_v),'percentValue':'false','shared':'false','includeChildSelections':'true','includeChildForces':'false','type':'max','id':sid('force',name,cat_name,'max')})
+
+          add_force('Colonial Mechanized / Motorized Platoon',[
+              ('Lieutenant',1,1),('Captain / Major',None,1),('Medic',None,1),('Forward Observer',None,1),
+              ('Infantry Squad',2,5),('Machine Gun Team',None,1),('Mortar Team',None,1),('Sniper Team',None,1),
+              ('Anti-Tank Team',None,1),('Field / Emplaced / Immobile Weapon',None,1),('Armoured Car',None,1),
+              ('Tank / SPG',None,1),('Transport / Tow',2,8),
+          ])
+          add_force('Colonial Armoured Platoon',[
+              ('Lieutenant',None,1),('Forward Observer',None,1),('Infantry Squad',None,2),
+              ('Armoured Car',None,2),('Tank / SPG',3,5),('Transport / Tow',None,2),
+          ])
+
+          rules=gst_root.find(gq('sharedRules'))
+          if rules is None:
+              rules=ET.SubElement(gst_root,gq('sharedRules'))
+          platoon_rules={
+              'Mechanized / Motorized Platoon': 'This selector represents the planned mobile infantry formation. Select at least two Infantry Squads and at least two Transport / Tow entries; New Recruit cannot enforce one transport per squad or transport capacity, so assign enough transport capacity to carry the infantry selected.',
+              'Armoured Platoon': 'This selector represents the planned armoured formation. Select three to five Tank / SPG entries. The data set does not currently model a separate command-vehicle upgrade, so nominate one selected vehicle as the platoon command vehicle when required by the scenario or rules being used.',
+          }
+          existing_rule_names={r.get('name') for r in rules.findall(gq('rule'))}
+          for rule_name,description in platoon_rules.items():
+              if rule_name in existing_rule_names:
+                  continue
+              r=ET.SubElement(rules,gq('rule'),{'id':sid('rule',rule_name),'name':rule_name,'hidden':'false'})
+              d=ET.SubElement(r,gq('description')); d.text=description
+
+          gst.write('Bolt Action - Foxhole.gst',encoding='UTF-8',xml_declaration=True)
           for path in ['Colonial Legion.cat','Bolt Action - Foxhole.gst','index.xml']:
               ET.parse(path); print('XML OK:',path)
           print('Squad-size controls added:',size_added)
           print('Weapon upgrade selections added:',weapon_added)
+          print('Force selectors ensured: Colonial Mechanized / Motorized Platoon, Colonial Armoured Platoon')
           PY
       - name: Commit rebuilt data
         shell: bash
