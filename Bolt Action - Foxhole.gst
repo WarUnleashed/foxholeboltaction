@@ -1,5 +1,5 @@
-<?xml version='1.0' encoding='utf-8'?>
-<ns0:gameSystem xmlns:ns0="http://www.battlescribe.net/schema/gameSystemSchema" id="4c6f1c8a-9f4d-4e4d-b2f7-2d71860d3f21" name="Bolt Action: Foxhole Colonial Legion (Unofficial)" revision="1" battleScribeVersion="2.03" authorName="Generated from Armies of the Colonial Legion Alpha 0.1">
+<?xml version='1.0' encoding='UTF-8'?>
+<gameSystem xmlns="http://www.battlescribe.net/schema/gameSystemSchema" id="4c6f1c8a-9f4d-4e4d-b2f7-2d71860d3f21" name="Bolt Action: Foxhole Colonial Legion (Unofficial)" revision="1" battleScribeVersion="2.03" authorName="Generated from Armies of the Colonial Legion Alpha 0.1" type="gameSystem">
   <costTypes>
     <costType id="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" name="pts" defaultCostLimit="-1.0" />
   </costTypes>
@@ -124,4 +124,4 @@
       <description>Uprated Green units grant +1 morale to nearby inexperienced Green units; nearby Green units uprate on 4+ instead of 5+.</description>
     </rule>
   </sharedRules>
-</ns0:gameSystem>
+</gameSystem>
