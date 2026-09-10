@@ -1,0 +1,117 @@
+name: Add weapon profiles and fix roster model propagation
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/add-weapon-profiles-and-fix-roster-models.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Apply supplied Bolt Action weapon profiles and roster fixes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import re, uuid, xml.etree.ElementTree as ET
+          CAT='Colonial Legion.cat'; NS='http://www.battlescribe.net/schema/catalogueSchema'; REV='28'
+          ET.register_namespace('',NS); q=lambda x:f'{{{NS}}}{x}'; ln=lambda x:x.rsplit('}',1)[-1]
+          tree=ET.parse(CAT); root=tree.getroot()
+          def norm(s): return re.sub(r'[^a-z0-9]+',' ',(s or '').lower()).strip()
+          # User-supplied BA3 weapon chart. Only apply where a catalogue weapon name can be mapped safely.
+          profiles={
+            'rifle':('24','1','-','-'),'pistol':('6','1','-','Assault'),'submachine gun':('12','2','-','Assault'),'smg':('12','2','-','Assault'),
+            'automatic rifle':('30','2','-','-'),'assault rifle':('18','2','-','Assault'),'light machine gun':('36','4','-','Team'),'lmg':('36','4','-','Team'),
+            'medium machine gun':('36','5','-','Team, Fixed'),'mmg':('36','5','-','Team, Fixed'),'heavy machine gun':('36','3','+1','Team, Fixed'),'hmg':('36','3','+1','Team, Fixed'),
+            'light automatic cannon':('48','2','+2','Team, Fixed, HE (1”)'),'heavy automatic cannon':('72','2','+3','Team, Fixed, HE (1”)'),
+            'anti tank rifle':('36','1','+2','Team'),'light at gun':('48','1','+4','Team, Fixed, HE (1”)'),'light anti tank gun':('48','1','+4','Team, Fixed, HE (1”)'),
+            'medium at gun':('60','1','+5','Team, Fixed, HE (1”)'),'medium anti tank gun':('60','1','+5','Team, Fixed, HE (1”)'),
+            'heavy at gun':('72','1','+6','Team, Fixed, HE (2”)'),'heavy anti tank gun':('72','1','+6','Team, Fixed, HE (2”)'),
+            'super heavy at gun':('84','1','+7','Team, Fixed, HE (3”)'),'super heavy anti tank gun':('84','1','+7','Team, Fixed, HE (3”)'),
+            'light mortar':('12-24','1','HE','Team, Indirect Fire, HE (1”)'),'medium mortar':('12-60','1','HE','Team, Fixed, Indirect Fire, HE (2”)'),'heavy mortar':('12-72','1','HE','Team, Fixed, Indirect Fire, HE (3”)'),
+            'light howitzer':('48 (or 24-60)','1','HE','Team, Fixed, Howitzer, HE (2”)'),'medium howitzer':('60 (or 30-72)','1','HE','Team, Fixed, Howitzer, HE (3”)'),'heavy howitzer':('72 (or 36-84)','1','HE','Team, Fixed, Howitzer, HE (4”)'),
+          }
+          # Explicit known Foxhole weapon -> BA class mappings from information supplied so far.
+          explicit={'68mm medium anti tank gun':'medium anti tank gun','75mm heavy anti tank gun':'heavy anti tank gun','94 5 mm super heavy anti tank gun':'super heavy anti tank gun','94 5 mm super heavy anti tank rifle':'super heavy anti tank gun'}
+          def class_for(name):
+            n=norm(name)
+            if n in explicit:return explicit[n]
+            # longest match prevents rifle from swallowing automatic/assault rifle
+            for k in sorted(profiles,key=len,reverse=True):
+              if norm(k) in n:return k
+            return None
+          def ensure_rules(node, text):
+            rules=node.find(q('rules'))
+            if rules is None: rules=ET.SubElement(node,q('rules'))
+            rid=str(uuid.uuid5(uuid.NAMESPACE_URL,'foxhole-ba3-profile:'+node.get('id','')+':weapon'))
+            r=next((x for x in rules.findall(q('rule')) if x.get('name')=='Weapon profile'),None)
+            if r is None:r=ET.SubElement(rules,q('rule'),{'id':rid,'name':'Weapon profile','hidden':'false'})
+            d=r.find(q('description'))
+            if d is None:d=ET.SubElement(r,q('description'))
+            d.text=text
+          updated=0
+          for node in root.iter():
+            if ln(node.tag) not in ('selectionEntry','selectionEntryLink'):continue
+            cls=class_for(node.get('name',''))
+            if not cls:continue
+            rng,shots,pen,special=profiles[cls]
+            ensure_rules(node,f'Range: {rng}”. Shots: {shots}. Pen: {pen}. Special Rules: {special}.')
+            updated+=1
+          # Swords: remove unconditional Stubborn. Fanatics selection owns Fanatics rule; conditional Stubborn stays only as labelled conditional rule.
+          for unit in root.iter(q('selectionEntry')):
+            if norm(unit.get('name'))!='swords of maro squad':continue
+            for parent in unit.iter():
+              rules=parent.find(q('rules'))
+              if rules is not None:
+                for r in list(rules):
+                  if norm(r.get('name'))=='stubborn': rules.remove(r)
+              infos=parent.find(q('infoLinks'))
+              if infos is not None:
+                for x in list(infos):
+                  if norm(x.get('name'))=='stubborn': infos.remove(x)
+          # Remove Attached Transport/Tow from Paratroopers at every nesting level.
+          for unit in root.iter(q('selectionEntry')):
+            if 'paratrooper squad' not in norm(unit.get('name')):continue
+            for parent in unit.iter():
+              for container_name in ('selectionEntryGroups','entryLinks'):
+                c=parent.find(q(container_name))
+                if c is not None:
+                  for x in list(c):
+                    if 'attached transport' in norm(x.get('name')):c.remove(x)
+          root.set('revision',REV); root.set('gameSystemRevision',REV)
+          tree.write(CAT,encoding='UTF-8',xml_declaration=True); ET.parse(CAT)
+          print('Weapon profile annotations updated:',updated)
+          PY
+      - name: Synchronize repository revision
+        shell: bash
+        run: |
+          python - <<'PY'
+          import xml.etree.ElementTree as ET
+          REV='28'; CATNS='http://www.battlescribe.net/schema/catalogueSchema'; GSTNS='http://www.battlescribe.net/schema/gameSystemSchema'; IDXNS='http://www.battlescribe.net/schema/dataIndexSchema'
+          ET.register_namespace('',CATNS)
+          for p in ('Colonial Legion.cat','Warden Army.cat'):
+            t=ET.parse(p); t.getroot().set('revision',REV); t.getroot().set('gameSystemRevision',REV); t.write(p,encoding='UTF-8',xml_declaration=True)
+          ET.register_namespace('',GSTNS); t=ET.parse('Bolt Action - Foxhole.gst'); t.getroot().set('revision',REV); t.write('Bolt Action - Foxhole.gst',encoding='UTF-8',xml_declaration=True)
+          ET.register_namespace('',IDXNS); t=ET.parse('index.xml')
+          for x in t.getroot().iter():
+            if x.tag.rsplit('}',1)[-1]=='dataIndexEntry':x.set('dataRevision',REV)
+          t.write('index.xml',encoding='UTF-8',xml_declaration=True)
+          for p in ('Colonial Legion.cat','Warden Army.cat','Bolt Action - Foxhole.gst','index.xml'):ET.parse(p)
+          PY
+      - name: Commit generated data
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add 'Colonial Legion.cat' 'Warden Army.cat' 'Bolt Action - Foxhole.gst' index.xml
+          if git diff --cached --quiet; then echo 'No changes'; exit 0; fi
+          git commit -m 'Add supplied Bolt Action weapon profiles and roster fixes'
+          git push
