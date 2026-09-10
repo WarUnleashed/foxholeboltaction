@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<catalogue xmlns="http://www.battlescribe.net/schema/catalogueSchema" id="8f43f0a9-20e0-52cf-b5c5-2f8a0c5d0001" name="Warden Army - Armies of Caoiva" revision="7" battleScribeVersion="2.03" gameSystemId="4c6f1c8a-9f4d-4e4d-b2f7-2d71860d3f21" gameSystemRevision="7" library="false" type="catalogue">
+<catalogue xmlns="http://www.battlescribe.net/schema/catalogueSchema" id="8f43f0a9-20e0-52cf-b5c5-2f8a0c5d0001" name="Warden Army - Armies of Caoiva" revision="8" battleScribeVersion="2.03" gameSystemId="4c6f1c8a-9f4d-4e4d-b2f7-2d71860d3f21" gameSystemRevision="8" library="false" type="catalogue">
   <forceEntries><forceEntry id="04992577-e146-5453-afb1-457912d24c5b" name="Warden Reinforced Platoon" hidden="false">
       <categoryLinks>
         <categoryLink id="303dc0f4-f777-5b41-bbf6-d3f176ddb697" name="Lieutenant" hidden="false" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="false">
@@ -29,7 +29,7 @@
             <constraint field="selections" scope="force" value="5" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="ff9aa780-97e8-5518-9254-248e1c8e6a01" />
           </constraints>
         </categoryLink>
-        <categoryLink id="edf529a5-6807-5a77-af72-23d34d415344" name="Machine Gun Team" hidden="false" targetId="df95158d-692a-545b-b6da-9fc45eb1f7fa" primary="false">
+        <categoryLink id="edf529a5-6807-5a77-af72-23d34d415344" name="Heavy Weapons Team" hidden="false" targetId="df95158d-692a-545b-b6da-9fc45eb1f7fa" primary="false">
           <constraints>
             <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="cd2b416b-4a53-5885-9800-7eabf465e172" />
           </constraints>
@@ -96,7 +96,7 @@
             <constraint field="selections" scope="force" value="5" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="20d62309-6b22-54f6-af61-d8023108ce83" />
           </constraints>
         </categoryLink>
-        <categoryLink id="ec087789-ede8-5615-b83e-da5af0d438cc" name="Machine Gun Team" hidden="false" targetId="df95158d-692a-545b-b6da-9fc45eb1f7fa" primary="false">
+        <categoryLink id="ec087789-ede8-5615-b83e-da5af0d438cc" name="Heavy Weapons Team" hidden="false" targetId="df95158d-692a-545b-b6da-9fc45eb1f7fa" primary="false">
           <constraints>
             <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="1a4b8f55-0926-58ca-8c89-c6c812bbf63e" />
           </constraints>
@@ -6255,7 +6255,7 @@
     <selectionEntries /></selectionEntry>
     <selectionEntry id="c9b3ddd8-915e-5477-b6c9-abada0385442" name="Ratcatcher Machine Gun Team (Inexperienced)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
-        <categoryLink id="d1a9b6e8-59c7-579a-84ab-092762546e23" name="Machine Gun Team" hidden="false" targetId="df95158d-692a-545b-b6da-9fc45eb1f7fa" primary="true" />
+        <categoryLink id="d1a9b6e8-59c7-579a-84ab-092762546e23" name="Heavy Weapons Team" hidden="false" targetId="df95158d-692a-545b-b6da-9fc45eb1f7fa" primary="true" />
       </categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="35.0" />
@@ -6269,7 +6269,7 @@
     <selectionEntries><selectionEntry id="94ce6906-2c31-5e76-8fed-d1620382b428" name="Machine Gun Crew" hidden="false" collective="false" import="true" type="model"><constraints><constraint field="selections" scope="parent" value="3" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="min" id="dee81e07-ddfd-57c8-806d-5b9cb0809503" /><constraint field="selections" scope="parent" value="3" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="865a498d-7383-5f0b-b0a4-e3e748d12f3a" /></constraints></selectionEntry></selectionEntries></selectionEntry>
     <selectionEntry id="f2168b0b-3f6f-567c-b83f-129b0b287b33" name="Ratcatcher Machine Gun Team (Regular)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
-        <categoryLink id="0d78f72d-c3ef-5a1a-b3e2-45e159f265ff" name="Machine Gun Team" hidden="false" targetId="df95158d-692a-545b-b6da-9fc45eb1f7fa" primary="true" />
+        <categoryLink id="0d78f72d-c3ef-5a1a-b3e2-45e159f265ff" name="Heavy Weapons Team" hidden="false" targetId="df95158d-692a-545b-b6da-9fc45eb1f7fa" primary="true" />
       </categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="50.0" />
@@ -6283,7 +6283,7 @@
     <selectionEntries><selectionEntry id="07dcc282-3429-59ca-8f20-247501668232" name="Machine Gun Crew" hidden="false" collective="false" import="true" type="model"><constraints><constraint field="selections" scope="parent" value="3" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="min" id="92b3dc05-3ed9-58a0-89da-f3130c430ad3" /><constraint field="selections" scope="parent" value="3" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="59997a28-0997-54cf-8429-1b6bf8367c39" /></constraints></selectionEntry></selectionEntries></selectionEntry>
     <selectionEntry id="0ccb672b-6e2c-5f4d-9cd1-b4c40f247a00" name="Ratcatcher Machine Gun Team (Veteran)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
-        <categoryLink id="0160b08a-d6e7-5adc-9847-c927af4cec2d" name="Machine Gun Team" hidden="false" targetId="df95158d-692a-545b-b6da-9fc45eb1f7fa" primary="true" />
+        <categoryLink id="0160b08a-d6e7-5adc-9847-c927af4cec2d" name="Heavy Weapons Team" hidden="false" targetId="df95158d-692a-545b-b6da-9fc45eb1f7fa" primary="true" />
       </categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="65.0" />
@@ -6381,8 +6381,7 @@
     <selectionEntries><selectionEntry id="32a0d2a7-d7e0-5095-9b0e-19add9f6e83c" name="Anti-Tank Crew" hidden="false" collective="false" import="true" type="model"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="min" id="d73ad702-42e7-5fe0-b24d-3135624b081c" /><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="0f39032a-d2ac-54f5-8ee7-28513a151675" /></constraints></selectionEntry></selectionEntries></selectionEntry>
     <selectionEntry id="ba6595fc-8e19-5770-a0ac-48d20b918ee1" name="Cutler Foebreaker Team (Inexperienced)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
-        <categoryLink id="da3f885f-34e3-53b0-a464-66c1b0c0482d" name="Anti-Tank Team" hidden="false" targetId="3cf48c43-9058-564e-901a-e3098be16d2f" primary="true" />
-      </categoryLinks>
+        <categoryLink id="ac785b7d-b61f-56a5-89e1-96489337b989" name="Heavy Weapons Team" hidden="false" targetId="df95158d-692a-545b-b6da-9fc45eb1f7fa" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="60.0" />
       </costs>
@@ -6395,8 +6394,7 @@
     <selectionEntries><selectionEntry id="f8c41993-1607-5129-ba03-dc980a64bceb" name="Anti-Tank Crew" hidden="false" collective="false" import="true" type="model"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="min" id="c73be89d-de47-55be-a87c-01feae7ddad5" /><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="6715831a-6b97-5d05-9e2d-d066cac5efd0" /></constraints></selectionEntry></selectionEntries></selectionEntry>
     <selectionEntry id="df77041f-9ffc-58e3-ac26-53829ad64b16" name="Cutler Foebreaker Team (Regular)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
-        <categoryLink id="af29c9bc-d957-5ed6-9582-c6cc0f69ee70" name="Anti-Tank Team" hidden="false" targetId="3cf48c43-9058-564e-901a-e3098be16d2f" primary="true" />
-      </categoryLinks>
+        <categoryLink id="31866b34-8d2a-55ad-8875-e3c3aa08a0c5" name="Heavy Weapons Team" hidden="false" targetId="df95158d-692a-545b-b6da-9fc45eb1f7fa" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="75.0" />
       </costs>
@@ -6409,8 +6407,7 @@
     <selectionEntries><selectionEntry id="4203ee1d-6038-5569-8fa7-d895091fa0c8" name="Anti-Tank Crew" hidden="false" collective="false" import="true" type="model"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="min" id="b2e9194a-8f37-5ec2-bf57-8a87cafffd03" /><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="4f7aa49f-9150-57be-8b6a-5f1e38225fcd" /></constraints></selectionEntry></selectionEntries></selectionEntry>
     <selectionEntry id="b82a5788-d6cb-509b-a75f-83ea9f7154fc" name="Cutler Foebreaker Team (Veteran)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
-        <categoryLink id="75baac57-a1c7-550a-ad88-6102101a238e" name="Anti-Tank Team" hidden="false" targetId="3cf48c43-9058-564e-901a-e3098be16d2f" primary="true" />
-      </categoryLinks>
+        <categoryLink id="659eba16-1229-53d9-98c9-1c1adca50439" name="Heavy Weapons Team" hidden="false" targetId="df95158d-692a-545b-b6da-9fc45eb1f7fa" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="90.0" />
       </costs>
@@ -6423,8 +6420,7 @@
     <selectionEntries><selectionEntry id="6d13dabd-e54a-5d8c-8e2c-8128ac745ebd" name="Anti-Tank Crew" hidden="false" collective="false" import="true" type="model"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="min" id="2c01387a-814c-53b3-b4ee-dc13eb8b7cc4" /><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="ec81dcda-03b2-5503-9af1-d636ace30407" /></constraints></selectionEntry></selectionEntries></selectionEntry>
     <selectionEntry id="fb1de11f-771a-5434-a53e-097aee79b9f6" name="Bonesaw Mk. 3 Team (Inexperienced)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
-        <categoryLink id="a1dcdc72-0d76-568e-a987-dbf35401ab47" name="Anti-Tank Team" hidden="false" targetId="3cf48c43-9058-564e-901a-e3098be16d2f" primary="true" />
-      </categoryLinks>
+        <categoryLink id="07eeb607-5102-5073-bd27-52f4df20df6c" name="Heavy Weapons Team" hidden="false" targetId="df95158d-692a-545b-b6da-9fc45eb1f7fa" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="52.0" />
       </costs>
@@ -6437,8 +6433,7 @@
     <selectionEntries><selectionEntry id="7ed46d16-bea0-542c-9725-3702f3baf6c7" name="Anti-Tank Crew" hidden="false" collective="false" import="true" type="model"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="min" id="5a14817f-7c4f-5d73-bec2-4e85a2631704" /><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="bbcc02be-a1e5-5695-9c11-4e728aa4a614" /></constraints></selectionEntry></selectionEntries></selectionEntry>
     <selectionEntry id="71fe2c6e-b59d-5d6a-a327-f2de5816b331" name="Bonesaw Mk. 3 Team (Regular)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
-        <categoryLink id="a45f2794-3dbb-5a40-9d47-a753ab0fdb94" name="Anti-Tank Team" hidden="false" targetId="3cf48c43-9058-564e-901a-e3098be16d2f" primary="true" />
-      </categoryLinks>
+        <categoryLink id="a257a600-2076-5754-be94-541a4528fd91" name="Heavy Weapons Team" hidden="false" targetId="df95158d-692a-545b-b6da-9fc45eb1f7fa" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="65.0" />
       </costs>
@@ -6451,8 +6446,7 @@
     <selectionEntries><selectionEntry id="a4a3f0c2-3bb5-5fa3-9a75-f9cd0df5c751" name="Anti-Tank Crew" hidden="false" collective="false" import="true" type="model"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="min" id="5fb82450-f08e-51c4-9979-e3d53aadc597" /><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="5d99cb7c-4c1f-5ace-9a58-7db0c02fbe9f" /></constraints></selectionEntry></selectionEntries></selectionEntry>
     <selectionEntry id="cdc0b430-1703-5fbf-ab19-d1560d580079" name="Bonesaw Mk. 3 Team (Veteran)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
-        <categoryLink id="99f65726-0609-5a2d-9849-f8c6c5876342" name="Anti-Tank Team" hidden="false" targetId="3cf48c43-9058-564e-901a-e3098be16d2f" primary="true" />
-      </categoryLinks>
+        <categoryLink id="9cdab1c5-7ce0-5cbb-9f2a-145eefd44a20" name="Heavy Weapons Team" hidden="false" targetId="df95158d-692a-545b-b6da-9fc45eb1f7fa" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="78.0" />
       </costs>
@@ -6465,8 +6459,7 @@
     <selectionEntries><selectionEntry id="430fbe86-3ed2-544b-8e4c-b77fc5125284" name="Anti-Tank Crew" hidden="false" collective="false" import="true" type="model"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="min" id="7a496ede-6056-518d-b579-6913ef5211c7" /><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="d54e5fda-8c2f-5bd8-bb64-4980bf1c9a9c" /></constraints></selectionEntry></selectionEntries></selectionEntry>
     <selectionEntry id="6b054d95-0da4-594b-9b1e-3a6bf2a54587" name="Mounted Bonesaw Mk. 3 Team (Inexperienced)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
-        <categoryLink id="9ecaca5e-74ee-5460-86cc-51fdd89764ad" name="Anti-Tank Team" hidden="false" targetId="3cf48c43-9058-564e-901a-e3098be16d2f" primary="true" />
-      </categoryLinks>
+        <categoryLink id="470eb502-9cb8-5c6a-9764-99149940a124" name="Heavy Weapons Team" hidden="false" targetId="df95158d-692a-545b-b6da-9fc45eb1f7fa" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="60.0" />
       </costs>
@@ -6479,8 +6472,7 @@
     <selectionEntries><selectionEntry id="4bd94577-e2ac-5328-a73c-1db284602ef4" name="Anti-Tank Crew" hidden="false" collective="false" import="true" type="model"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="min" id="8acd330c-f4b0-5b93-9aa7-4f81757f569d" /><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="5ce980ac-10c6-5993-9489-4923e7deaf3c" /></constraints></selectionEntry></selectionEntries></selectionEntry>
     <selectionEntry id="a2163b5e-b462-5339-94d5-d751084316d7" name="Mounted Bonesaw Mk. 3 Team (Regular)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
-        <categoryLink id="0282d7ca-a63b-5f85-9cfe-5830e1ac80eb" name="Anti-Tank Team" hidden="false" targetId="3cf48c43-9058-564e-901a-e3098be16d2f" primary="true" />
-      </categoryLinks>
+        <categoryLink id="157f65e5-a23f-5c3e-bfde-e14275af316f" name="Heavy Weapons Team" hidden="false" targetId="df95158d-692a-545b-b6da-9fc45eb1f7fa" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="75.0" />
       </costs>
@@ -6493,8 +6485,7 @@
     <selectionEntries><selectionEntry id="6ee69940-63af-5221-a4c9-27a5e1f8e472" name="Anti-Tank Crew" hidden="false" collective="false" import="true" type="model"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="min" id="fc5c20d5-088d-5f20-bc57-edbb617cfd8c" /><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="57c07ed7-350f-5155-b339-0a0493e777ac" /></constraints></selectionEntry></selectionEntries></selectionEntry>
     <selectionEntry id="c8ae75ba-ad6d-5552-ada9-049ca7ada784" name="Mounted Bonesaw Mk. 3 Team (Veteran)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
-        <categoryLink id="25de8dcc-74f9-529d-ab01-9bea84f072a3" name="Anti-Tank Team" hidden="false" targetId="3cf48c43-9058-564e-901a-e3098be16d2f" primary="true" />
-      </categoryLinks>
+        <categoryLink id="ac1cd58e-45fd-542d-8847-d2d8586d259e" name="Heavy Weapons Team" hidden="false" targetId="df95158d-692a-545b-b6da-9fc45eb1f7fa" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="90.0" />
       </costs>
