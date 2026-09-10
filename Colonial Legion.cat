@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<catalogue xmlns="http://www.battlescribe.net/schema/catalogueSchema" id="ca91b894-5f26-495d-9309-6515686fcd24" name="Colonial Legion - Armies of the Colonial Legion Alpha 0.1" revision="2" battleScribeVersion="2.03" gameSystemId="4c6f1c8a-9f4d-4e4d-b2f7-2d71860d3f21" gameSystemRevision="2" library="false" type="catalogue">
+<catalogue xmlns="http://www.battlescribe.net/schema/catalogueSchema" id="ca91b894-5f26-495d-9309-6515686fcd24" name="Colonial Legion - Armies of the Colonial Legion Alpha 0.1" revision="3" battleScribeVersion="2.03" gameSystemId="4c6f1c8a-9f4d-4e4d-b2f7-2d71860d3f21" gameSystemRevision="3" library="false" type="catalogue">
   <forceEntries><forceEntry id="628a182c-b681-58a5-a683-a2ebf780f726" name="Colonial Reinforced Platoon" hidden="false">
       <categoryLinks>
         <categoryLink id="c5053338-dda6-5cd2-8506-45ee7f83ee73" name="Lieutenant" hidden="false" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="false">
@@ -36,7 +36,7 @@
         </categoryLink>
         <categoryLink id="faa9621f-b17a-5272-99df-a2917c8f4ff8" name="Mortar Team" hidden="false" targetId="f8cf368a-5e9a-5d56-8e8f-5a5e9a7977b4" primary="false">
           <constraints>
-            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="9ea6117d-6dc5-551b-9410-b4a88208070e" />
+            <constraint field="selections" scope="force" value="2" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="9ea6117d-6dc5-551b-9410-b4a88208070e" />
           </constraints>
         </categoryLink>
         <categoryLink id="0065c12b-6598-5407-938b-19b736926437" name="Sniper Team" hidden="false" targetId="62025d03-4255-56ea-870e-c3399170789d" primary="false">
@@ -51,12 +51,12 @@
         </categoryLink>
         <categoryLink id="cf016f46-6433-5ae7-aa8a-819b9fc4d4f2" name="Field / Emplaced / Immobile Weapon" hidden="false" targetId="75cd78ea-f7b0-5366-b2b5-cfcaa6ba2fc6" primary="false">
           <constraints>
-            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="9d8879f9-37d4-54c7-a27e-f7fb573f779d" />
+            <constraint field="selections" scope="force" value="2" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="9d8879f9-37d4-54c7-a27e-f7fb573f779d" />
           </constraints>
         </categoryLink>
         <categoryLink id="de864b20-0dbb-508b-bbf3-28832e4cb7f4" name="Armoured Car" hidden="false" targetId="6e1678b3-02f8-5430-9f5b-e3da292b8625" primary="false">
           <constraints>
-            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="679ec7f3-e95b-5e7a-953b-581e7a15ef65" />
+            <constraint field="selections" scope="force" value="2" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="679ec7f3-e95b-5e7a-953b-581e7a15ef65" />
           </constraints>
         </categoryLink>
         <categoryLink id="50f1e0d1-7273-5337-9e11-2e320de8e86d" name="Tank / SPG" hidden="false" targetId="0f9945cb-0ce1-521e-8f54-35857994efd8" primary="false">
@@ -103,7 +103,7 @@
         </categoryLink>
         <categoryLink id="f27e7941-056a-514b-89e1-1aac3f8f473f" name="Mortar Team" hidden="false" targetId="f8cf368a-5e9a-5d56-8e8f-5a5e9a7977b4" primary="false">
           <constraints>
-            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="217f36d4-dcb6-56d0-b243-325e99193567" />
+            <constraint field="selections" scope="force" value="2" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="217f36d4-dcb6-56d0-b243-325e99193567" />
           </constraints>
         </categoryLink>
         <categoryLink id="3df6f462-e505-5f83-adcc-5d88cf995002" name="Sniper Team" hidden="false" targetId="62025d03-4255-56ea-870e-c3399170789d" primary="false">
@@ -118,12 +118,12 @@
         </categoryLink>
         <categoryLink id="025c0a2f-efb0-503e-9576-d7b6e8fe8a76" name="Field / Emplaced / Immobile Weapon" hidden="false" targetId="75cd78ea-f7b0-5366-b2b5-cfcaa6ba2fc6" primary="false">
           <constraints>
-            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="e701b206-06a4-5939-9a27-d8e044734e7e" />
+            <constraint field="selections" scope="force" value="2" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="e701b206-06a4-5939-9a27-d8e044734e7e" />
           </constraints>
         </categoryLink>
         <categoryLink id="c5f0cfdf-881d-51bf-b884-9ae0432c7703" name="Armoured Car" hidden="false" targetId="6e1678b3-02f8-5430-9f5b-e3da292b8625" primary="false">
           <constraints>
-            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="10787656-0077-52a7-b640-e7165ecd7aed" />
+            <constraint field="selections" scope="force" value="2" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="10787656-0077-52a7-b640-e7165ecd7aed" />
           </constraints>
         </categoryLink>
         <categoryLink id="de3e48fc-693d-57d9-86ad-0ba13e6ae30f" name="Tank / SPG" hidden="false" targetId="0f9945cb-0ce1-521e-8f54-35857994efd8" primary="false">

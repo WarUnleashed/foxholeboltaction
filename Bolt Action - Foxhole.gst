@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<gameSystem xmlns="http://www.battlescribe.net/schema/gameSystemSchema" id="4c6f1c8a-9f4d-4e4d-b2f7-2d71860d3f21" name="Bolt Action: Foxhole (Unofficial)" revision="2" battleScribeVersion="2.03" authorName="Foxhole Bolt Action data" type="gameSystem">
+<gameSystem xmlns="http://www.battlescribe.net/schema/gameSystemSchema" id="4c6f1c8a-9f4d-4e4d-b2f7-2d71860d3f21" name="Bolt Action: Foxhole (Unofficial)" revision="3" battleScribeVersion="2.03" authorName="Foxhole Bolt Action data" type="gameSystem">
   <costTypes>
     <costType id="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" name="pts" defaultCostLimit="-1.0" />
   </costTypes>

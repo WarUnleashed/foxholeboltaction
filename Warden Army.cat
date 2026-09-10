@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<catalogue xmlns="http://www.battlescribe.net/schema/catalogueSchema" id="8f43f0a9-20e0-52cf-b5c5-2f8a0c5d0001" name="Warden Army - Armies of Caoiva" revision="2" battleScribeVersion="2.03" gameSystemId="4c6f1c8a-9f4d-4e4d-b2f7-2d71860d3f21" gameSystemRevision="2" library="false" type="catalogue">
+<catalogue xmlns="http://www.battlescribe.net/schema/catalogueSchema" id="8f43f0a9-20e0-52cf-b5c5-2f8a0c5d0001" name="Warden Army - Armies of Caoiva" revision="3" battleScribeVersion="2.03" gameSystemId="4c6f1c8a-9f4d-4e4d-b2f7-2d71860d3f21" gameSystemRevision="3" library="false" type="catalogue">
   <forceEntries><forceEntry id="04992577-e146-5453-afb1-457912d24c5b" name="Warden Reinforced Platoon" hidden="false">
       <categoryLinks>
         <categoryLink id="303dc0f4-f777-5b41-bbf6-d3f176ddb697" name="Lieutenant" hidden="false" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="false">
@@ -36,7 +36,7 @@
         </categoryLink>
         <categoryLink id="609a7b3d-4bbc-582c-8303-433da9a7a688" name="Mortar Team" hidden="false" targetId="f8cf368a-5e9a-5d56-8e8f-5a5e9a7977b4" primary="false">
           <constraints>
-            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="a7751dfb-0c66-54fc-a92a-5964311b7b40" />
+            <constraint field="selections" scope="force" value="2" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="a7751dfb-0c66-54fc-a92a-5964311b7b40" />
           </constraints>
         </categoryLink>
         <categoryLink id="5f062391-8c6c-598f-9471-615367a7020f" name="Sniper Team" hidden="false" targetId="62025d03-4255-56ea-870e-c3399170789d" primary="false">
@@ -51,12 +51,12 @@
         </categoryLink>
         <categoryLink id="02894e5c-299d-5ef5-a118-2f4c463d1046" name="Field / Emplaced / Immobile Weapon" hidden="false" targetId="75cd78ea-f7b0-5366-b2b5-cfcaa6ba2fc6" primary="false">
           <constraints>
-            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="6a522e36-f60d-5ff0-8efc-b67abc8c5819" />
+            <constraint field="selections" scope="force" value="2" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="6a522e36-f60d-5ff0-8efc-b67abc8c5819" />
           </constraints>
         </categoryLink>
         <categoryLink id="9208e173-dc4f-52f2-a959-b05f51c81ab6" name="Armoured Car" hidden="false" targetId="6e1678b3-02f8-5430-9f5b-e3da292b8625" primary="false">
           <constraints>
-            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="3a461e21-898a-5d09-9bb9-9c597dfe809f" />
+            <constraint field="selections" scope="force" value="2" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="3a461e21-898a-5d09-9bb9-9c597dfe809f" />
           </constraints>
         </categoryLink>
         <categoryLink id="24c482b6-cee3-5b31-b6cf-d951f712e998" name="Tank / SPG" hidden="false" targetId="0f9945cb-0ce1-521e-8f54-35857994efd8" primary="false">
@@ -103,7 +103,7 @@
         </categoryLink>
         <categoryLink id="dd99973d-e71e-536b-afd1-a93a5214791c" name="Mortar Team" hidden="false" targetId="f8cf368a-5e9a-5d56-8e8f-5a5e9a7977b4" primary="false">
           <constraints>
-            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="eab2d438-a60d-5677-b4b8-f4f070bedae2" />
+            <constraint field="selections" scope="force" value="2" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="eab2d438-a60d-5677-b4b8-f4f070bedae2" />
           </constraints>
         </categoryLink>
         <categoryLink id="40e4440c-ca26-5414-851f-31f435f26af4" name="Sniper Team" hidden="false" targetId="62025d03-4255-56ea-870e-c3399170789d" primary="false">
@@ -118,12 +118,12 @@
         </categoryLink>
         <categoryLink id="a49c135c-35e6-5d81-b7cc-89dd9e690735" name="Field / Emplaced / Immobile Weapon" hidden="false" targetId="75cd78ea-f7b0-5366-b2b5-cfcaa6ba2fc6" primary="false">
           <constraints>
-            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="b6ebd636-4a9f-5fe1-98c8-74324b940754" />
+            <constraint field="selections" scope="force" value="2" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="b6ebd636-4a9f-5fe1-98c8-74324b940754" />
           </constraints>
         </categoryLink>
         <categoryLink id="7ee508c1-c868-57db-aca5-bdccc06b53f3" name="Armoured Car" hidden="false" targetId="6e1678b3-02f8-5430-9f5b-e3da292b8625" primary="false">
           <constraints>
-            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="65197489-6ee1-5178-908b-36f371f6ae25" />
+            <constraint field="selections" scope="force" value="2" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="65197489-6ee1-5178-908b-36f371f6ae25" />
           </constraints>
         </categoryLink>
         <categoryLink id="2b957339-d651-5186-9549-047f6431e04d" name="Tank / SPG" hidden="false" targetId="0f9945cb-0ce1-521e-8f54-35857994efd8" primary="false">
@@ -4405,11 +4405,6 @@
             <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="627056d1-0bf0-5428-afdd-fe80af3b69dc" />
           </constraints>
           <entryLinks>
-            <entryLink id="d9421716-e2c8-50e5-9cc5-486960ee1b38" name="Coastal Gun (Inexperienced)" hidden="false" collective="false" import="true" targetId="4add8752-6e30-597e-802d-1d86ff5c9866" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="e4d305ba-91aa-5d71-9671-74d36c18b207" />
-              </constraints>
-            </entryLink>
             <entryLink id="cb36c6ef-3378-57b2-94f5-0b1b3b16e661" name="Niska Mk. I Gun Motor Carriage (Inexperienced)" hidden="false" collective="false" import="true" targetId="3e55271d-a823-535a-a553-9732448549f0" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="2bf78669-5aaf-5120-ae93-ca325b9fa5eb" />
@@ -4418,16 +4413,6 @@
             <entryLink id="815cb985-d8ee-5330-84a1-018585b23ffa" name="Mulloy LPC (Inexperienced)" hidden="false" collective="false" import="true" targetId="74e8011c-bd68-5fe1-a528-02293fa4e4bd" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="d757252b-5507-5188-abe0-99fd2199ef9b" />
-              </constraints>
-            </entryLink>
-            <entryLink id="a612d453-b0e5-5e73-b5b7-147e73a01d09" name="BMS Packmule Flatbed (Inexperienced)" hidden="false" collective="false" import="true" targetId="b98c4b4a-b070-5927-8813-267d3fcfdc43" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="a7804835-c49c-5d01-bc20-fdf255330fab" />
-              </constraints>
-            </entryLink>
-            <entryLink id="5b3b0f8e-b205-5e4e-939e-9075c42364cd" name="BMS Class 2 Mobile Auto-Crane (Inexperienced)" hidden="false" collective="false" import="true" targetId="c7426e7d-06d4-5d5b-b4c7-5c090b0bb6c7" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="59a1675b-4dff-59bc-96a1-dbba29bd5648" />
               </constraints>
             </entryLink>
             <entryLink id="8678e4e6-29a6-5c6d-a88a-3bbe3331886a" name="Dunne Transport, Leatherback 2a, &amp; Landrunner 12c (Inexperienced)" hidden="false" collective="false" import="true" targetId="9d3648e7-b7a2-5088-9261-551c6de7c668" type="selectionEntry">
@@ -4450,11 +4435,6 @@
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="d74a2844-c50d-5afb-8ba1-b8c0774bc290" />
               </constraints>
             </entryLink>
-            <entryLink id="83c957c3-3a2a-597f-8be2-bec9db5effcf" name="BMS Class 3 Field Tractor (Inexperienced)" hidden="false" collective="false" import="true" targetId="93823be1-fb3b-509b-aabf-6ca7e6acab63" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="2d8a15b4-ec1e-566f-b480-7dc2481490df" />
-              </constraints>
-            </entryLink>
             <entryLink id="34049392-d11e-5ec4-82c1-2ba33bfceab3" name="Dunne Responder 3e (Inexperienced)" hidden="false" collective="false" import="true" targetId="f2f82982-40a6-5d2e-8171-5f96829371e3" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="6d8ccb23-2481-58fd-8e14-c5287a3701fd" />
@@ -4462,7 +4442,7 @@
             </entryLink>
           </entryLinks>
         </selectionEntryGroup>
-      </selectionEntryGroups>
+      <selectionEntryGroup id="8adc81e8-5a0b-56a1-bac5-09f9053dea71" name="Warden Weapon Replacements" hidden="false"><selectionEntries><selectionEntry id="dd63cb3e-e49c-5bb8-bf34-2ce41a541312" name="Automatic rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="d7d90693-9a52-5113-9ad7-0dd8b9ac052a" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="5.0" /></costs></selectionEntry></selectionEntries></selectionEntryGroup></selectionEntryGroups>
     </selectionEntry>
     <selectionEntry id="5f896580-9e05-54ee-90bc-5c54debb46c1" name="Regular Infantry Squad (Great War Era)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
@@ -4514,11 +4494,6 @@
             <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="8b032e5b-09da-57bd-8d75-4b3306005839" />
           </constraints>
           <entryLinks>
-            <entryLink id="586c3463-716c-5b77-8380-e2d73e06177e" name="Coastal Gun (Regular)" hidden="false" collective="false" import="true" targetId="c0068818-5b9e-5c26-84c4-61968f8fa274" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="98bac155-9996-5b84-902b-aa207b541e3d" />
-              </constraints>
-            </entryLink>
             <entryLink id="859eb1e8-e3a7-52bd-a763-3bc2195adc13" name="Niska Mk. I Gun Motor Carriage (Regular)" hidden="false" collective="false" import="true" targetId="0985bbc0-fee6-57bc-9875-462ea3de07bb" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="fabe3cd7-4932-5cc6-8683-f14a7ed5c224" />
@@ -4527,16 +4502,6 @@
             <entryLink id="30af9454-4ece-5e34-90a7-216967545313" name="Mulloy LPC (Regular)" hidden="false" collective="false" import="true" targetId="fe72808a-b9f0-5e8e-8b97-9d899baf44f3" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="075eca90-be92-578f-8ee8-ef40e3c74252" />
-              </constraints>
-            </entryLink>
-            <entryLink id="1d00ac74-589b-51ce-9232-c8226e243ea1" name="BMS Packmule Flatbed (Regular)" hidden="false" collective="false" import="true" targetId="025b0f41-3723-57b8-b951-2f4c804524b7" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="4b91570a-3d5e-55a9-ac65-6037a1fb94f5" />
-              </constraints>
-            </entryLink>
-            <entryLink id="cb122957-ed12-5359-94ae-f01fba76a43c" name="BMS Class 2 Mobile Auto-Crane (Regular)" hidden="false" collective="false" import="true" targetId="603d70c9-20cd-5c73-a7f1-7f2b179ebc9a" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="a8084fb5-824b-5796-8b90-27df8d2ab0d3" />
               </constraints>
             </entryLink>
             <entryLink id="42d53280-6220-57f2-9318-493980f5b1e4" name="Dunne Transport, Leatherback 2a, &amp; Landrunner 12c (Regular)" hidden="false" collective="false" import="true" targetId="ee058577-6e65-5e30-92d3-1657b8451c82" type="selectionEntry">
@@ -4559,11 +4524,6 @@
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="4642606b-8ef4-5aaf-988c-8eaadbec4aaf" />
               </constraints>
             </entryLink>
-            <entryLink id="5270952f-cf87-5736-9f1e-fad628474a11" name="BMS Class 3 Field Tractor (Regular)" hidden="false" collective="false" import="true" targetId="4fdcf713-a2ce-53a6-8a8a-27273e51c208" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="5214a05f-04d6-571b-9874-0bc830a0768f" />
-              </constraints>
-            </entryLink>
             <entryLink id="4b241d9d-7fbf-5bb6-a837-4e3d183a7fa7" name="Dunne Responder 3e (Regular)" hidden="false" collective="false" import="true" targetId="d4bbff59-c222-595a-bf5e-fedda9a4e892" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="d223b98c-8635-57de-a090-6fd9032ca958" />
@@ -4571,7 +4531,7 @@
             </entryLink>
           </entryLinks>
         </selectionEntryGroup>
-      </selectionEntryGroups>
+      <selectionEntryGroup id="8b01ae8b-cf4f-5dff-bd53-dba9b90acfde" name="Warden Weapon Replacements" hidden="false"><selectionEntries><selectionEntry id="fc3d97ff-e95d-537b-99b2-2e866ca25af6" name="NCO submachine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="9dd0a94f-06e6-54b3-9d31-533662f1bc09" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="3.0" /></costs></selectionEntry><selectionEntry id="b9b57c0d-e81a-5b09-8a73-563c5bec4472" name="Automatic rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="0d8676a9-75e5-5332-942a-d895d78e4263" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="5.0" /></costs></selectionEntry><selectionEntry id="ec3d4856-0c38-53f3-bb9f-321d44003298" name="Pistol" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="7a71d797-d6ca-5ddf-9bc7-b50a50654614" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="-3.0" /></costs></selectionEntry><selectionEntry id="2624dd64-125f-5bbe-8140-4824da329a70" name="Malone machine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="5100a688-f6a2-5d02-bfe4-418f51f3aa5a" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="20.0" /></costs></selectionEntry><selectionEntry id="782cc67c-dfb7-5e38-94c2-5cf7df420c6c" name="Grenade launcher (alongside rifle)" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="c23dacf3-a2fb-5afb-a971-d0c545b98dcb" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="20.0" /></costs></selectionEntry></selectionEntries></selectionEntryGroup></selectionEntryGroups>
     </selectionEntry>
     <selectionEntry id="4022fba0-b0b5-58ae-a0af-b3a9da343491" name="Veteran Infantry Squad (Great War Era)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
@@ -4623,11 +4583,6 @@
             <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="6585c021-ecc3-53e6-beef-0d88eeef4e90" />
           </constraints>
           <entryLinks>
-            <entryLink id="1c31ca73-e50e-54d9-a92f-efc3a30949e8" name="Coastal Gun (Veteran)" hidden="false" collective="false" import="true" targetId="0e16e4d9-c642-5e81-8738-efdec0aeedce" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="825551ff-ff62-52ba-8fc8-9bf857e667c8" />
-              </constraints>
-            </entryLink>
             <entryLink id="ce35b855-cf34-55ce-a8aa-fc7f2d17f634" name="Niska Mk. I Gun Motor Carriage (Veteran)" hidden="false" collective="false" import="true" targetId="82397978-01c8-5793-88f0-c5d07b99ba46" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="70edaa67-26ab-5389-a5b5-694f83bb34e5" />
@@ -4636,16 +4591,6 @@
             <entryLink id="c3aa1335-a877-59c2-a127-c827a8473933" name="Mulloy LPC (Veteran)" hidden="false" collective="false" import="true" targetId="100517c6-1890-5ca6-b17f-b62ce3751b33" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="860a56c2-7c51-5f59-9104-959a8bad6c39" />
-              </constraints>
-            </entryLink>
-            <entryLink id="68d5d20a-c03c-50e7-9d36-806cc0b8cb48" name="BMS Packmule Flatbed (Veteran)" hidden="false" collective="false" import="true" targetId="69004c62-e0a9-5061-b74b-0b92e8bd1896" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="1f53dd32-7f88-5721-8cf8-7afbc9cde67e" />
-              </constraints>
-            </entryLink>
-            <entryLink id="afd9d2a9-ae11-52bd-8a9b-dcf9a4b3b59b" name="BMS Class 2 Mobile Auto-Crane (Veteran)" hidden="false" collective="false" import="true" targetId="c34b690b-4183-53d4-8023-5b2a400c7588" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="bfa21864-70c3-58ea-a73c-53a748218b6a" />
               </constraints>
             </entryLink>
             <entryLink id="f952a1e1-d8bb-5a41-9250-ddfe819cf935" name="Dunne Transport, Leatherback 2a, &amp; Landrunner 12c (Veteran)" hidden="false" collective="false" import="true" targetId="189ab382-54f6-5094-bd7c-18fda190f9f6" type="selectionEntry">
@@ -4668,11 +4613,6 @@
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="b2b2f494-20f8-5e69-8257-c541d4c0527b" />
               </constraints>
             </entryLink>
-            <entryLink id="7d53039f-ec5c-50c0-ac41-5bae715fddf6" name="BMS Class 3 Field Tractor (Veteran)" hidden="false" collective="false" import="true" targetId="979068e9-83a0-5cb7-9819-7ceddfddd29c" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="55624d81-1213-58e9-b4d6-53783df5429d" />
-              </constraints>
-            </entryLink>
             <entryLink id="cbe343f8-2a20-5310-93a5-639dc9842e9d" name="Dunne Responder 3e (Veteran)" hidden="false" collective="false" import="true" targetId="9bb2b5f6-226d-5c80-a97f-c2b86322a0db" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="8c619ca8-f063-5229-b631-c12e92ed7604" />
@@ -4680,7 +4620,7 @@
             </entryLink>
           </entryLinks>
         </selectionEntryGroup>
-      </selectionEntryGroups>
+      <selectionEntryGroup id="5e3fdf33-3d76-5616-bcef-fb8c5ef5a0b2" name="Warden Weapon Replacements" hidden="false"><selectionEntries><selectionEntry id="e195f6e8-af29-50cb-9861-2b9173aacd5e" name="Submachine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="3" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="5cd7790e-a61b-57a1-81ef-a6e6c96c5597" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="3.0" /></costs></selectionEntry><selectionEntry id="ad717997-03b4-5921-876d-8ce16111cd32" name="Automatic rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="7f184567-8f3a-5afd-bd46-3c54bc42bc95" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="5.0" /></costs></selectionEntry><selectionEntry id="850e263b-f24d-5543-b0cb-e7b143bafe11" name="Pistol" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="2964ac17-7cb6-5c9b-a9d8-08351e5b91fa" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="-3.0" /></costs></selectionEntry><selectionEntry id="2aead9f1-11c7-59cc-ab38-dfdec05bc965" name="Malone machine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="635666c5-b13a-5872-8e0f-7df9865e7be5" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="20.0" /></costs></selectionEntry><selectionEntry id="0639ff12-4523-5943-9222-8ec2d101fdf8" name="Grenade launcher (alongside rifle)" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="41ec4c14-9e12-51a6-be54-0f512b45dd2a" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="20.0" /></costs></selectionEntry></selectionEntries></selectionEntryGroup></selectionEntryGroups>
     </selectionEntry>
     <selectionEntry id="489a6807-7856-596c-9182-818665ddd057" name="Reconnaissance Squad (Great War Era) (Regular)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
@@ -4732,11 +4672,6 @@
             <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="cff88bfa-4264-546b-af3b-3e3c28144d1a" />
           </constraints>
           <entryLinks>
-            <entryLink id="2eed7c52-88bc-5fc6-a680-71c2489ab953" name="Coastal Gun (Regular)" hidden="false" collective="false" import="true" targetId="c0068818-5b9e-5c26-84c4-61968f8fa274" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="961dadd6-620c-5198-b186-b60797de250f" />
-              </constraints>
-            </entryLink>
             <entryLink id="ef478533-2e0b-5198-ba7c-3f1dd8a366f1" name="Niska Mk. I Gun Motor Carriage (Regular)" hidden="false" collective="false" import="true" targetId="0985bbc0-fee6-57bc-9875-462ea3de07bb" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="2489fe31-83c9-5715-8da8-11af3893f862" />
@@ -4745,16 +4680,6 @@
             <entryLink id="9992fd9d-5988-56a5-b0a2-5bec1eb5145d" name="Mulloy LPC (Regular)" hidden="false" collective="false" import="true" targetId="fe72808a-b9f0-5e8e-8b97-9d899baf44f3" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="ed51fb8d-e127-5c9f-8500-ca33c8adb92e" />
-              </constraints>
-            </entryLink>
-            <entryLink id="4d461d45-ad5d-5c6c-bb19-c53cf4b15568" name="BMS Packmule Flatbed (Regular)" hidden="false" collective="false" import="true" targetId="025b0f41-3723-57b8-b951-2f4c804524b7" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="d1b0eb38-a6ff-5d2b-93a9-be00ec243374" />
-              </constraints>
-            </entryLink>
-            <entryLink id="8850bb82-e2ca-5cca-b245-309319b2730d" name="BMS Class 2 Mobile Auto-Crane (Regular)" hidden="false" collective="false" import="true" targetId="603d70c9-20cd-5c73-a7f1-7f2b179ebc9a" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="0b441091-18dc-55f1-891b-11939198b1ff" />
               </constraints>
             </entryLink>
             <entryLink id="c5842a82-895b-515b-94fb-afb94cc4e736" name="Dunne Transport, Leatherback 2a, &amp; Landrunner 12c (Regular)" hidden="false" collective="false" import="true" targetId="ee058577-6e65-5e30-92d3-1657b8451c82" type="selectionEntry">
@@ -4777,11 +4702,6 @@
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="bd268a07-1972-51ea-bcbd-5fb81f2e0d90" />
               </constraints>
             </entryLink>
-            <entryLink id="c19ff316-6cd1-57a7-8f76-df712a9d5a96" name="BMS Class 3 Field Tractor (Regular)" hidden="false" collective="false" import="true" targetId="4fdcf713-a2ce-53a6-8a8a-27273e51c208" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="76077633-669c-54b4-bae7-ddbcfc9f0e76" />
-              </constraints>
-            </entryLink>
             <entryLink id="e00111c1-6619-5424-920a-359fcd956c56" name="Dunne Responder 3e (Regular)" hidden="false" collective="false" import="true" targetId="d4bbff59-c222-595a-bf5e-fedda9a4e892" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="4038a0a4-d434-56a0-a999-931f7f4e78da" />
@@ -4789,7 +4709,7 @@
             </entryLink>
           </entryLinks>
         </selectionEntryGroup>
-      </selectionEntryGroups>
+      <selectionEntryGroup id="26afc418-5434-5a5e-8c20-054d9766529b" name="Warden Weapon Replacements" hidden="false"><selectionEntries><selectionEntry id="454f01a2-ba87-5b71-b7b3-b844a8d36531" name="Submachine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="4" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="1e5c6f10-f3f2-5b63-8878-d83c1a87ced4" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="3.0" /></costs></selectionEntry><selectionEntry id="144a090c-8f7b-5d07-b286-bafa7eb3c92a" name="Shotgun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="dd4e5944-b12d-578c-ac60-367d95154962" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="3.0" /></costs></selectionEntry><selectionEntry id="b5070fe5-b8be-5901-b5a0-e3d4360d37d9" name="Automatic rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="3061881b-681f-53ec-95e1-10dc88870a38" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="5.0" /></costs></selectionEntry><selectionEntry id="51274c0e-c7ad-5cac-8d22-12a405492417" name="Grenade launcher (alongside rifle)" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="8d4b735c-2241-5406-bece-eeab1764ada8" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="20.0" /></costs></selectionEntry></selectionEntries></selectionEntryGroup></selectionEntryGroups>
     </selectionEntry>
     <selectionEntry id="269cb919-747d-530f-8201-f068c67b3a09" name="Reconnaissance Squad (Great War Era) (Veteran)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
@@ -4841,11 +4761,6 @@
             <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="e0e1ec8d-5532-5b0a-9ae4-9ce1180960e4" />
           </constraints>
           <entryLinks>
-            <entryLink id="9b735e51-9b0e-5dff-ad4e-9d09dd4059cd" name="Coastal Gun (Veteran)" hidden="false" collective="false" import="true" targetId="0e16e4d9-c642-5e81-8738-efdec0aeedce" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="a10bc6e1-e5b4-5d1a-87b5-18a1928de7d3" />
-              </constraints>
-            </entryLink>
             <entryLink id="1a514c9a-16a1-5f9f-9e4d-e1c4a5033624" name="Niska Mk. I Gun Motor Carriage (Veteran)" hidden="false" collective="false" import="true" targetId="82397978-01c8-5793-88f0-c5d07b99ba46" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="7636939a-380e-5755-80e1-52da12b12898" />
@@ -4854,16 +4769,6 @@
             <entryLink id="0daca85e-c827-55a7-a316-cd50d875f4b9" name="Mulloy LPC (Veteran)" hidden="false" collective="false" import="true" targetId="100517c6-1890-5ca6-b17f-b62ce3751b33" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="b067b15b-52b2-5f3d-806a-0943e8576664" />
-              </constraints>
-            </entryLink>
-            <entryLink id="2c3b6e18-b5ed-5f36-8439-c38a89b29c6d" name="BMS Packmule Flatbed (Veteran)" hidden="false" collective="false" import="true" targetId="69004c62-e0a9-5061-b74b-0b92e8bd1896" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="12fd735a-92a3-52d2-8dd1-533cf2abac7c" />
-              </constraints>
-            </entryLink>
-            <entryLink id="6ad1748b-199d-5cd0-be4c-149b34ffe4b4" name="BMS Class 2 Mobile Auto-Crane (Veteran)" hidden="false" collective="false" import="true" targetId="c34b690b-4183-53d4-8023-5b2a400c7588" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="fa106e2c-53d4-59a3-abee-e538ad39b984" />
               </constraints>
             </entryLink>
             <entryLink id="29df0ebf-edf6-5018-95fa-9de43c4b9590" name="Dunne Transport, Leatherback 2a, &amp; Landrunner 12c (Veteran)" hidden="false" collective="false" import="true" targetId="189ab382-54f6-5094-bd7c-18fda190f9f6" type="selectionEntry">
@@ -4886,11 +4791,6 @@
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="45d6e5b1-574d-52ba-94eb-518b88fbe2eb" />
               </constraints>
             </entryLink>
-            <entryLink id="36ae7f5a-8d5f-57ff-b4e2-831e8485e5f0" name="BMS Class 3 Field Tractor (Veteran)" hidden="false" collective="false" import="true" targetId="979068e9-83a0-5cb7-9819-7ceddfddd29c" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="c9b81947-b166-5c00-bc08-eabfb3a60dc6" />
-              </constraints>
-            </entryLink>
             <entryLink id="278a6fb2-ae4c-5efb-b353-cdb0bdc2cf91" name="Dunne Responder 3e (Veteran)" hidden="false" collective="false" import="true" targetId="9bb2b5f6-226d-5c80-a97f-c2b86322a0db" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="c90786bb-fba1-51dd-a54f-5fda2db68ef9" />
@@ -4898,7 +4798,7 @@
             </entryLink>
           </entryLinks>
         </selectionEntryGroup>
-      </selectionEntryGroups>
+      <selectionEntryGroup id="35fe26bf-b685-5f30-9487-9b5e0bf06aee" name="Warden Weapon Replacements" hidden="false"><selectionEntries><selectionEntry id="b06683a5-d07b-5650-bb6c-f86b401a719f" name="Submachine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="4" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="ba95e255-4444-5d1e-92a4-05482f3d5ff2" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="3.0" /></costs></selectionEntry><selectionEntry id="467f1f17-1953-57e7-81f1-acac2ce536d5" name="Shotgun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="2662f556-87b6-5bf3-9e9b-8f0d7b09acf2" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="3.0" /></costs></selectionEntry><selectionEntry id="bfc7b6e6-e89f-52a1-a1f5-118f637164ec" name="Automatic rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="cf2d232f-434c-5419-a1a3-cb07a140118e" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="5.0" /></costs></selectionEntry><selectionEntry id="9bb623a0-11d7-5ed5-a094-acbd368b221b" name="Grenade launcher (alongside rifle)" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="a1d05c26-4c21-577b-953a-a5c6a5dcc45e" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="20.0" /></costs></selectionEntry></selectionEntries></selectionEntryGroup></selectionEntryGroups>
     </selectionEntry>
     <selectionEntry id="3ad485be-c54a-5bb1-8f79-836f07c148b5" name="Conscripted Squad (Great War Era)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
@@ -4950,11 +4850,6 @@
             <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="076c5a50-6aa7-574d-af3b-18cdf44a62b2" />
           </constraints>
           <entryLinks>
-            <entryLink id="2ea1447e-8594-51c4-bd05-0296cd385e5c" name="Coastal Gun (Inexperienced)" hidden="false" collective="false" import="true" targetId="4add8752-6e30-597e-802d-1d86ff5c9866" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="45dd5d62-cea2-5cab-b74a-8c52fb4233f3" />
-              </constraints>
-            </entryLink>
             <entryLink id="5cc7ccc8-ca65-5e5d-a758-b01ae8283643" name="Niska Mk. I Gun Motor Carriage (Inexperienced)" hidden="false" collective="false" import="true" targetId="3e55271d-a823-535a-a553-9732448549f0" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="98ecd28e-687b-5d43-bf54-7577fb4e3754" />
@@ -4963,16 +4858,6 @@
             <entryLink id="61d3b719-d800-568a-a1d7-d6663ff5cd09" name="Mulloy LPC (Inexperienced)" hidden="false" collective="false" import="true" targetId="74e8011c-bd68-5fe1-a528-02293fa4e4bd" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="4ae907bd-4826-55fe-9703-54074a7d1013" />
-              </constraints>
-            </entryLink>
-            <entryLink id="7c36d640-1f3b-5a88-a038-6cc7e2dc899a" name="BMS Packmule Flatbed (Inexperienced)" hidden="false" collective="false" import="true" targetId="b98c4b4a-b070-5927-8813-267d3fcfdc43" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="32812d54-e418-55e6-bb20-4c7e4793ff84" />
-              </constraints>
-            </entryLink>
-            <entryLink id="f1a6df9b-6f9a-5467-ab0d-2b9f9e18fde4" name="BMS Class 2 Mobile Auto-Crane (Inexperienced)" hidden="false" collective="false" import="true" targetId="c7426e7d-06d4-5d5b-b4c7-5c090b0bb6c7" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="a13a2b54-8f5e-5f63-b3f9-12f50b6a8f54" />
               </constraints>
             </entryLink>
             <entryLink id="b9faf118-6b2d-5dec-b800-036417aab685" name="Dunne Transport, Leatherback 2a, &amp; Landrunner 12c (Inexperienced)" hidden="false" collective="false" import="true" targetId="9d3648e7-b7a2-5088-9261-551c6de7c668" type="selectionEntry">
@@ -4995,11 +4880,6 @@
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="2d6ccc24-a4c5-5ca3-937b-6967473f4040" />
               </constraints>
             </entryLink>
-            <entryLink id="7636b661-bf92-5e70-be79-d272e0bf616c" name="BMS Class 3 Field Tractor (Inexperienced)" hidden="false" collective="false" import="true" targetId="93823be1-fb3b-509b-aabf-6ca7e6acab63" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="6cf12fae-6bd5-5097-9b28-01da12082c65" />
-              </constraints>
-            </entryLink>
             <entryLink id="76aee0c8-a936-5abc-ba21-4225017ea909" name="Dunne Responder 3e (Inexperienced)" hidden="false" collective="false" import="true" targetId="f2f82982-40a6-5d2e-8171-5f96829371e3" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="8fe8dedd-d43f-586a-9f80-2a4ece576a8a" />
@@ -5007,7 +4887,7 @@
             </entryLink>
           </entryLinks>
         </selectionEntryGroup>
-      </selectionEntryGroups>
+      <selectionEntryGroup id="14a0246d-6fd2-579d-bf72-7294a6819c53" name="Warden Weapon Replacements" hidden="false"><selectionEntries><selectionEntry id="4fabfecb-c673-5d9d-8380-27451f5f5299" name="Automatic rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="cc77fcb5-3c39-512c-b912-4c31658b217d" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="5.0" /></costs></selectionEntry></selectionEntries></selectionEntryGroup></selectionEntryGroups>
     </selectionEntry>
     <selectionEntry id="225bda61-c9ed-59c3-b044-f6e52c589f3f" name="The Hands Squad (Great War Era)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
@@ -5059,11 +4939,6 @@
             <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="3c529386-d31e-5ae2-8463-00c1f3e0b0d7" />
           </constraints>
           <entryLinks>
-            <entryLink id="539385f4-dfa1-5f31-92f5-bc9fbfbd7036" name="Coastal Gun (Veteran)" hidden="false" collective="false" import="true" targetId="0e16e4d9-c642-5e81-8738-efdec0aeedce" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="fd98a9ee-b63f-56a0-823f-1b6774e3b000" />
-              </constraints>
-            </entryLink>
             <entryLink id="f982b75c-b119-5ba2-bcdb-31b7812eadc0" name="Niska Mk. I Gun Motor Carriage (Veteran)" hidden="false" collective="false" import="true" targetId="82397978-01c8-5793-88f0-c5d07b99ba46" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="8a7d6a12-a744-5db4-9feb-71488e0e5460" />
@@ -5072,16 +4947,6 @@
             <entryLink id="5d5d29be-37f4-5b15-9be6-5ea60b81c7bd" name="Mulloy LPC (Veteran)" hidden="false" collective="false" import="true" targetId="100517c6-1890-5ca6-b17f-b62ce3751b33" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="1ea4b36e-6567-5370-b075-1a36f24dac0d" />
-              </constraints>
-            </entryLink>
-            <entryLink id="7ec5cce3-64f9-526c-8cf5-34c23c170087" name="BMS Packmule Flatbed (Veteran)" hidden="false" collective="false" import="true" targetId="69004c62-e0a9-5061-b74b-0b92e8bd1896" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="dd430e76-f582-5e88-bfc7-3d3eb227b284" />
-              </constraints>
-            </entryLink>
-            <entryLink id="62f66ff1-a1fd-5b78-a9ea-0abeffc99b45" name="BMS Class 2 Mobile Auto-Crane (Veteran)" hidden="false" collective="false" import="true" targetId="c34b690b-4183-53d4-8023-5b2a400c7588" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="0021c327-a18c-5c90-97e8-d055eb238093" />
               </constraints>
             </entryLink>
             <entryLink id="a67942e2-94a5-5d58-9c1b-bd3c79b8f116" name="Dunne Transport, Leatherback 2a, &amp; Landrunner 12c (Veteran)" hidden="false" collective="false" import="true" targetId="189ab382-54f6-5094-bd7c-18fda190f9f6" type="selectionEntry">
@@ -5104,11 +4969,6 @@
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="227302d7-cd48-5938-8165-b36a396ddb71" />
               </constraints>
             </entryLink>
-            <entryLink id="141982c1-3ade-55fe-a4f8-1a10b47931ec" name="BMS Class 3 Field Tractor (Veteran)" hidden="false" collective="false" import="true" targetId="979068e9-83a0-5cb7-9819-7ceddfddd29c" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="5d037620-e7db-586a-9a01-87ad333b82e4" />
-              </constraints>
-            </entryLink>
             <entryLink id="b497f856-95ee-5989-ace7-c1289c31f2dc" name="Dunne Responder 3e (Veteran)" hidden="false" collective="false" import="true" targetId="9bb2b5f6-226d-5c80-a97f-c2b86322a0db" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="42b9d126-23c7-58aa-91ce-c299d0c849d5" />
@@ -5116,7 +4976,7 @@
             </entryLink>
           </entryLinks>
         </selectionEntryGroup>
-      </selectionEntryGroups>
+      <selectionEntryGroup id="bf82f84d-15ae-5438-9a86-751f59d79e87" name="Warden Weapon Replacements" hidden="false"><selectionEntries><selectionEntry id="61ee8907-a458-56fa-9ec9-3e7d2ebc4847" name="Submachine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="3" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="2e269d93-bbeb-5653-9eba-ed2fc199d735" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="3.0" /></costs></selectionEntry><selectionEntry id="1904f13a-f475-5b19-a28a-319974a0e405" name="Automatic rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="0f2fcc52-a6c0-510c-816a-331e91cb1342" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="5.0" /></costs></selectionEntry><selectionEntry id="bd41dc47-dc9c-5a54-af2a-c597fd19be38" name="Pistol" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="c60ad1ae-4f65-59be-a3ac-1304b2204ec9" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="-3.0" /></costs></selectionEntry><selectionEntry id="27d66130-c402-5cfa-8684-7e2c1c9dc631" name="Malone machine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="c9035a85-5dbb-5ba0-a52f-93c847acb14c" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="20.0" /></costs></selectionEntry><selectionEntry id="7d948cdc-a899-5545-96ca-fdb685550e56" name="Grenade launcher (alongside rifle)" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="6c1f11cf-7f4b-559c-91a3-88fe0236d802" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="20.0" /></costs></selectionEntry></selectionEntries></selectionEntryGroup></selectionEntryGroups>
     </selectionEntry>
     <selectionEntry id="3aa9ea6b-1b41-5438-91e9-772884bdec3d" name="Eight Sons Squad (Great War Era)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
@@ -5168,11 +5028,6 @@
             <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="8876126f-74ce-5252-aaa0-42ded15c02c7" />
           </constraints>
           <entryLinks>
-            <entryLink id="6d0c1fd4-ece8-5c44-a5c4-eac6bf48594d" name="Coastal Gun (Veteran)" hidden="false" collective="false" import="true" targetId="0e16e4d9-c642-5e81-8738-efdec0aeedce" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="4e60fd91-7a67-53d4-8aca-ffd7ff9243cb" />
-              </constraints>
-            </entryLink>
             <entryLink id="d3643d47-83a6-5825-8006-449c6f0cc0a9" name="Niska Mk. I Gun Motor Carriage (Veteran)" hidden="false" collective="false" import="true" targetId="82397978-01c8-5793-88f0-c5d07b99ba46" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="4f8600f8-977a-565d-a0e8-1127a8c310e3" />
@@ -5181,16 +5036,6 @@
             <entryLink id="645806cc-6f19-5011-abfc-51d7b9fe5bdd" name="Mulloy LPC (Veteran)" hidden="false" collective="false" import="true" targetId="100517c6-1890-5ca6-b17f-b62ce3751b33" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="2a062d13-9f87-551c-b32f-5e6409226070" />
-              </constraints>
-            </entryLink>
-            <entryLink id="a4909c78-7443-5932-91d4-b700745ac550" name="BMS Packmule Flatbed (Veteran)" hidden="false" collective="false" import="true" targetId="69004c62-e0a9-5061-b74b-0b92e8bd1896" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="27d996c5-ba44-531c-b94f-d063e32e0155" />
-              </constraints>
-            </entryLink>
-            <entryLink id="2705e18a-b2f5-54f8-b9ff-3e47448c9894" name="BMS Class 2 Mobile Auto-Crane (Veteran)" hidden="false" collective="false" import="true" targetId="c34b690b-4183-53d4-8023-5b2a400c7588" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="d74edd14-b0e1-59b4-817a-6fad46699d7d" />
               </constraints>
             </entryLink>
             <entryLink id="d8923a94-f755-524d-a4ad-23d7746e2c94" name="Dunne Transport, Leatherback 2a, &amp; Landrunner 12c (Veteran)" hidden="false" collective="false" import="true" targetId="189ab382-54f6-5094-bd7c-18fda190f9f6" type="selectionEntry">
@@ -5213,11 +5058,6 @@
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="997aedad-44b4-5b86-a3fc-d99a469012ad" />
               </constraints>
             </entryLink>
-            <entryLink id="1d9f7d95-9000-58a5-928b-ecc5808b5580" name="BMS Class 3 Field Tractor (Veteran)" hidden="false" collective="false" import="true" targetId="979068e9-83a0-5cb7-9819-7ceddfddd29c" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="9b0d22fd-bcbb-5fc9-9fa5-650e3e05cc77" />
-              </constraints>
-            </entryLink>
             <entryLink id="0486c80e-6086-53c8-af8f-65f54f2fb24f" name="Dunne Responder 3e (Veteran)" hidden="false" collective="false" import="true" targetId="9bb2b5f6-226d-5c80-a97f-c2b86322a0db" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="7dadb3b8-63f9-573d-900f-888030228cb3" />
@@ -5225,7 +5065,7 @@
             </entryLink>
           </entryLinks>
         </selectionEntryGroup>
-      </selectionEntryGroups>
+      <selectionEntryGroup id="21ec9d54-02f6-5836-952c-22a91206a8b8" name="Warden Weapon Replacements" hidden="false"><selectionEntries><selectionEntry id="01a8c2aa-d860-52c0-bc93-f66dfb0f4f53" name="Submachine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="3" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="6b9b02cd-a49c-5176-beae-ccc097321a19" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="3.0" /></costs></selectionEntry><selectionEntry id="1eaebc2a-d5f8-50e3-8026-aaa51209f50b" name="Automatic rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="135ddfa9-bb1b-5bcf-bbfc-3b235fa1bb0b" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="5.0" /></costs></selectionEntry><selectionEntry id="f8dd79b5-a0c8-5f49-8916-6f6e6e8c23e8" name="Pistol" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="d0e02e11-904a-5cd2-9def-1f3bcb61f7a5" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="-3.0" /></costs></selectionEntry><selectionEntry id="66354e45-60dc-5960-b885-ffdc0e69d560" name="Malone machine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="b2f34945-c666-5345-9ff3-9c314722f59c" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="20.0" /></costs></selectionEntry><selectionEntry id="75246126-4e0e-55a9-98e2-c33266913e82" name="Grenade launcher (alongside rifle)" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="26257eee-fdad-5770-802c-916e87fd9698" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="20.0" /></costs></selectionEntry></selectionEntries></selectionEntryGroup></selectionEntryGroups>
     </selectionEntry>
     <selectionEntry id="c22ae147-e5ae-5b2e-8c3f-cc598420d5f5" name="Inexperienced Infantry Squad" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
@@ -5277,11 +5117,6 @@
             <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="3890193a-a872-56e7-9af5-0a562e507dbf" />
           </constraints>
           <entryLinks>
-            <entryLink id="af31b1a0-51a6-5dd4-9165-cc04bc8a94ec" name="Coastal Gun (Inexperienced)" hidden="false" collective="false" import="true" targetId="4add8752-6e30-597e-802d-1d86ff5c9866" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="eca13c4d-206a-5005-8828-e4a05dabbee8" />
-              </constraints>
-            </entryLink>
             <entryLink id="e36a4281-7796-5819-a15c-a4cf44233452" name="Niska Mk. I Gun Motor Carriage (Inexperienced)" hidden="false" collective="false" import="true" targetId="3e55271d-a823-535a-a553-9732448549f0" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="4f32df7c-41fb-523f-b1eb-67a301832a5e" />
@@ -5290,16 +5125,6 @@
             <entryLink id="79a5057a-58a7-5d95-85d4-f8ec562d51af" name="Mulloy LPC (Inexperienced)" hidden="false" collective="false" import="true" targetId="74e8011c-bd68-5fe1-a528-02293fa4e4bd" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="ec840490-ff98-5dfd-9e57-818f2a415edc" />
-              </constraints>
-            </entryLink>
-            <entryLink id="bb7d8a33-bf8e-524e-b8d3-b364a4846b07" name="BMS Packmule Flatbed (Inexperienced)" hidden="false" collective="false" import="true" targetId="b98c4b4a-b070-5927-8813-267d3fcfdc43" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="b50c7a96-7b74-54ba-b023-99c78e089cae" />
-              </constraints>
-            </entryLink>
-            <entryLink id="d71414e6-8e5b-53d9-b253-0b214cfc8d4a" name="BMS Class 2 Mobile Auto-Crane (Inexperienced)" hidden="false" collective="false" import="true" targetId="c7426e7d-06d4-5d5b-b4c7-5c090b0bb6c7" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="2806f4b2-15b3-5f59-a572-3edb43105f7e" />
               </constraints>
             </entryLink>
             <entryLink id="8db9b324-24ac-5f24-8424-2083ea6eb345" name="Dunne Transport, Leatherback 2a, &amp; Landrunner 12c (Inexperienced)" hidden="false" collective="false" import="true" targetId="9d3648e7-b7a2-5088-9261-551c6de7c668" type="selectionEntry">
@@ -5322,11 +5147,6 @@
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="a484a8d5-c4f7-5080-b951-f433e2961332" />
               </constraints>
             </entryLink>
-            <entryLink id="1830fa78-ddf3-5a61-a845-a86f1b272d5c" name="BMS Class 3 Field Tractor (Inexperienced)" hidden="false" collective="false" import="true" targetId="93823be1-fb3b-509b-aabf-6ca7e6acab63" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="6449addd-9b67-59a7-8703-5cf361c961a2" />
-              </constraints>
-            </entryLink>
             <entryLink id="c341c541-747f-5d33-a201-48b60a0fedfd" name="Dunne Responder 3e (Inexperienced)" hidden="false" collective="false" import="true" targetId="f2f82982-40a6-5d2e-8171-5f96829371e3" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="7467bbd3-424a-5a42-b8df-bfae4d316e5a" />
@@ -5334,7 +5154,7 @@
             </entryLink>
           </entryLinks>
         </selectionEntryGroup>
-      </selectionEntryGroups>
+      <selectionEntryGroup id="ff3f3e2e-02cf-5db8-8710-683ff926fa9b" name="Warden Weapon Replacements" hidden="false"><selectionEntries><selectionEntry id="09d9333b-174f-5014-aef5-8e8c539ba60a" name="NCO submachine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="c8eb8ee2-f3f3-5349-ae9f-ebf37114ec1c" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="3.0" /></costs></selectionEntry><selectionEntry id="70668e74-ccf9-5244-8ba4-15e9bed46ed9" name="Automatic rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="c62cd913-aa18-57d0-8a49-406770f0ba75" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="5.0" /></costs></selectionEntry><selectionEntry id="62b88495-35b3-58f2-9cce-d4e1f6f25a2f" name="Pistol" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="1a1f8a7a-e1dd-5090-a628-a57e5a72aa0b" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="-3.0" /></costs></selectionEntry><selectionEntry id="3fac9c06-cccf-5b60-8964-8aec08adeb92" name="Malone machine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="8b3055a2-7269-5bb8-a383-f6a82c17c954" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="20.0" /></costs></selectionEntry></selectionEntries></selectionEntryGroup></selectionEntryGroups>
     </selectionEntry>
     <selectionEntry id="add7e207-a2cb-5a84-888c-b5e58a088dd1" name="Regular Infantry Squad" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
@@ -5386,11 +5206,6 @@
             <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="204d6a08-52b5-529d-a99e-8916179ace1d" />
           </constraints>
           <entryLinks>
-            <entryLink id="bd56a2fa-9deb-5286-8ce9-0e0b760d1ead" name="Coastal Gun (Regular)" hidden="false" collective="false" import="true" targetId="c0068818-5b9e-5c26-84c4-61968f8fa274" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="64bda095-0b59-5ade-8147-82efae5b299e" />
-              </constraints>
-            </entryLink>
             <entryLink id="1958f0ad-7200-59f9-afa0-d277b1f01523" name="Niska Mk. I Gun Motor Carriage (Regular)" hidden="false" collective="false" import="true" targetId="0985bbc0-fee6-57bc-9875-462ea3de07bb" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="a8678446-8b66-5aad-985f-8ce0b1aa4256" />
@@ -5399,16 +5214,6 @@
             <entryLink id="fbc74fd0-4899-53e1-897c-60cbdfef2411" name="Mulloy LPC (Regular)" hidden="false" collective="false" import="true" targetId="fe72808a-b9f0-5e8e-8b97-9d899baf44f3" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="8a014898-61a8-5b73-93be-c5f3a9f24979" />
-              </constraints>
-            </entryLink>
-            <entryLink id="6d91fdb4-3156-5d0b-88de-cc7ef040221b" name="BMS Packmule Flatbed (Regular)" hidden="false" collective="false" import="true" targetId="025b0f41-3723-57b8-b951-2f4c804524b7" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="43b6e4c5-6169-54bf-87d7-f0167d7b2777" />
-              </constraints>
-            </entryLink>
-            <entryLink id="78ad480e-bdf3-5363-9609-e02e3b3a11ae" name="BMS Class 2 Mobile Auto-Crane (Regular)" hidden="false" collective="false" import="true" targetId="603d70c9-20cd-5c73-a7f1-7f2b179ebc9a" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="324e8880-4464-5f61-9d10-bdaa4aeaba48" />
               </constraints>
             </entryLink>
             <entryLink id="80b2905a-fd83-5fb9-861b-d3868edf6252" name="Dunne Transport, Leatherback 2a, &amp; Landrunner 12c (Regular)" hidden="false" collective="false" import="true" targetId="ee058577-6e65-5e30-92d3-1657b8451c82" type="selectionEntry">
@@ -5431,11 +5236,6 @@
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="91a0024c-ed92-532f-aa4a-5a9857a4213b" />
               </constraints>
             </entryLink>
-            <entryLink id="5081f16c-a307-50df-a560-e57e520c64f6" name="BMS Class 3 Field Tractor (Regular)" hidden="false" collective="false" import="true" targetId="4fdcf713-a2ce-53a6-8a8a-27273e51c208" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="ef885710-8717-5713-942e-7b536a9d2925" />
-              </constraints>
-            </entryLink>
             <entryLink id="8f37c7a2-89ff-51f4-9040-1b579b18c04b" name="Dunne Responder 3e (Regular)" hidden="false" collective="false" import="true" targetId="d4bbff59-c222-595a-bf5e-fedda9a4e892" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="4a086a1b-d1f9-58e5-b9bc-404be04c15a5" />
@@ -5443,7 +5243,7 @@
             </entryLink>
           </entryLinks>
         </selectionEntryGroup>
-      </selectionEntryGroups>
+      <selectionEntryGroup id="d2cc018f-2e0c-5cbd-a489-bd48c3db4f2b" name="Warden Weapon Replacements" hidden="false"><selectionEntries><selectionEntry id="09f0679c-bf74-54bc-9404-fbccdac7827e" name="Submachine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="1b7b1427-41c0-5d08-a094-c246b2746aab" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="3.0" /></costs></selectionEntry><selectionEntry id="6da50f2e-b155-5653-920e-4a1c7fb6d073" name="Assault rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="3" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="ee8f848e-befa-58f7-8184-763093f34e54" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="5.0" /></costs></selectionEntry><selectionEntry id="9f61afc3-58c3-5220-9248-86648b2627e6" name="Carbine" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="3" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="7e893045-6a65-571e-9a6f-868d9ed4dfa1" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="1.0" /></costs></selectionEntry><selectionEntry id="dcd49319-de44-597d-8788-12d60b21ebe1" name="Automatic rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="cd97a37b-28b3-56cc-ac9a-a78647b9641c" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="5.0" /></costs></selectionEntry><selectionEntry id="9c022986-86ba-5142-8b64-2f0f35f125d2" name="Pistol" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="20fcde58-db66-5b56-a0d8-a7ba3a1cf78d" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="-3.0" /></costs></selectionEntry><selectionEntry id="22dcbd72-2dd2-5ffe-b5d2-bd6adf7c287f" name="Malone machine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="6e06fdfb-0114-5afa-b11c-e8049b832258" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="20.0" /></costs></selectionEntry><selectionEntry id="fb80dacc-010d-5b88-becb-63bf0f8c478f" name="Grenade launcher (alongside rifle/carbine)" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="d472b7be-54ea-5c4c-8789-14be9db26bbf" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="20.0" /></costs></selectionEntry></selectionEntries></selectionEntryGroup></selectionEntryGroups>
     </selectionEntry>
     <selectionEntry id="5d4903c7-0ecf-534d-9169-9b2023471d2e" name="Veteran Infantry Squad" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
@@ -5495,11 +5295,6 @@
             <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="64cf40af-dc27-5e99-9782-732a72495abb" />
           </constraints>
           <entryLinks>
-            <entryLink id="06e4f3fc-18e9-5ea7-850c-2c454120ee33" name="Coastal Gun (Veteran)" hidden="false" collective="false" import="true" targetId="0e16e4d9-c642-5e81-8738-efdec0aeedce" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="4812bcaa-f926-51c4-931e-29c39c4311cd" />
-              </constraints>
-            </entryLink>
             <entryLink id="9ce7e9fc-cb04-5fea-9b92-d97a790494f4" name="Niska Mk. I Gun Motor Carriage (Veteran)" hidden="false" collective="false" import="true" targetId="82397978-01c8-5793-88f0-c5d07b99ba46" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="7354422d-edf3-50bf-821d-86d90a7dda5a" />
@@ -5508,16 +5303,6 @@
             <entryLink id="3377c684-eb09-58a2-a89a-1e4d5bb36698" name="Mulloy LPC (Veteran)" hidden="false" collective="false" import="true" targetId="100517c6-1890-5ca6-b17f-b62ce3751b33" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="77f3b729-a905-5856-934b-13f4e7e10424" />
-              </constraints>
-            </entryLink>
-            <entryLink id="4f317b56-ac63-5c42-a83b-49347950a690" name="BMS Packmule Flatbed (Veteran)" hidden="false" collective="false" import="true" targetId="69004c62-e0a9-5061-b74b-0b92e8bd1896" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="60ea0ecb-a102-5d3e-8a22-64f7e92c9e46" />
-              </constraints>
-            </entryLink>
-            <entryLink id="89026888-d78d-5a10-90a9-f61409618ae3" name="BMS Class 2 Mobile Auto-Crane (Veteran)" hidden="false" collective="false" import="true" targetId="c34b690b-4183-53d4-8023-5b2a400c7588" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="8345da51-0f32-55ad-b1fc-74e991f1e4ca" />
               </constraints>
             </entryLink>
             <entryLink id="2804965f-2026-529a-a4e9-e956d34743e8" name="Dunne Transport, Leatherback 2a, &amp; Landrunner 12c (Veteran)" hidden="false" collective="false" import="true" targetId="189ab382-54f6-5094-bd7c-18fda190f9f6" type="selectionEntry">
@@ -5540,11 +5325,6 @@
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="98f7505a-b26e-559c-b556-ff5b7e8e098b" />
               </constraints>
             </entryLink>
-            <entryLink id="7bbe129a-0ee2-5c2d-b529-cf98ad31faaa" name="BMS Class 3 Field Tractor (Veteran)" hidden="false" collective="false" import="true" targetId="979068e9-83a0-5cb7-9819-7ceddfddd29c" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="1d31b891-4a28-5f48-9498-ab6c5cfd4428" />
-              </constraints>
-            </entryLink>
             <entryLink id="b8fb95c1-9b37-5266-a7af-f8d75c9ee499" name="Dunne Responder 3e (Veteran)" hidden="false" collective="false" import="true" targetId="9bb2b5f6-226d-5c80-a97f-c2b86322a0db" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="ecd2ff70-456d-581a-802b-60d32393828c" />
@@ -5552,7 +5332,7 @@
             </entryLink>
           </entryLinks>
         </selectionEntryGroup>
-      </selectionEntryGroups>
+      <selectionEntryGroup id="7eb1dddd-1e6f-5584-aaff-84f0d13c1373" name="Warden Weapon Replacements" hidden="false"><selectionEntries><selectionEntry id="6d848853-bc94-5f00-bf3b-703aec0e870a" name="Submachine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="7" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="f4ff7452-9de3-5761-84b0-40104231d563" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="3.0" /></costs></selectionEntry><selectionEntry id="6225bc07-286f-5b8c-b088-9d5959bc11ac" name="Assault rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="10" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="9ed6eb01-1170-5362-81d9-a79fd5698df6" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="5.0" /></costs></selectionEntry><selectionEntry id="cbaa7d89-dc3c-57dd-b4ee-5f051ccba749" name="Carbine" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="10" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="c4b79674-f10a-5f68-938f-4ec6e179a00b" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="1.0" /></costs></selectionEntry><selectionEntry id="b95bfec8-c179-558b-84c7-d48a695d24bd" name="Automatic rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="7ea58efc-a0f8-5460-ac5c-9a633f6a8d39" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="5.0" /></costs></selectionEntry><selectionEntry id="67f615ff-497c-5733-a421-89776afc6a24" name="Pistol" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="aaff12e6-016c-5516-8fe7-019bd447499a" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="-3.0" /></costs></selectionEntry><selectionEntry id="2030f951-a380-5220-b2f8-e7764d3c6e61" name="Malone machine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="8eb0215f-991a-5b04-ac88-8786879227b2" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="20.0" /></costs></selectionEntry><selectionEntry id="3f49477a-1aa1-5d2a-be85-22a008a8fa93" name="Grenade launcher (alongside rifle/carbine)" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="1a84e4af-406e-5115-9ab0-dc7bbac295ab" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="20.0" /></costs></selectionEntry></selectionEntries></selectionEntryGroup></selectionEntryGroups>
     </selectionEntry>
     <selectionEntry id="975e601f-1cfe-5eb8-9e2a-decf5d5712df" name="Reconnaissance Squad (Regular)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
@@ -5604,11 +5384,6 @@
             <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="b1ceb423-a3c6-5c1e-a665-ba0ddcff018c" />
           </constraints>
           <entryLinks>
-            <entryLink id="7d24ca6a-3d93-50cd-bf9f-9ebed6d95bcc" name="Coastal Gun (Regular)" hidden="false" collective="false" import="true" targetId="c0068818-5b9e-5c26-84c4-61968f8fa274" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="ae84190c-9286-59c1-abcb-33e1cd4341d5" />
-              </constraints>
-            </entryLink>
             <entryLink id="efd844ba-3dac-5005-a7da-09b043ed03be" name="Niska Mk. I Gun Motor Carriage (Regular)" hidden="false" collective="false" import="true" targetId="0985bbc0-fee6-57bc-9875-462ea3de07bb" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="75aeea18-917c-5db3-9974-3a5cb9e69532" />
@@ -5617,16 +5392,6 @@
             <entryLink id="17bd7477-f6b5-5e4f-85ab-307229c5b20e" name="Mulloy LPC (Regular)" hidden="false" collective="false" import="true" targetId="fe72808a-b9f0-5e8e-8b97-9d899baf44f3" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="33774c66-3d57-5184-bc02-acf6773a49e0" />
-              </constraints>
-            </entryLink>
-            <entryLink id="b97a78c0-2416-52fe-92eb-79fdb7141349" name="BMS Packmule Flatbed (Regular)" hidden="false" collective="false" import="true" targetId="025b0f41-3723-57b8-b951-2f4c804524b7" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="e5906b8e-229e-5044-ab13-dce64769cfef" />
-              </constraints>
-            </entryLink>
-            <entryLink id="926a6ec3-44e8-5e06-abe8-d2321092adb5" name="BMS Class 2 Mobile Auto-Crane (Regular)" hidden="false" collective="false" import="true" targetId="603d70c9-20cd-5c73-a7f1-7f2b179ebc9a" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="211418a8-07d2-503c-896a-b504c2b801bb" />
               </constraints>
             </entryLink>
             <entryLink id="38e6ebf8-9986-55e4-87fb-d861f0072763" name="Dunne Transport, Leatherback 2a, &amp; Landrunner 12c (Regular)" hidden="false" collective="false" import="true" targetId="ee058577-6e65-5e30-92d3-1657b8451c82" type="selectionEntry">
@@ -5649,11 +5414,6 @@
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="8421c4c1-6e66-5fce-913a-8cc6fb4e42f4" />
               </constraints>
             </entryLink>
-            <entryLink id="63a0de32-bd06-5bde-9a62-866ad093195c" name="BMS Class 3 Field Tractor (Regular)" hidden="false" collective="false" import="true" targetId="4fdcf713-a2ce-53a6-8a8a-27273e51c208" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="38fc116a-d56b-529c-a9a4-391cefffe9ec" />
-              </constraints>
-            </entryLink>
             <entryLink id="dbfb3194-40ab-55b9-b456-f2e3b9788bb3" name="Dunne Responder 3e (Regular)" hidden="false" collective="false" import="true" targetId="d4bbff59-c222-595a-bf5e-fedda9a4e892" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="6e8474d0-dc06-5dba-af35-4c09f4bb6ace" />
@@ -5661,7 +5421,7 @@
             </entryLink>
           </entryLinks>
         </selectionEntryGroup>
-      </selectionEntryGroups>
+      <selectionEntryGroup id="15dba109-1e70-53cd-b3c0-9d0c3dc78fde" name="Warden Weapon Replacements" hidden="false"><selectionEntries><selectionEntry id="b0735206-51c4-50a7-8828-6d10c2b5498d" name="Submachine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="3" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="c1591ead-977e-519b-98c9-1c8fedad2ff4" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="3.0" /></costs></selectionEntry><selectionEntry id="50204b0f-aa51-5376-917a-508c8dc81cfd" name="Shotgun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="5" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="abb3fcea-3b7c-5336-af77-b541feb9e6a8" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="3.0" /></costs></selectionEntry><selectionEntry id="00da82fa-7571-5907-b1b4-6d34a34ed855" name="Assault rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="3" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="0c52c602-caaf-55dc-b961-497c40887250" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="5.0" /></costs></selectionEntry><selectionEntry id="f85f9017-20b4-59d3-bc73-8b8dfbc7a79c" name="Carbine" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="10" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="c9501cb7-da00-5141-9ecf-1cb4862d0b67" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="1.0" /></costs></selectionEntry><selectionEntry id="2904ba66-6c7b-5be4-ad1d-981bcdbc4045" name="Automatic rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="3" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="efe4de2f-551d-5299-bbb2-fb9664e6e2e8" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="5.0" /></costs></selectionEntry><selectionEntry id="56d5ec37-0e85-533f-87d1-629eff766803" name="Grenade launcher (alongside rifle/carbine)" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="ca64b598-7ef0-53b2-99bd-f3263eb9240e" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="20.0" /></costs></selectionEntry></selectionEntries></selectionEntryGroup></selectionEntryGroups>
     </selectionEntry>
     <selectionEntry id="4b9d9723-4774-5188-b528-9fff94997d9d" name="Reconnaissance Squad (Veteran)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
@@ -5713,11 +5473,6 @@
             <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="5bdc3dc5-2d29-5985-b0a0-d6051cd47417" />
           </constraints>
           <entryLinks>
-            <entryLink id="f0b992dc-6505-5b21-821c-0fb3a56fdc69" name="Coastal Gun (Veteran)" hidden="false" collective="false" import="true" targetId="0e16e4d9-c642-5e81-8738-efdec0aeedce" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="d65ebb95-8ece-5a18-a15d-372fcaf2123d" />
-              </constraints>
-            </entryLink>
             <entryLink id="a4ead6e1-c489-5fa1-a316-266be6f891e3" name="Niska Mk. I Gun Motor Carriage (Veteran)" hidden="false" collective="false" import="true" targetId="82397978-01c8-5793-88f0-c5d07b99ba46" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="30376f39-fb62-56ad-8da3-71a8a084e59b" />
@@ -5726,16 +5481,6 @@
             <entryLink id="10d57e3b-c1b7-5bf0-89db-071055caff15" name="Mulloy LPC (Veteran)" hidden="false" collective="false" import="true" targetId="100517c6-1890-5ca6-b17f-b62ce3751b33" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="7c6e88af-cc14-599d-b130-c4b891f06107" />
-              </constraints>
-            </entryLink>
-            <entryLink id="d5b5603d-602f-54f8-958f-94153e97cc27" name="BMS Packmule Flatbed (Veteran)" hidden="false" collective="false" import="true" targetId="69004c62-e0a9-5061-b74b-0b92e8bd1896" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="048fafa3-7d66-551c-9cea-9469eb853f05" />
-              </constraints>
-            </entryLink>
-            <entryLink id="d43725c6-6cff-5230-a139-3c96ce9b7b6b" name="BMS Class 2 Mobile Auto-Crane (Veteran)" hidden="false" collective="false" import="true" targetId="c34b690b-4183-53d4-8023-5b2a400c7588" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="71f85bdb-8335-55c1-8713-9d811448d1d7" />
               </constraints>
             </entryLink>
             <entryLink id="b4e19fe3-5618-5a71-b7c5-9f153c704206" name="Dunne Transport, Leatherback 2a, &amp; Landrunner 12c (Veteran)" hidden="false" collective="false" import="true" targetId="189ab382-54f6-5094-bd7c-18fda190f9f6" type="selectionEntry">
@@ -5758,11 +5503,6 @@
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="6035eedc-976f-5c8a-bbcd-ccfa3f316ffc" />
               </constraints>
             </entryLink>
-            <entryLink id="a8da3385-6236-554b-b5e2-8b4bef12bee1" name="BMS Class 3 Field Tractor (Veteran)" hidden="false" collective="false" import="true" targetId="979068e9-83a0-5cb7-9819-7ceddfddd29c" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="6538b93a-a5f3-563c-885f-720707ee301f" />
-              </constraints>
-            </entryLink>
             <entryLink id="7564d9c3-4879-57c7-b112-f0a1232e1134" name="Dunne Responder 3e (Veteran)" hidden="false" collective="false" import="true" targetId="9bb2b5f6-226d-5c80-a97f-c2b86322a0db" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="f04ccbd3-54b7-5e25-bad9-2ce686c8c148" />
@@ -5770,7 +5510,7 @@
             </entryLink>
           </entryLinks>
         </selectionEntryGroup>
-      </selectionEntryGroups>
+      <selectionEntryGroup id="ed262dbc-d7a1-5bfa-bc7a-2d0cda29d67a" name="Warden Weapon Replacements" hidden="false"><selectionEntries><selectionEntry id="8df79936-b08a-5215-89de-89aa4728b72e" name="Submachine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="3" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="45a047bb-959d-563c-9930-d32b3be6c1c2" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="3.0" /></costs></selectionEntry><selectionEntry id="abea1f15-b8e0-508b-8e36-b6d923c19d58" name="Shotgun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="5" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="fe1f7b2d-2806-5f00-bef9-37f6bf34e09d" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="3.0" /></costs></selectionEntry><selectionEntry id="858ec4a2-144c-5548-a0ab-88abf7f4f58e" name="Assault rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="3" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="8ffff497-68dc-57b8-b356-ea187e09ccb1" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="5.0" /></costs></selectionEntry><selectionEntry id="cc1e3418-fb92-5ca3-82ac-44e1f67964e1" name="Carbine" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="10" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="687299f8-255e-5f11-8e23-94d993ce4752" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="1.0" /></costs></selectionEntry><selectionEntry id="c4cdb21a-b8c5-5273-b29b-71b444d3e962" name="Automatic rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="3" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="005fb7dc-7424-554e-adb5-49bbf84a1260" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="5.0" /></costs></selectionEntry><selectionEntry id="9c46a8bd-d874-5c1a-ae4c-3f79bc1c8208" name="Grenade launcher (alongside rifle/carbine)" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="3c90b49c-e9ce-5a13-b0f8-2ed32c45c495" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="20.0" /></costs></selectionEntry></selectionEntries></selectionEntryGroup></selectionEntryGroups>
     </selectionEntry>
     <selectionEntry id="17720bfb-09c0-5d41-b8f7-6a4748d7081b" name="Engineer Squad" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
@@ -5822,11 +5562,6 @@
             <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="dd490772-3c4a-5486-b613-7088a93982da" />
           </constraints>
           <entryLinks>
-            <entryLink id="ca2615ad-14a5-51d3-bca1-15e27fdf8638" name="Coastal Gun (Veteran)" hidden="false" collective="false" import="true" targetId="0e16e4d9-c642-5e81-8738-efdec0aeedce" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="9bab5c3a-c3aa-520f-b379-0474eeee5b70" />
-              </constraints>
-            </entryLink>
             <entryLink id="32d792cc-bbf5-5342-9868-9509e7daaa91" name="Niska Mk. I Gun Motor Carriage (Veteran)" hidden="false" collective="false" import="true" targetId="82397978-01c8-5793-88f0-c5d07b99ba46" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="23083299-a4f0-5cff-a8f1-722a3b89a13b" />
@@ -5835,16 +5570,6 @@
             <entryLink id="1d54c2a9-288d-5a72-8221-7bc7c71259ad" name="Mulloy LPC (Veteran)" hidden="false" collective="false" import="true" targetId="100517c6-1890-5ca6-b17f-b62ce3751b33" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="bffd97bd-5c3c-5d22-8098-83f847bc584c" />
-              </constraints>
-            </entryLink>
-            <entryLink id="3666a81a-738f-5567-b4fa-f08bf15fd006" name="BMS Packmule Flatbed (Veteran)" hidden="false" collective="false" import="true" targetId="69004c62-e0a9-5061-b74b-0b92e8bd1896" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="d6eabc7e-14d3-5458-aa9d-a3324d5f81f9" />
-              </constraints>
-            </entryLink>
-            <entryLink id="ef16d520-1e9d-5e1d-b732-089f19a0d7be" name="BMS Class 2 Mobile Auto-Crane (Veteran)" hidden="false" collective="false" import="true" targetId="c34b690b-4183-53d4-8023-5b2a400c7588" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="eccfa23e-c490-54f7-adfc-9a68a5cc7a75" />
               </constraints>
             </entryLink>
             <entryLink id="40a024a1-abdb-571a-bd58-3953079edf68" name="Dunne Transport, Leatherback 2a, &amp; Landrunner 12c (Veteran)" hidden="false" collective="false" import="true" targetId="189ab382-54f6-5094-bd7c-18fda190f9f6" type="selectionEntry">
@@ -5867,11 +5592,6 @@
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="087c1336-19c4-5b8b-bbff-70c9aa64cf1b" />
               </constraints>
             </entryLink>
-            <entryLink id="76323384-ed52-5130-af83-f9f5edf5dd9b" name="BMS Class 3 Field Tractor (Veteran)" hidden="false" collective="false" import="true" targetId="979068e9-83a0-5cb7-9819-7ceddfddd29c" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="d920faba-4a8e-5fde-9cbf-0e6723d46a6e" />
-              </constraints>
-            </entryLink>
             <entryLink id="c3c4af42-cba6-566b-8da4-00d4c8f79a35" name="Dunne Responder 3e (Veteran)" hidden="false" collective="false" import="true" targetId="9bb2b5f6-226d-5c80-a97f-c2b86322a0db" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="3bce59cf-c205-5959-9424-4078aed771c1" />
@@ -5879,7 +5599,7 @@
             </entryLink>
           </entryLinks>
         </selectionEntryGroup>
-      </selectionEntryGroups>
+      <selectionEntryGroup id="5ac58710-5ac9-5643-9c5b-0304c79cfccb" name="Warden Weapon Replacements" hidden="false"><selectionEntries><selectionEntry id="dc15eb8f-8c90-5ca8-b9e6-ab5cb3891c45" name="Submachine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="7" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="3d121763-0adc-5863-9bb2-b6bf5e30ec12" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="3.0" /></costs></selectionEntry><selectionEntry id="5616c959-1f1c-5873-be8c-bae56a51b17f" name="Shotgun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="10" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="6c0c10b2-8358-5de5-9686-b80dd45c7b38" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="3.0" /></costs></selectionEntry><selectionEntry id="c4ee1df4-a61c-58e0-8e39-5d77213a3e43" name="Assault rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="7" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="c25d9d5d-4a89-50aa-8ea0-08c2a95ab686" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="5.0" /></costs></selectionEntry><selectionEntry id="03d7e78d-5d6d-5f68-9cd3-05242ecea3a2" name="Carbine" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="7" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="1f6614ed-b205-51bd-940b-c2aba61df746" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="1.0" /></costs></selectionEntry><selectionEntry id="243b0fa2-bcbf-5639-8dd0-917b7fe58fac" name="Pistol" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="0890ff40-8b9b-5ed8-a818-f35cc375691f" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="-3.0" /></costs></selectionEntry><selectionEntry id="5e23dc66-2888-5f79-aa99-c1f946e3ffb1" name="Malone machine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="e3f6cd4d-aec6-5bfd-87c8-bd5416d6fb41" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="20.0" /></costs></selectionEntry><selectionEntry id="78b3b60a-0ff9-5b03-86dd-8f6b4d83c60f" name="Flamethrower" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="261860b3-bd17-5293-955f-037b452d99b1" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="20.0" /></costs></selectionEntry><selectionEntry id="2de10764-7ea8-5042-be4b-3536b3a9f6ed" name="Grenade launcher (alongside rifle)" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="725391f9-6f38-55a6-bcb6-463c1396daf1" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="20.0" /></costs></selectionEntry></selectionEntries></selectionEntryGroup></selectionEntryGroups>
     </selectionEntry>
     <selectionEntry id="c0fc47c0-ea1e-5a28-b43d-ca60bb99b6f4" name="Cavalry Squad (Regular)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
@@ -5931,11 +5651,6 @@
             <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="541376e9-385e-5c67-a33a-4b84ed7c845b" />
           </constraints>
           <entryLinks>
-            <entryLink id="9759a0df-b0f3-5ece-b65e-7449f1d9a660" name="Coastal Gun (Regular)" hidden="false" collective="false" import="true" targetId="c0068818-5b9e-5c26-84c4-61968f8fa274" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="242f23be-2e25-5831-a584-06a7fd3adbc6" />
-              </constraints>
-            </entryLink>
             <entryLink id="71de0410-d486-5932-9301-9158cf4e94fd" name="Niska Mk. I Gun Motor Carriage (Regular)" hidden="false" collective="false" import="true" targetId="0985bbc0-fee6-57bc-9875-462ea3de07bb" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="bce97ec8-068c-5d3b-b4f6-503d922f2599" />
@@ -5944,16 +5659,6 @@
             <entryLink id="7e7206ce-b752-5986-9fa7-85bd69d1474e" name="Mulloy LPC (Regular)" hidden="false" collective="false" import="true" targetId="fe72808a-b9f0-5e8e-8b97-9d899baf44f3" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="fc7e3240-2339-52d8-af39-582fae4644e2" />
-              </constraints>
-            </entryLink>
-            <entryLink id="156ab027-232d-5b5c-9040-7f79d768a8b4" name="BMS Packmule Flatbed (Regular)" hidden="false" collective="false" import="true" targetId="025b0f41-3723-57b8-b951-2f4c804524b7" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="dcc89c76-8fda-54a8-9828-c96f45640b2a" />
-              </constraints>
-            </entryLink>
-            <entryLink id="f81a3f01-61b9-5439-86c9-b6eac58f8c6f" name="BMS Class 2 Mobile Auto-Crane (Regular)" hidden="false" collective="false" import="true" targetId="603d70c9-20cd-5c73-a7f1-7f2b179ebc9a" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="078d6987-7da2-5db7-ad52-f5179f8c9d8f" />
               </constraints>
             </entryLink>
             <entryLink id="458bfad9-2c23-5a24-9514-6c183aba5f69" name="Dunne Transport, Leatherback 2a, &amp; Landrunner 12c (Regular)" hidden="false" collective="false" import="true" targetId="ee058577-6e65-5e30-92d3-1657b8451c82" type="selectionEntry">
@@ -5976,11 +5681,6 @@
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="9d88e30e-fe99-5502-841c-81314c23a1ea" />
               </constraints>
             </entryLink>
-            <entryLink id="ac0c724c-bae7-51d1-b5d9-b663c5858d13" name="BMS Class 3 Field Tractor (Regular)" hidden="false" collective="false" import="true" targetId="4fdcf713-a2ce-53a6-8a8a-27273e51c208" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="cc545788-1acd-5b1b-a72f-ea4b582a9b99" />
-              </constraints>
-            </entryLink>
             <entryLink id="6792de4a-feb0-5c9c-a84f-464667356f1b" name="Dunne Responder 3e (Regular)" hidden="false" collective="false" import="true" targetId="d4bbff59-c222-595a-bf5e-fedda9a4e892" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="e5523097-5e78-5f4c-9a05-608257aee742" />
@@ -5988,7 +5688,7 @@
             </entryLink>
           </entryLinks>
         </selectionEntryGroup>
-      </selectionEntryGroups>
+      <selectionEntryGroup id="dac62bda-4929-5d02-bb53-8bb99016d02a" name="Warden Weapon Replacements" hidden="false"><selectionEntries><selectionEntry id="eff1e0d8-690f-515e-84bc-31e3ed82e063" name="Submachine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="3" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="f06361bf-2e37-508b-9c9f-66fa7e89c011" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="2.0" /></costs></selectionEntry><selectionEntry id="837c21c3-bccd-5140-8cc2-e37c438c3ce7" name="Automatic rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="0caf0d95-a3ff-5ff9-9272-1e59ba74a2ee" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="4.0" /></costs></selectionEntry><selectionEntry id="82834399-9930-55cb-97b5-f20c009751d4" name="Pistol" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="10" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="d46ffa29-7f9b-5c41-9c99-bcd7948f00e9" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="-4.0" /></costs></selectionEntry><selectionEntry id="f152cab2-43d7-58f1-b090-236d94129089" name="Malone machine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="1b82147c-4700-5989-8008-b83d1d57b60c" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="19.0" /></costs></selectionEntry></selectionEntries></selectionEntryGroup></selectionEntryGroups>
     </selectionEntry>
     <selectionEntry id="fa2d7f1c-2b12-54dc-94f4-91472c6e0d67" name="Cavalry Squad (Veteran)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
@@ -6040,11 +5740,6 @@
             <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="baad5e5f-c81f-5b37-92b8-945a958d366f" />
           </constraints>
           <entryLinks>
-            <entryLink id="f7487b60-5fe3-5d07-bb55-3b08b452f328" name="Coastal Gun (Veteran)" hidden="false" collective="false" import="true" targetId="0e16e4d9-c642-5e81-8738-efdec0aeedce" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="56e3bd45-811a-51b9-ac3c-ef01faf361c9" />
-              </constraints>
-            </entryLink>
             <entryLink id="a394df3e-9fdb-5268-a105-e2251b98e5bf" name="Niska Mk. I Gun Motor Carriage (Veteran)" hidden="false" collective="false" import="true" targetId="82397978-01c8-5793-88f0-c5d07b99ba46" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="52ef8b48-9244-5c2b-af00-2ae3691f2793" />
@@ -6053,16 +5748,6 @@
             <entryLink id="ee47284a-f0e4-5869-95c0-e0d84411adab" name="Mulloy LPC (Veteran)" hidden="false" collective="false" import="true" targetId="100517c6-1890-5ca6-b17f-b62ce3751b33" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="c66b4665-d083-5fc5-8eca-56ab3b6f2034" />
-              </constraints>
-            </entryLink>
-            <entryLink id="7ac39a84-4f47-5344-9365-bf987b645221" name="BMS Packmule Flatbed (Veteran)" hidden="false" collective="false" import="true" targetId="69004c62-e0a9-5061-b74b-0b92e8bd1896" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="e0bc3af1-a36e-5833-8868-e1084cbef7e9" />
-              </constraints>
-            </entryLink>
-            <entryLink id="a66f43bd-d891-5477-b246-a775059fd409" name="BMS Class 2 Mobile Auto-Crane (Veteran)" hidden="false" collective="false" import="true" targetId="c34b690b-4183-53d4-8023-5b2a400c7588" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="4862ecc6-f8cb-5963-a67e-5ddb6a59795d" />
               </constraints>
             </entryLink>
             <entryLink id="2ee701d5-3553-5212-bef1-2015933cf679" name="Dunne Transport, Leatherback 2a, &amp; Landrunner 12c (Veteran)" hidden="false" collective="false" import="true" targetId="189ab382-54f6-5094-bd7c-18fda190f9f6" type="selectionEntry">
@@ -6085,11 +5770,6 @@
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="bd22c3f6-834b-5dd0-815e-4d4e4b9c67c8" />
               </constraints>
             </entryLink>
-            <entryLink id="19247d5a-57ff-5ed6-956f-e6345205c60b" name="BMS Class 3 Field Tractor (Veteran)" hidden="false" collective="false" import="true" targetId="979068e9-83a0-5cb7-9819-7ceddfddd29c" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="74b935c5-ca46-5a2a-ace8-ee7e8f4c2f17" />
-              </constraints>
-            </entryLink>
             <entryLink id="4c76b83d-b915-5489-a24e-2bd5bc844e97" name="Dunne Responder 3e (Veteran)" hidden="false" collective="false" import="true" targetId="9bb2b5f6-226d-5c80-a97f-c2b86322a0db" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="86208daa-e91e-5507-89ab-0b03c538a89e" />
@@ -6097,7 +5777,7 @@
             </entryLink>
           </entryLinks>
         </selectionEntryGroup>
-      </selectionEntryGroups>
+      <selectionEntryGroup id="e4d079a2-eefd-59dc-91d0-fb0aab15c840" name="Warden Weapon Replacements" hidden="false"><selectionEntries><selectionEntry id="bb693642-ea6e-521e-bbb5-3db51322804c" name="Submachine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="3" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="d763c990-f2cb-53fe-a7ca-9a181bda7c11" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="2.0" /></costs></selectionEntry><selectionEntry id="e278fecb-c535-5855-ba65-c262419378bd" name="Automatic rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="505a05eb-2a21-53cb-87c3-746f4119c164" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="4.0" /></costs></selectionEntry><selectionEntry id="8a8c7d2a-1d5a-5657-8860-ff8378060b4f" name="Pistol" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="10" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="7533b91f-760e-51b6-ad3b-12fe220cb97c" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="-4.0" /></costs></selectionEntry><selectionEntry id="c19beb1b-5ef2-5df4-9012-ec6a18eb3f63" name="Malone machine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="8829c935-b98d-5815-9fc5-c512f4beedfe" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="19.0" /></costs></selectionEntry></selectionEntries></selectionEntryGroup></selectionEntryGroups>
     </selectionEntry>
     <selectionEntry id="bab180d0-27be-5760-befe-7211bfb42423" name="Conscripted Squad" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
@@ -6149,11 +5829,6 @@
             <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="805d0701-90af-5aa0-a6ff-aa8909db5f0d" />
           </constraints>
           <entryLinks>
-            <entryLink id="c80ef359-b9c5-54b3-af88-bd68f1b45324" name="Coastal Gun (Inexperienced)" hidden="false" collective="false" import="true" targetId="4add8752-6e30-597e-802d-1d86ff5c9866" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="dc1fd06d-eb79-5aa6-80ac-2f6c451724f6" />
-              </constraints>
-            </entryLink>
             <entryLink id="901393e3-ce7e-5a6f-8522-d9b54e0dd2e1" name="Niska Mk. I Gun Motor Carriage (Inexperienced)" hidden="false" collective="false" import="true" targetId="3e55271d-a823-535a-a553-9732448549f0" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="ee8eefd4-673f-5b5f-a5fd-bc09e4324093" />
@@ -6162,16 +5837,6 @@
             <entryLink id="1f5c7f5c-b9bd-55fd-a55f-b506b2ea7b4c" name="Mulloy LPC (Inexperienced)" hidden="false" collective="false" import="true" targetId="74e8011c-bd68-5fe1-a528-02293fa4e4bd" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="1b80beb4-399a-5f46-aeae-1d1f44feaba0" />
-              </constraints>
-            </entryLink>
-            <entryLink id="056d603c-2992-5e38-b815-681a6bc37c12" name="BMS Packmule Flatbed (Inexperienced)" hidden="false" collective="false" import="true" targetId="b98c4b4a-b070-5927-8813-267d3fcfdc43" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="91eaf824-fb2f-548c-85f7-d70c22bbbc5f" />
-              </constraints>
-            </entryLink>
-            <entryLink id="31ea0a41-6ab5-5081-829a-b5de8254e297" name="BMS Class 2 Mobile Auto-Crane (Inexperienced)" hidden="false" collective="false" import="true" targetId="c7426e7d-06d4-5d5b-b4c7-5c090b0bb6c7" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="0e0fd1cd-c318-58f8-9e52-fabc2147235c" />
               </constraints>
             </entryLink>
             <entryLink id="6b67fc0d-751d-5375-98d4-5f95042a92b4" name="Dunne Transport, Leatherback 2a, &amp; Landrunner 12c (Inexperienced)" hidden="false" collective="false" import="true" targetId="9d3648e7-b7a2-5088-9261-551c6de7c668" type="selectionEntry">
@@ -6194,11 +5859,6 @@
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="0f321022-e2ed-573e-819b-fc049e9ef33a" />
               </constraints>
             </entryLink>
-            <entryLink id="f83738e5-64d4-51c3-a856-8425e70bd8ad" name="BMS Class 3 Field Tractor (Inexperienced)" hidden="false" collective="false" import="true" targetId="93823be1-fb3b-509b-aabf-6ca7e6acab63" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="3b9541fb-ab10-5071-ace8-0e873d5846f9" />
-              </constraints>
-            </entryLink>
             <entryLink id="8d3f3c15-dd61-5a82-9b46-a8f4129a0819" name="Dunne Responder 3e (Inexperienced)" hidden="false" collective="false" import="true" targetId="f2f82982-40a6-5d2e-8171-5f96829371e3" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="741f5761-4d36-5255-bcc1-56ec71e691f5" />
@@ -6206,7 +5866,7 @@
             </entryLink>
           </entryLinks>
         </selectionEntryGroup>
-      </selectionEntryGroups>
+      <selectionEntryGroup id="e25b92c4-df12-5cbc-9105-71092275c515" name="Warden Weapon Replacements" hidden="false"><selectionEntries><selectionEntry id="d31cfd36-8011-5302-8530-ffaa36f00f6c" name="NCO submachine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="03b607ff-be4e-5428-827f-6cdd4fcdd9d5" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="3.0" /></costs></selectionEntry><selectionEntry id="fd271a60-9acb-58ea-abe9-9e6358505d03" name="Automatic rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="46ed2012-6c14-5dc9-80e9-b16d2ed72f2d" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="5.0" /></costs></selectionEntry></selectionEntries></selectionEntryGroup></selectionEntryGroups>
     </selectionEntry>
     <selectionEntry id="3df2e520-50ab-56f8-805f-673afd92a2bd" name="Partisan Squad (Inexperienced)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
@@ -6258,11 +5918,6 @@
             <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="ad0a4699-d059-503f-906e-e1866c2cf913" />
           </constraints>
           <entryLinks>
-            <entryLink id="d7df224e-8cbb-5606-ac22-63dfe2f3ff15" name="Coastal Gun (Inexperienced)" hidden="false" collective="false" import="true" targetId="4add8752-6e30-597e-802d-1d86ff5c9866" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="8713aeb0-2098-5a17-994c-c337c09abcc2" />
-              </constraints>
-            </entryLink>
             <entryLink id="fb3c3eae-950a-5426-970e-a0d645dfade4" name="Niska Mk. I Gun Motor Carriage (Inexperienced)" hidden="false" collective="false" import="true" targetId="3e55271d-a823-535a-a553-9732448549f0" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="dc301ed7-3cc3-5699-8c00-96aa66200b94" />
@@ -6271,16 +5926,6 @@
             <entryLink id="360bc32b-bdc6-5f72-b995-891af4889bbd" name="Mulloy LPC (Inexperienced)" hidden="false" collective="false" import="true" targetId="74e8011c-bd68-5fe1-a528-02293fa4e4bd" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="7e498b76-9a15-500c-b01b-64fec39ab154" />
-              </constraints>
-            </entryLink>
-            <entryLink id="7247ddc1-e657-5d16-bbb7-9f2b9c4d1ef7" name="BMS Packmule Flatbed (Inexperienced)" hidden="false" collective="false" import="true" targetId="b98c4b4a-b070-5927-8813-267d3fcfdc43" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="cb05fbb2-deeb-5aaf-922c-bc1f75bdbb52" />
-              </constraints>
-            </entryLink>
-            <entryLink id="dab7d5c6-5857-57a3-9a75-8f17b7e1b883" name="BMS Class 2 Mobile Auto-Crane (Inexperienced)" hidden="false" collective="false" import="true" targetId="c7426e7d-06d4-5d5b-b4c7-5c090b0bb6c7" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="0bfbb366-4ea3-569a-9bcc-733853c3911d" />
               </constraints>
             </entryLink>
             <entryLink id="e2618a12-4776-54f5-86f4-cc4d52d5ac75" name="Dunne Transport, Leatherback 2a, &amp; Landrunner 12c (Inexperienced)" hidden="false" collective="false" import="true" targetId="9d3648e7-b7a2-5088-9261-551c6de7c668" type="selectionEntry">
@@ -6303,11 +5948,6 @@
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="afefcb1c-40fc-525f-90c1-bccc70a38d6e" />
               </constraints>
             </entryLink>
-            <entryLink id="06831eb4-c977-54b1-8192-3b011bf9d69a" name="BMS Class 3 Field Tractor (Inexperienced)" hidden="false" collective="false" import="true" targetId="93823be1-fb3b-509b-aabf-6ca7e6acab63" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="d729cd49-49c9-5781-b66a-00c1d3ea4649" />
-              </constraints>
-            </entryLink>
             <entryLink id="29a28220-5420-52da-846f-1ab178f53cf3" name="Dunne Responder 3e (Inexperienced)" hidden="false" collective="false" import="true" targetId="f2f82982-40a6-5d2e-8171-5f96829371e3" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="9fe9e4b7-cc9b-50e4-aebd-b581127f6e48" />
@@ -6315,7 +5955,7 @@
             </entryLink>
           </entryLinks>
         </selectionEntryGroup>
-      </selectionEntryGroups>
+      <selectionEntryGroup id="18d0577c-4247-5d77-bc2a-0557e4e40154" name="Warden Weapon Replacements" hidden="false"><selectionEntries><selectionEntry id="36f8281a-ee76-507d-98b5-68bc9472e611" name="Submachine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="5" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="4eda5844-1f3c-5d00-b99c-2c9f4860729e" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="3.0" /></costs></selectionEntry><selectionEntry id="d3e5ea18-d6bc-5ee0-9c4d-da55ceda52da" name="Shotgun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="5" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="1abd571f-d813-5a24-861a-14d1cb4e90dd" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="3.0" /></costs></selectionEntry><selectionEntry id="c83f596e-1ab5-51d5-b67e-5d05bd65c353" name="Assault rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="5" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="eceaa253-aae6-502e-ac78-feaf13a704bb" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="5.0" /></costs></selectionEntry><selectionEntry id="91796a76-6754-59f2-ac62-10ccbad911a7" name="Carbine" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="5" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="309440a8-664a-544d-8aaa-ec1a5ea10461" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="1.0" /></costs></selectionEntry><selectionEntry id="97925122-40ac-563d-81b4-bc293c12328d" name="Automatic rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="363b76ca-a58e-5dd5-a33c-b80b003bb988" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="5.0" /></costs></selectionEntry><selectionEntry id="6a6eb416-243e-505c-a020-e53963ad2383" name="Pistol" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="3" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="cb6f4e47-e769-5758-b818-5d94d2bdad78" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="-3.0" /></costs></selectionEntry><selectionEntry id="ca5fb567-3d49-5ed5-b49f-5afca99a1e67" name="Malone machine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="b97b1a25-71b3-5a19-b689-a2d3260937a9" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="20.0" /></costs></selectionEntry><selectionEntry id="ac029d87-75cf-5d1b-8790-63e5205e27cf" name="Grenade launcher (alongside rifle)" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="38115904-6a78-5646-bc0e-b41ce1edd743" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="20.0" /></costs></selectionEntry></selectionEntries></selectionEntryGroup></selectionEntryGroups>
     </selectionEntry>
     <selectionEntry id="eca5d2eb-e4d2-5dc4-bd4c-5b65224dfebd" name="Partisan Squad (Regular)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
@@ -6367,11 +6007,6 @@
             <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="81be2db8-88e6-5ac8-8544-00c1c768bbd2" />
           </constraints>
           <entryLinks>
-            <entryLink id="a1d6d781-b2aa-543e-8115-09b65a19b8dc" name="Coastal Gun (Regular)" hidden="false" collective="false" import="true" targetId="c0068818-5b9e-5c26-84c4-61968f8fa274" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="be181293-3797-507c-8dc0-d789298f85a1" />
-              </constraints>
-            </entryLink>
             <entryLink id="346bcea5-2468-52b3-aab5-c2999af8c25b" name="Niska Mk. I Gun Motor Carriage (Regular)" hidden="false" collective="false" import="true" targetId="0985bbc0-fee6-57bc-9875-462ea3de07bb" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="5bc95951-2585-5df7-aa76-c2ec6af2044c" />
@@ -6380,16 +6015,6 @@
             <entryLink id="e354435f-1f12-5504-967c-738aa1731e8f" name="Mulloy LPC (Regular)" hidden="false" collective="false" import="true" targetId="fe72808a-b9f0-5e8e-8b97-9d899baf44f3" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="e31f9390-1fe0-5460-a48c-916255910fcf" />
-              </constraints>
-            </entryLink>
-            <entryLink id="dcc8e29c-23eb-5ae0-9fd7-0bc2fbd047be" name="BMS Packmule Flatbed (Regular)" hidden="false" collective="false" import="true" targetId="025b0f41-3723-57b8-b951-2f4c804524b7" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="95401279-ef8f-5230-a7fb-71540d79ff73" />
-              </constraints>
-            </entryLink>
-            <entryLink id="f1cb47d6-ee65-599e-b8a1-931bbdc64378" name="BMS Class 2 Mobile Auto-Crane (Regular)" hidden="false" collective="false" import="true" targetId="603d70c9-20cd-5c73-a7f1-7f2b179ebc9a" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="bd1378db-9b0e-5b06-8885-1f1f08238b2b" />
               </constraints>
             </entryLink>
             <entryLink id="fe850661-888e-54f9-9a25-01ba07f2172a" name="Dunne Transport, Leatherback 2a, &amp; Landrunner 12c (Regular)" hidden="false" collective="false" import="true" targetId="ee058577-6e65-5e30-92d3-1657b8451c82" type="selectionEntry">
@@ -6412,11 +6037,6 @@
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="256773d0-f82c-5197-8b75-b4b50dd2e071" />
               </constraints>
             </entryLink>
-            <entryLink id="cc241149-9676-590b-a3b7-220837858f05" name="BMS Class 3 Field Tractor (Regular)" hidden="false" collective="false" import="true" targetId="4fdcf713-a2ce-53a6-8a8a-27273e51c208" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="ce7ae77f-6335-5860-8a37-843fa721da6e" />
-              </constraints>
-            </entryLink>
             <entryLink id="4ec0844b-6049-504f-94f1-0bfd86d52812" name="Dunne Responder 3e (Regular)" hidden="false" collective="false" import="true" targetId="d4bbff59-c222-595a-bf5e-fedda9a4e892" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="7ccaef59-4a13-5f6b-836b-4d81ce59ac72" />
@@ -6424,7 +6044,7 @@
             </entryLink>
           </entryLinks>
         </selectionEntryGroup>
-      </selectionEntryGroups>
+      <selectionEntryGroup id="342972f7-acfd-5969-9ee8-872a3d4ebc2b" name="Warden Weapon Replacements" hidden="false"><selectionEntries><selectionEntry id="70eacad9-f208-5eb1-80f4-693e757b9c59" name="Submachine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="5" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="878df09a-8755-58eb-90ec-14b7e331abed" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="3.0" /></costs></selectionEntry><selectionEntry id="9ed8d2b4-4568-5728-9f5f-e743061d8cd6" name="Shotgun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="5" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="b9704441-8a52-5f84-8625-59e8ea67dec3" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="3.0" /></costs></selectionEntry><selectionEntry id="cf36fba5-86aa-5d96-9628-1e4f63f44428" name="Assault rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="5" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="fa54623a-1a07-5ebb-9aba-5908275e70b3" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="5.0" /></costs></selectionEntry><selectionEntry id="09c7afce-3056-5148-9ad5-4b353aeaaa78" name="Carbine" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="5" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="66192eab-bad3-5dd3-b688-ecd3b5a62546" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="1.0" /></costs></selectionEntry><selectionEntry id="41e19c5b-2ac3-5f80-bda4-77710f4250f7" name="Automatic rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="1cd6c268-c30e-5ed7-b795-16fe634e1160" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="5.0" /></costs></selectionEntry><selectionEntry id="abb6df75-812f-5f59-a649-09bf913a8320" name="Pistol" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="3" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="998319f7-1cff-5d35-a372-2ed761853f76" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="-3.0" /></costs></selectionEntry><selectionEntry id="d72c04e3-1e5e-5a9b-a0dc-09cf3d3036f3" name="Malone machine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="3" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="ec72b841-2d77-57e5-97c8-3b2e381bd7c0" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="20.0" /></costs></selectionEntry><selectionEntry id="b680a3fa-9f2a-5458-8e86-04af742a1304" name="Grenade launcher (alongside rifle)" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="b7b0942e-7f66-5611-aa88-e4ae5dc57565" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="20.0" /></costs></selectionEntry></selectionEntries></selectionEntryGroup></selectionEntryGroups>
     </selectionEntry>
     <selectionEntry id="7db63f91-53aa-53e1-9972-b430d17ee433" name="Partisan Squad (Veteran)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
@@ -6476,11 +6096,6 @@
             <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="7a091b94-d983-538f-9a46-976084b1de4e" />
           </constraints>
           <entryLinks>
-            <entryLink id="a43801b8-5f05-56d9-8149-2a274b2e80db" name="Coastal Gun (Veteran)" hidden="false" collective="false" import="true" targetId="0e16e4d9-c642-5e81-8738-efdec0aeedce" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="1ce98a59-500b-5c52-8a7a-c6113ea30505" />
-              </constraints>
-            </entryLink>
             <entryLink id="65b546c1-1e89-5f79-bc00-183158749a8f" name="Niska Mk. I Gun Motor Carriage (Veteran)" hidden="false" collective="false" import="true" targetId="82397978-01c8-5793-88f0-c5d07b99ba46" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="2f14c9a1-2683-5f60-b8d1-788e15a43994" />
@@ -6489,16 +6104,6 @@
             <entryLink id="73049309-bd6e-5ce0-b727-21e858868b4c" name="Mulloy LPC (Veteran)" hidden="false" collective="false" import="true" targetId="100517c6-1890-5ca6-b17f-b62ce3751b33" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="5272dae2-d7c3-59ff-97d0-cab044ff6ff7" />
-              </constraints>
-            </entryLink>
-            <entryLink id="ca9adc4a-d557-57f6-bd17-e828fe2b627a" name="BMS Packmule Flatbed (Veteran)" hidden="false" collective="false" import="true" targetId="69004c62-e0a9-5061-b74b-0b92e8bd1896" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="f10c45ca-1ac2-599b-bc4b-ab14e2125390" />
-              </constraints>
-            </entryLink>
-            <entryLink id="c3245026-53f9-5ab2-b43e-8a2ffa84bce9" name="BMS Class 2 Mobile Auto-Crane (Veteran)" hidden="false" collective="false" import="true" targetId="c34b690b-4183-53d4-8023-5b2a400c7588" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="ad3bc0ff-78cd-56f7-a55c-872f1c477d23" />
               </constraints>
             </entryLink>
             <entryLink id="0abd94a1-a78b-597b-9517-69a098b2917b" name="Dunne Transport, Leatherback 2a, &amp; Landrunner 12c (Veteran)" hidden="false" collective="false" import="true" targetId="189ab382-54f6-5094-bd7c-18fda190f9f6" type="selectionEntry">
@@ -6521,11 +6126,6 @@
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="ef978ee9-a829-5b63-8876-bc2370a5b4af" />
               </constraints>
             </entryLink>
-            <entryLink id="370e7776-8b03-5fa0-a5bc-294199e57e2e" name="BMS Class 3 Field Tractor (Veteran)" hidden="false" collective="false" import="true" targetId="979068e9-83a0-5cb7-9819-7ceddfddd29c" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="8a285717-9626-5e8a-8578-ef5ae5153a03" />
-              </constraints>
-            </entryLink>
             <entryLink id="7dba4bb1-019f-5d7f-930d-551eadd1a621" name="Dunne Responder 3e (Veteran)" hidden="false" collective="false" import="true" targetId="9bb2b5f6-226d-5c80-a97f-c2b86322a0db" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="0ccc53e9-733a-5a5f-a73b-d30ccbab74d1" />
@@ -6533,7 +6133,7 @@
             </entryLink>
           </entryLinks>
         </selectionEntryGroup>
-      </selectionEntryGroups>
+      <selectionEntryGroup id="456a03ae-78b0-5592-99f1-4cf4846bdd74" name="Warden Weapon Replacements" hidden="false"><selectionEntries><selectionEntry id="d4f8e36e-fc92-50c9-a892-d6d5a26e9d71" name="Submachine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="5" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="71ed07dc-9210-5e79-92b2-56b988370a28" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="3.0" /></costs></selectionEntry><selectionEntry id="271b2764-e746-5ee3-8826-1f580e8cb937" name="Shotgun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="5" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="565e09aa-5a67-54bc-be29-872432aba2d9" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="3.0" /></costs></selectionEntry><selectionEntry id="82da7c43-35e5-51f5-b456-f709d7833e34" name="Assault rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="5" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="cb0db68f-c923-5fbf-b041-f44a85905f2c" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="5.0" /></costs></selectionEntry><selectionEntry id="728976d5-59b5-5214-9a85-5ffb042bae51" name="Carbine" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="5" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="68f95ca4-592a-5116-b542-01fcc75f6278" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="1.0" /></costs></selectionEntry><selectionEntry id="fc561b50-80e2-5ed0-a807-54f245398877" name="Automatic rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="6804be31-f41d-589e-b2a6-ea809c452a2b" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="5.0" /></costs></selectionEntry><selectionEntry id="9f9357b1-08cc-52e3-beaf-135cf893cf71" name="Pistol" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="3" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="6881ae5c-5fd8-5d34-be22-b52fd8229813" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="-3.0" /></costs></selectionEntry><selectionEntry id="aa174500-96ec-51ce-810d-c6db40b92218" name="Malone machine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="3" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="d4b00b3b-f378-5d21-935a-a16426f13c45" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="20.0" /></costs></selectionEntry><selectionEntry id="22e7772c-ceb9-59fa-b4bc-be63336c9811" name="Grenade launcher (alongside rifle)" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="a999c2ba-a167-5782-b345-1e881bc8ff57" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="20.0" /></costs></selectionEntry></selectionEntries></selectionEntryGroup></selectionEntryGroups>
     </selectionEntry>
     <selectionEntry id="a1d7e527-0372-5073-b022-7401d00a6f24" name="The Hands Squad" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
@@ -6585,11 +6185,6 @@
             <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="e92cd2cf-496c-5b4c-8612-0ab19fb6590c" />
           </constraints>
           <entryLinks>
-            <entryLink id="95007b15-041f-5890-b468-6e59118aec6f" name="Coastal Gun (Veteran)" hidden="false" collective="false" import="true" targetId="0e16e4d9-c642-5e81-8738-efdec0aeedce" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="92fb2595-3eba-573c-a257-9224f5723dea" />
-              </constraints>
-            </entryLink>
             <entryLink id="75d3f2f6-6964-5fcf-b155-7f4e74d6b329" name="Niska Mk. I Gun Motor Carriage (Veteran)" hidden="false" collective="false" import="true" targetId="82397978-01c8-5793-88f0-c5d07b99ba46" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="5db3ff4d-da1c-5657-b350-1111287636fe" />
@@ -6598,16 +6193,6 @@
             <entryLink id="e28c4c2e-ccf3-5ea2-a514-54455ae6ac26" name="Mulloy LPC (Veteran)" hidden="false" collective="false" import="true" targetId="100517c6-1890-5ca6-b17f-b62ce3751b33" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="f6a3a37b-28ae-5e29-b479-c73f63258998" />
-              </constraints>
-            </entryLink>
-            <entryLink id="6d540b79-24ff-56ca-ae58-3098ba1bfb28" name="BMS Packmule Flatbed (Veteran)" hidden="false" collective="false" import="true" targetId="69004c62-e0a9-5061-b74b-0b92e8bd1896" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="e9e75c28-9ba5-549d-8eef-759ab39691e0" />
-              </constraints>
-            </entryLink>
-            <entryLink id="681768f2-9a98-5df2-abdd-ea04f4351571" name="BMS Class 2 Mobile Auto-Crane (Veteran)" hidden="false" collective="false" import="true" targetId="c34b690b-4183-53d4-8023-5b2a400c7588" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="282a67b0-3f28-599e-95b6-6bcbcc9addc4" />
               </constraints>
             </entryLink>
             <entryLink id="4896abe0-29af-5eb2-ab20-ac8123d7d5d2" name="Dunne Transport, Leatherback 2a, &amp; Landrunner 12c (Veteran)" hidden="false" collective="false" import="true" targetId="189ab382-54f6-5094-bd7c-18fda190f9f6" type="selectionEntry">
@@ -6630,11 +6215,6 @@
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="57632079-b19d-5859-bdf5-a795a40b1aec" />
               </constraints>
             </entryLink>
-            <entryLink id="1ce5aecd-ff35-518f-81a5-964f77f0d607" name="BMS Class 3 Field Tractor (Veteran)" hidden="false" collective="false" import="true" targetId="979068e9-83a0-5cb7-9819-7ceddfddd29c" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="2467e3db-61a3-5fa0-b84d-e2cd06936029" />
-              </constraints>
-            </entryLink>
             <entryLink id="d1858223-7191-5e04-9a7c-f7f28fb15105" name="Dunne Responder 3e (Veteran)" hidden="false" collective="false" import="true" targetId="9bb2b5f6-226d-5c80-a97f-c2b86322a0db" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="6ea9a118-2df5-556f-ae93-b045de8fe256" />
@@ -6642,7 +6222,7 @@
             </entryLink>
           </entryLinks>
         </selectionEntryGroup>
-      </selectionEntryGroups>
+      <selectionEntryGroup id="d3d42f0b-305e-5b3a-a36c-de82e47fd44f" name="Warden Weapon Replacements" hidden="false"><selectionEntries><selectionEntry id="5fe65edd-384e-5a72-8ce0-5ea7d9b0b30f" name="Submachine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="7" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="e52273c6-97c8-5857-bab1-8f268be41eaa" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="3.0" /></costs></selectionEntry><selectionEntry id="25b5b613-6498-5ac0-81d0-88e8b80353d7" name="Assault rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="10" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="07df8436-5cd5-5dd9-b7b9-91f469f035ef" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="5.0" /></costs></selectionEntry><selectionEntry id="4d86bd58-f65a-5ffe-b09c-6ef060fc80f0" name="Carbine" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="10" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="bb39925b-83a1-58fd-aada-fea15fdc4017" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="1.0" /></costs></selectionEntry><selectionEntry id="738e5fe1-8e0b-5253-821d-de2f6ef75110" name="Automatic rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="ba312f21-bc2e-5970-a12d-72b9bdb4c584" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="5.0" /></costs></selectionEntry><selectionEntry id="f7aa8c9c-3785-51b0-ab0e-7c929e5bf7aa" name="Pistol" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="991f6194-2c48-5e1d-876e-e662b0f7d0c9" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="-3.0" /></costs></selectionEntry><selectionEntry id="7888d611-adcf-567b-bef4-997d9036002d" name="Malone machine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="6034a723-643c-5905-b48d-2bc313e99720" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="20.0" /></costs></selectionEntry><selectionEntry id="a5310397-285e-52e9-bc60-6936cc0d4b8f" name="Grenade launcher (alongside rifle)" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="bdfd6943-1685-5980-bea8-25f401b3b717" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="20.0" /></costs></selectionEntry></selectionEntries></selectionEntryGroup></selectionEntryGroups>
     </selectionEntry>
     <selectionEntry id="359c736e-c62a-5d33-9a0f-d3c374182b1d" name="Eight Sons Squad" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
@@ -6694,11 +6274,6 @@
             <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="b4f2998b-81f5-5fd7-898b-a62ea536b1fb" />
           </constraints>
           <entryLinks>
-            <entryLink id="241b3178-0e62-565a-bab8-993d04d3265c" name="Coastal Gun (Veteran)" hidden="false" collective="false" import="true" targetId="0e16e4d9-c642-5e81-8738-efdec0aeedce" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="eebaa3d3-d050-5928-b67b-bda6f240326c" />
-              </constraints>
-            </entryLink>
             <entryLink id="a0443188-1ef6-5200-b550-578a9a8d1d57" name="Niska Mk. I Gun Motor Carriage (Veteran)" hidden="false" collective="false" import="true" targetId="82397978-01c8-5793-88f0-c5d07b99ba46" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="57e009e7-51d3-5347-9510-9e6804dc2075" />
@@ -6707,16 +6282,6 @@
             <entryLink id="01f9b8d2-8f1c-5c35-b20b-0d49b6c80e68" name="Mulloy LPC (Veteran)" hidden="false" collective="false" import="true" targetId="100517c6-1890-5ca6-b17f-b62ce3751b33" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="69ec4c56-0444-5380-aeee-bcebee3595cd" />
-              </constraints>
-            </entryLink>
-            <entryLink id="fab13742-07bd-5953-83ae-5c02f908e71b" name="BMS Packmule Flatbed (Veteran)" hidden="false" collective="false" import="true" targetId="69004c62-e0a9-5061-b74b-0b92e8bd1896" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="e969a629-b998-5756-8590-d125676d4522" />
-              </constraints>
-            </entryLink>
-            <entryLink id="5611aacd-fcd1-58bc-8f2b-781a20cf611d" name="BMS Class 2 Mobile Auto-Crane (Veteran)" hidden="false" collective="false" import="true" targetId="c34b690b-4183-53d4-8023-5b2a400c7588" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="4921fe2d-183b-5f61-b087-7e5710c74c60" />
               </constraints>
             </entryLink>
             <entryLink id="40a59944-dc33-5f0e-b6f0-6e6f8374629e" name="Dunne Transport, Leatherback 2a, &amp; Landrunner 12c (Veteran)" hidden="false" collective="false" import="true" targetId="189ab382-54f6-5094-bd7c-18fda190f9f6" type="selectionEntry">
@@ -6739,11 +6304,6 @@
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="ffae79da-16f2-54ee-a348-daf019aee652" />
               </constraints>
             </entryLink>
-            <entryLink id="c2b82f0f-d9b0-555b-bee3-9f56148dba74" name="BMS Class 3 Field Tractor (Veteran)" hidden="false" collective="false" import="true" targetId="979068e9-83a0-5cb7-9819-7ceddfddd29c" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="025e35c4-6c0b-52d3-aac1-fdcba3ad0d09" />
-              </constraints>
-            </entryLink>
             <entryLink id="3f0bed55-40da-5f4a-a965-687f458a9ec5" name="Dunne Responder 3e (Veteran)" hidden="false" collective="false" import="true" targetId="9bb2b5f6-226d-5c80-a97f-c2b86322a0db" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="0c287080-d125-5dd4-9644-d7474b2bae8f" />
@@ -6751,7 +6311,7 @@
             </entryLink>
           </entryLinks>
         </selectionEntryGroup>
-      </selectionEntryGroups>
+      <selectionEntryGroup id="496217b3-4efc-503d-8439-bd14a572ed49" name="Warden Weapon Replacements" hidden="false"><selectionEntries><selectionEntry id="3ce9f4da-645a-583d-ba2c-0d3364bc6a69" name="Submachine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="10" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="ab025a4b-ded8-583b-ae9a-acb9dd42c7b7" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="3.0" /></costs></selectionEntry><selectionEntry id="5c7544ab-cf46-5d46-a88e-db19c6d3eb8d" name="Shotgun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="10" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="f17f0038-48c4-576b-bb1d-b82c74e197a6" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="3.0" /></costs></selectionEntry><selectionEntry id="9304653f-f3fb-596b-b9e9-ad06327512bb" name="Assault rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="10" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="ed03ac5e-383a-55d5-bf4b-0469e7024e47" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="5.0" /></costs></selectionEntry><selectionEntry id="35398a6c-d5ac-5c25-bd38-f92b56b1ef9d" name="Carbine" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="10" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="3f303b3d-ea9c-5068-8bf1-ea0f2714c4b5" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="1.0" /></costs></selectionEntry><selectionEntry id="f89d6085-66bb-5589-ace1-6bd659214240" name="Automatic rifle" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="3" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="9530f7cb-a7d4-5d56-9c84-f635f52b621b" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="5.0" /></costs></selectionEntry><selectionEntry id="ff31f883-24e4-5b30-81d4-f701361d3b8e" name="Pistol" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="02238808-4d92-5265-8c25-c2e84a8e185e" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="-3.0" /></costs></selectionEntry><selectionEntry id="30f41ea7-60c8-51f9-963b-69503fa9a369" name="Malone machine gun" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="2" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="11516170-0a35-55bc-b023-d3ec60ec3960" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="20.0" /></costs></selectionEntry><selectionEntry id="4c3fac65-c4e6-5c88-bc58-621a32778f88" name="Grenade launcher (alongside rifle)" hidden="false" collective="false" import="true" type="upgrade"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="22fe6a52-dfa9-557b-9b04-dae029416576" /></constraints><costs><cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="20.0" /></costs></selectionEntry></selectionEntries></selectionEntryGroup></selectionEntryGroups>
     </selectionEntry>
     <selectionEntry id="c9b3ddd8-915e-5477-b6c9-abada0385442" name="Ratcatcher Machine Gun Team (Inexperienced)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
