@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<gameSystem xmlns="http://www.battlescribe.net/schema/gameSystemSchema" id="4c6f1c8a-9f4d-4e4d-b2f7-2d71860d3f21" name="Bolt Action: Foxhole (Unofficial)" revision="9" battleScribeVersion="2.03" authorName="Foxhole Bolt Action data" type="gameSystem">
+<gameSystem xmlns="http://www.battlescribe.net/schema/gameSystemSchema" id="4c6f1c8a-9f4d-4e4d-b2f7-2d71860d3f21" name="Bolt Action: Foxhole (Unofficial)" revision="10" battleScribeVersion="2.03" authorName="Foxhole Bolt Action data" type="gameSystem">
   <costTypes>
     <costType id="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" name="pts" defaultCostLimit="-1.0" />
   </costTypes>
@@ -32,7 +32,7 @@
     <categoryEntry id="0f9945cb-0ce1-521e-8f54-35857994efd8" name="Tank / SPG" hidden="false" />
     <categoryEntry id="fc7f7f70-4bea-5d27-8b5e-cb2ac03797c7" name="Transport / Tow" hidden="false" />
     <categoryEntry id="5a76adff-513b-5d97-a775-aba4be508203" name="Armoured Platoon Commander" hidden="false" />
-  </categoryEntries>
+  <categoryEntry id="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" name="Officer" hidden="false" /></categoryEntries>
   <sharedRules>
     <rule id="ba5cf271-b859-5059-a62e-814477937989" name="NCO Weapon Limits" hidden="false">
       <description>NCOs may only take pistol, SMG, rifle, carbine, shotgun, or assault rifle where available; they may never take heavy weapons or assistant-required weapons.</description>

@@ -1,19 +1,19 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<catalogue xmlns="http://www.battlescribe.net/schema/catalogueSchema" id="8f43f0a9-20e0-52cf-b5c5-2f8a0c5d0001" name="Warden Army - Armies of Caoiva" revision="9" battleScribeVersion="2.03" gameSystemId="4c6f1c8a-9f4d-4e4d-b2f7-2d71860d3f21" gameSystemRevision="9" library="false" type="catalogue">
+<catalogue xmlns="http://www.battlescribe.net/schema/catalogueSchema" id="8f43f0a9-20e0-52cf-b5c5-2f8a0c5d0001" name="Warden Army - Armies of Caoiva" revision="10" battleScribeVersion="2.03" gameSystemId="4c6f1c8a-9f4d-4e4d-b2f7-2d71860d3f21" gameSystemRevision="10" library="false" type="catalogue">
   <forceEntries><forceEntry id="04992577-e146-5453-afb1-457912d24c5b" name="Warden Reinforced Platoon" hidden="false">
       <categoryLinks>
-        <categoryLink id="303dc0f4-f777-5b41-bbf6-d3f176ddb697" name="Lieutenant" hidden="false" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="false">
+        <categoryLink id="303dc0f4-f777-5b41-bbf6-d3f176ddb697" name="Lieutenant" hidden="true" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="false">
           <constraints>
             <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="min" id="12ca5a41-b950-5e09-bc86-49685603232b" />
             <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="88a5620e-9edf-555e-899a-3e5a67152b89" />
           </constraints>
         </categoryLink>
-        <categoryLink id="0148860a-1739-5678-9631-d9d401aa0ffe" name="Captain / Major" hidden="false" targetId="914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a" primary="false">
+        <categoryLink id="0148860a-1739-5678-9631-d9d401aa0ffe" name="Captain / Major" hidden="true" targetId="914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a" primary="false">
           <constraints>
             <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="a12e34ff-b5d9-5b8a-a1fd-8a9a747f5e29" />
           </constraints>
         </categoryLink>
-        <categoryLink id="9c065ccc-591d-54e0-99ad-f2ccb730ade4" name="Medic" hidden="false" targetId="4e0b9e1a-0360-51cc-a506-097a7efcd44e" primary="false">
+        <categoryLink id="9c065ccc-591d-54e0-99ad-f2ccb730ade4" name="Medic" hidden="true" targetId="4e0b9e1a-0360-51cc-a506-097a7efcd44e" primary="false">
           <constraints>
             <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="f10af380-ec2e-58d1-8ee5-ddfa6081ff8c" />
           </constraints>
@@ -31,7 +31,7 @@
         </categoryLink>
         <categoryLink id="edf529a5-6807-5a77-af72-23d34d415344" name="Heavy Weapons Team" hidden="false" targetId="df95158d-692a-545b-b6da-9fc45eb1f7fa" primary="false">
           <constraints>
-            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="cd2b416b-4a53-5885-9800-7eabf465e172" />
+            <constraint field="selections" scope="force" value="2" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="cd2b416b-4a53-5885-9800-7eabf465e172" />
           </constraints>
         </categoryLink>
         <categoryLink id="609a7b3d-4bbc-582c-8303-433da9a7a688" name="Mortar Team" hidden="false" targetId="f8cf368a-5e9a-5d56-8e8f-5a5e9a7977b4" primary="false">
@@ -65,22 +65,22 @@
           </constraints>
         </categoryLink>
         <categoryLink id="558d792b-9d47-54fc-b5a7-cecd7ba81a3e" name="Transport / Tow" hidden="false" targetId="fc7f7f70-4bea-5d27-8b5e-cb2ac03797c7" primary="false" />
-      </categoryLinks>
+      <categoryLink id="9596077e-7bb9-541b-b418-ae68d0f13d3b" name="Officer" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="false"><constraints><constraint field="selections" scope="force" value="3" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="a35567f8-5f5f-5b11-837d-d5b8f0576aeb" /></constraints></categoryLink></categoryLinks>
     </forceEntry>
     <forceEntry id="b735a4f4-f8d0-540f-af55-9393dda50015" name="Warden Mechanized / Motorized Platoon" hidden="false">
       <categoryLinks>
-        <categoryLink id="48f7fa2f-e82b-5495-94ab-70683cff50f7" name="Lieutenant" hidden="false" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="false">
+        <categoryLink id="48f7fa2f-e82b-5495-94ab-70683cff50f7" name="Lieutenant" hidden="true" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="false">
           <constraints>
             <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="min" id="33de755d-8b13-5849-9e11-a72f1878e757" />
             <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="72bc62c4-05fb-54da-b21f-4a9f089faae5" />
           </constraints>
         </categoryLink>
-        <categoryLink id="b55a1742-3c08-54fc-b15f-a30440203051" name="Captain / Major" hidden="false" targetId="914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a" primary="false">
+        <categoryLink id="b55a1742-3c08-54fc-b15f-a30440203051" name="Captain / Major" hidden="true" targetId="914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a" primary="false">
           <constraints>
             <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="321c7fe9-91da-5a3a-b786-a4ec868395bb" />
           </constraints>
         </categoryLink>
-        <categoryLink id="f3978ebc-1d39-54c3-b44a-437441a1ca72" name="Medic" hidden="false" targetId="4e0b9e1a-0360-51cc-a506-097a7efcd44e" primary="false">
+        <categoryLink id="f3978ebc-1d39-54c3-b44a-437441a1ca72" name="Medic" hidden="true" targetId="4e0b9e1a-0360-51cc-a506-097a7efcd44e" primary="false">
           <constraints>
             <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="43674cad-5e92-5d64-b3e4-19fab7f45c0a" />
           </constraints>
@@ -98,7 +98,7 @@
         </categoryLink>
         <categoryLink id="ec087789-ede8-5615-b83e-da5af0d438cc" name="Heavy Weapons Team" hidden="false" targetId="df95158d-692a-545b-b6da-9fc45eb1f7fa" primary="false">
           <constraints>
-            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="1a4b8f55-0926-58ca-8c89-c6c812bbf63e" />
+            <constraint field="selections" scope="force" value="2" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="1a4b8f55-0926-58ca-8c89-c6c812bbf63e" />
           </constraints>
         </categoryLink>
         <categoryLink id="dd99973d-e71e-536b-afd1-a93a5214791c" name="Mortar Team" hidden="false" targetId="f8cf368a-5e9a-5d56-8e8f-5a5e9a7977b4" primary="false">
@@ -137,7 +137,7 @@
             <constraint field="selections" scope="force" value="8" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="c3f66ba0-485f-5133-9d60-528a9cd55229" />
           </constraints>
         </categoryLink>
-      </categoryLinks>
+      <categoryLink id="e0b878d8-da42-5712-b624-73b2985178dd" name="Officer" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="false"><constraints><constraint field="selections" scope="force" value="3" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="a81d8e27-ba4c-5d48-a4e6-1514d898cac7" /></constraints></categoryLink></categoryLinks>
     </forceEntry>
     <forceEntry id="5514efbe-f782-5931-b014-0aac40cbc85e" name="Warden Armoured Platoon" hidden="false">
       <categoryLinks>
@@ -179,8 +179,8 @@
   </forceEntries><selectionEntries>
     <selectionEntry id="9bfac0e3-d743-55da-80dd-f81c318b3b75" name="2nd Lieutenant (Inexperienced)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
-        <categoryLink id="84b3919d-ecf9-5eb5-b307-f360fe39ab4f" name="Lieutenant" hidden="false" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="true" />
-      </categoryLinks>
+        <categoryLink id="84b3919d-ecf9-5eb5-b307-f360fe39ab4f" name="Lieutenant" hidden="false" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="false" />
+      <categoryLink id="514d12ac-d31d-5a0c-82ee-ef66038e8533" name="Officer" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="35.0" />
       </costs>
@@ -249,8 +249,8 @@
     <selectionEntries><selectionEntry id="f715c18c-c93f-5f35-b918-81c50e9edca3" name="Officer" hidden="false" collective="false" import="true" type="model"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="min" id="405b8cfc-7a81-5fcb-93ab-a927d30f4624" /><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="74f79225-e830-5a62-8a61-ad26086cf479" /></constraints></selectionEntry></selectionEntries></selectionEntry>
     <selectionEntry id="c857f60a-f2de-5ac9-a132-28049026a5ee" name="2nd Lieutenant (Regular)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
-        <categoryLink id="a8a2ccc4-82e9-514d-ab9d-ee8876d0e975" name="Lieutenant" hidden="false" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="true" />
-      </categoryLinks>
+        <categoryLink id="a8a2ccc4-82e9-514d-ab9d-ee8876d0e975" name="Lieutenant" hidden="false" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="false" />
+      <categoryLink id="23785d18-fe93-54ac-95b9-e37e0e47a0f3" name="Officer" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="50.0" />
       </costs>
@@ -319,8 +319,8 @@
     <selectionEntries><selectionEntry id="7498687f-9dc1-50aa-a82d-88801dd56ae2" name="Officer" hidden="false" collective="false" import="true" type="model"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="min" id="a5926c8f-2843-55a4-aec0-35371762ed75" /><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="8fbd6023-dfaf-5d48-9e4b-6d45ebe20903" /></constraints></selectionEntry></selectionEntries></selectionEntry>
     <selectionEntry id="5017e553-26b9-5318-a82b-92c62c6f9329" name="2nd Lieutenant (Veteran)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
-        <categoryLink id="56105a48-b462-5229-b378-c0a502b408c0" name="Lieutenant" hidden="false" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="true" />
-      </categoryLinks>
+        <categoryLink id="56105a48-b462-5229-b378-c0a502b408c0" name="Lieutenant" hidden="false" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="false" />
+      <categoryLink id="e5d830e6-f7f2-5778-acf4-28ec847c35b2" name="Officer" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="65.0" />
       </costs>
@@ -389,8 +389,8 @@
     <selectionEntries><selectionEntry id="6478ccfc-5bc2-58f3-931c-add35ef31a6e" name="Officer" hidden="false" collective="false" import="true" type="model"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="min" id="55b06363-b604-5d63-a8fb-4a3b0345fe87" /><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="22ed0a06-0400-5927-b8e7-23d0eab23b12" /></constraints></selectionEntry></selectionEntries></selectionEntry>
     <selectionEntry id="eeccea24-b31c-51d8-99e9-deb51d3a15ea" name="1st Lieutenant (Inexperienced)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
-        <categoryLink id="84c39eba-a02d-528c-9da8-79f7f0574582" name="Lieutenant" hidden="false" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="true" />
-      </categoryLinks>
+        <categoryLink id="84c39eba-a02d-528c-9da8-79f7f0574582" name="Lieutenant" hidden="false" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="false" />
+      <categoryLink id="6dfef56d-bc97-5fc2-9763-d07a824b0858" name="Officer" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="60.0" />
       </costs>
@@ -459,8 +459,8 @@
     <selectionEntries><selectionEntry id="17542cf7-a5f8-58d3-99e0-32d264304978" name="Officer" hidden="false" collective="false" import="true" type="model"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="min" id="fcbbaa3a-833c-5aa0-a5a8-12fcabc1ef2a" /><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="163c8515-fa6c-5679-a82b-eea3c243fe81" /></constraints></selectionEntry></selectionEntries></selectionEntry>
     <selectionEntry id="e47f6ab4-08db-5c24-8f06-8c825ae4fe1c" name="1st Lieutenant (Regular)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
-        <categoryLink id="1128afe3-ba12-586a-bc6e-d663baab87e7" name="Lieutenant" hidden="false" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="true" />
-      </categoryLinks>
+        <categoryLink id="1128afe3-ba12-586a-bc6e-d663baab87e7" name="Lieutenant" hidden="false" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="false" />
+      <categoryLink id="ff52314e-d9b9-5a55-9ed2-6c57443ff941" name="Officer" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="75.0" />
       </costs>
@@ -529,8 +529,8 @@
     <selectionEntries><selectionEntry id="5aba8040-1b66-5607-abb8-e9be2e0a1f53" name="Officer" hidden="false" collective="false" import="true" type="model"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="min" id="937ea9ee-0412-5570-a82a-5e69d485820b" /><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="36b14d45-3ac8-5a1b-87f2-9bfd522e5a5b" /></constraints></selectionEntry></selectionEntries></selectionEntry>
     <selectionEntry id="fdd8cda9-cd45-5601-b4bf-6ae16759205a" name="1st Lieutenant (Veteran)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
-        <categoryLink id="fff1c08e-aede-5c5d-83cf-536ab409f548" name="Lieutenant" hidden="false" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="true" />
-      </categoryLinks>
+        <categoryLink id="fff1c08e-aede-5c5d-83cf-536ab409f548" name="Lieutenant" hidden="false" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="false" />
+      <categoryLink id="618ae470-84ab-5fdd-8b41-97e2f8011919" name="Officer" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="90.0" />
       </costs>
@@ -599,8 +599,8 @@
     <selectionEntries><selectionEntry id="761bdb4f-f18e-5215-85b5-7af60c10234b" name="Officer" hidden="false" collective="false" import="true" type="model"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="min" id="d41f39ac-396d-55aa-b979-bdb761600eb7" /><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="2049a6f2-9faa-51a2-96ba-ea5c234679f7" /></constraints></selectionEntry></selectionEntries></selectionEntry>
     <selectionEntry id="33ab7730-deb9-594b-98d5-9e312471b478" name="Captain (Inexperienced)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
-        <categoryLink id="56cc74f6-025b-5636-b226-ad8177bdb237" name="Captain / Major" hidden="false" targetId="914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a" primary="true" />
-      </categoryLinks>
+        <categoryLink id="56cc74f6-025b-5636-b226-ad8177bdb237" name="Captain / Major" hidden="false" targetId="914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a" primary="false" />
+      <categoryLink id="a6ff9a53-4b45-5465-88fc-ba8ff91d1829" name="Officer" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="95.0" />
       </costs>
@@ -669,8 +669,8 @@
     <selectionEntries><selectionEntry id="bdc3bfb6-d497-5dc6-a767-f3ac1db521b2" name="Officer" hidden="false" collective="false" import="true" type="model"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="min" id="86c50a14-b03e-5be4-93e5-06b3839ef831" /><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="eedb5479-da42-5185-b3ab-35cc5e0a76c9" /></constraints></selectionEntry></selectionEntries></selectionEntry>
     <selectionEntry id="5b8d1982-77c2-5c42-b72a-95a7d9814124" name="Captain (Regular)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
-        <categoryLink id="3b74bf54-e68a-5e8b-b5ec-997d77efcdec" name="Captain / Major" hidden="false" targetId="914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a" primary="true" />
-      </categoryLinks>
+        <categoryLink id="3b74bf54-e68a-5e8b-b5ec-997d77efcdec" name="Captain / Major" hidden="false" targetId="914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a" primary="false" />
+      <categoryLink id="25375d28-9d8f-5a5c-b1ed-f5815c190341" name="Officer" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="110.0" />
       </costs>
@@ -739,8 +739,8 @@
     <selectionEntries><selectionEntry id="ffa607af-7abc-502d-97c2-9f0707f56b4d" name="Officer" hidden="false" collective="false" import="true" type="model"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="min" id="e27cad1d-75ec-566d-9bf6-6eecd894ee11" /><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="39dd201a-25ad-588c-921b-9250f56bfa04" /></constraints></selectionEntry></selectionEntries></selectionEntry>
     <selectionEntry id="afab3856-3c70-539c-8f8d-df375eda6894" name="Captain (Veteran)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
-        <categoryLink id="b8146b45-db44-593b-8ade-863da7cab4eb" name="Captain / Major" hidden="false" targetId="914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a" primary="true" />
-      </categoryLinks>
+        <categoryLink id="b8146b45-db44-593b-8ade-863da7cab4eb" name="Captain / Major" hidden="false" targetId="914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a" primary="false" />
+      <categoryLink id="8473b58a-f1c3-5a1d-80a2-cad318b23c4a" name="Officer" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="125.0" />
       </costs>
@@ -809,8 +809,8 @@
     <selectionEntries><selectionEntry id="0af275ed-1970-5b88-8351-0510f99661cd" name="Officer" hidden="false" collective="false" import="true" type="model"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="min" id="04519474-2eba-5774-a8b5-4e792b3f9cd1" /><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="1a93e744-9d1c-5a39-96c1-026fba25dd31" /></constraints></selectionEntry></selectionEntries></selectionEntry>
     <selectionEntry id="53a2d653-568d-5ffa-ac03-fffd27f12dc3" name="Major (Inexperienced)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
-        <categoryLink id="59e27c87-a99c-5e45-a44c-f79f9703f976" name="Captain / Major" hidden="false" targetId="914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a" primary="true" />
-      </categoryLinks>
+        <categoryLink id="59e27c87-a99c-5e45-a44c-f79f9703f976" name="Captain / Major" hidden="false" targetId="914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a" primary="false" />
+      <categoryLink id="19416c5a-9d01-5102-a10b-3e39d9c7a480" name="Officer" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="135.0" />
       </costs>
@@ -879,8 +879,8 @@
     <selectionEntries><selectionEntry id="2e6f829d-73f2-5020-9dc9-f08e28617214" name="Officer" hidden="false" collective="false" import="true" type="model"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="min" id="bc48105e-9a12-5e45-b97c-3c85b2a6bb51" /><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="1ed9713c-7d8d-5912-aad8-e88fee69bcba" /></constraints></selectionEntry></selectionEntries></selectionEntry>
     <selectionEntry id="35ec8c28-85f5-576c-bbd1-c90a3ce73a54" name="Major (Regular)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
-        <categoryLink id="6ffc8ed1-db07-5e95-8c3b-47b458ff113a" name="Captain / Major" hidden="false" targetId="914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a" primary="true" />
-      </categoryLinks>
+        <categoryLink id="6ffc8ed1-db07-5e95-8c3b-47b458ff113a" name="Captain / Major" hidden="false" targetId="914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a" primary="false" />
+      <categoryLink id="85a52419-61f2-5bfc-863b-ab0e0eb531cd" name="Officer" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="150.0" />
       </costs>
@@ -949,8 +949,8 @@
     <selectionEntries><selectionEntry id="42f1c44a-4ac9-5885-8a4a-c2fcf904e01f" name="Officer" hidden="false" collective="false" import="true" type="model"><constraints><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="min" id="71ed8b02-76ae-5839-aaff-202c1ef94fd7" /><constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="c45b80c9-836c-554d-af67-02c5dda4ef0f" /></constraints></selectionEntry></selectionEntries></selectionEntry>
     <selectionEntry id="5727335c-0f68-5902-a6e8-6ab0060e27b8" name="Major (Veteran)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
-        <categoryLink id="ba1ccade-8740-5971-8bdd-cca4b3b4b10c" name="Captain / Major" hidden="false" targetId="914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a" primary="true" />
-      </categoryLinks>
+        <categoryLink id="ba1ccade-8740-5971-8bdd-cca4b3b4b10c" name="Captain / Major" hidden="false" targetId="914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a" primary="false" />
+      <categoryLink id="1d1ce77d-6e05-5637-bc30-4c72649b7073" name="Officer" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="165.0" />
       </costs>
@@ -3863,8 +3863,8 @@
     </selectionEntry>
     <selectionEntry id="e0ab08d9-7149-50f1-8247-7fd2ddde06b0" name="Medic (Veteran)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
-        <categoryLink id="0286859c-31d5-5ffb-aeab-ecf31f76c5be" name="Medic" hidden="false" targetId="4e0b9e1a-0360-51cc-a506-097a7efcd44e" primary="true" />
-      </categoryLinks>
+        <categoryLink id="0286859c-31d5-5ffb-aeab-ecf31f76c5be" name="Medic" hidden="false" targetId="4e0b9e1a-0360-51cc-a506-097a7efcd44e" primary="false" />
+      <categoryLink id="58acbbfa-39f5-560e-b0ce-8d165d915c22" name="Officer" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="30.0" />
       </costs>
