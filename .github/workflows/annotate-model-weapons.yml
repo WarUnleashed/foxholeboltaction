@@ -1,0 +1,141 @@
+name: Annotate model weapons for YellowScribe
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'Colonial Legion.cat'
+      - 'Warden Army.cat'
+      - '.github/workflows/annotate-model-weapons.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  annotate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add weapon-bearing model labels
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import uuid
+          import xml.etree.ElementTree as ET
+
+          NS='http://www.battlescribe.net/schema/catalogueSchema'
+          INFANTRY_CAT='1db0d511-ab38-5eb8-afa7-97cd18cf7d11'
+          REVISION='6'
+          ET.register_namespace('',NS)
+
+          def q(tag): return f'{{{NS}}}{tag}'
+          def sid(*parts):
+              return str(uuid.uuid5(uuid.UUID('6ba7b810-9dad-11d1-80b4-00c04fd430c8'),'ys-weapons|'+'|'.join(map(str,parts))))
+          def has_category(unit,cid):
+              cats=unit.find(q('categoryLinks'))
+              return cats is not None and any(x.get('targetId')==cid for x in cats.findall(q('categoryLink')))
+          def ensure_constraints(el,minv=1,maxv=1):
+              cs=el.find(q('constraints'))
+              if cs is None: cs=ET.SubElement(el,q('constraints'))
+              if not any(c.get('type')=='min' for c in cs.findall(q('constraint'))):
+                  ET.SubElement(cs,q('constraint'),{'field':'selections','scope':'parent','value':str(minv),'percentValue':'false','shared':'false','includeChildSelections':'false','includeChildForces':'false','type':'min','id':sid(el.get('id'),'min')})
+              if not any(c.get('type')=='max' for c in cs.findall(q('constraint'))):
+                  ET.SubElement(cs,q('constraint'),{'field':'selections','scope':'parent','value':str(maxv),'percentValue':'false','shared':'false','includeChildSelections':'false','includeChildForces':'false','type':'max','id':sid(el.get('id'),'max')})
+
+          def base_weapon(faction,name):
+              n=name.lower()
+              if faction=='warden':
+                  return 'Cavalry Carbine' if 'cavalry squad' in n else 'Rifle'
+              if 'cavalry squad' in n: return 'Cavalry Carbine'
+              if 'drafted squad' in n and 'great war era' in n: return 'Volta Repeater'
+              if 'drafted squad' in n: return 'Rifle'
+              return 'Carbine'
+
+          weapon_terms=(
+              'rifle','carbine','pistol','submachine','smg','shotgun','assault','automatic',
+              'machine gun','flamethrower','grenade launcher','ignifist','volta','malone','gast'
+          )
+          skip_terms=('sticky grenade','white ash','bicycle','motorbike','horse','additional man','additional soldier')
+
+          def clean_weapon(name):
+              text=name.replace('NCO ','').replace('NCO — ','')
+              text=text.replace(' (additional weapon)','')
+              text=text.replace(' (alongside rifle/carbine)',' + rifle/carbine')
+              text=text.replace(' (alongside rifle)',' + rifle')
+              return text.strip()
+
+          def process(path,faction):
+              tree=ET.parse(path); root=tree.getroot(); changed=0
+              root.set('revision',REVISION); root.set('gameSystemRevision',REVISION)
+              top=root.find(q('selectionEntries'))
+              if top is None: return 0
+              for unit in top.findall(q('selectionEntry')):
+                  if unit.get('type')!='unit' or not has_category(unit,INFANTRY_CAT): continue
+
+                  # Label the generic YellowScribe models with their base weapon.
+                  ses=unit.find(q('selectionEntries'))
+                  if ses is not None:
+                      bw=base_weapon(faction,unit.get('name',''))
+                      for m in ses.findall(q('selectionEntry')):
+                          if m.get('type')!='model': continue
+                          mn=m.get('name','')
+                          if mn=='NCO': m.set('name',f'NCO — {bw}'); changed+=1
+                          elif mn=='Soldier': m.set('name',f'Soldier — {bw}'); changed+=1
+                          elif mn=='Additional Soldier': m.set('name',f'Additional Soldier — {bw}'); changed+=1
+
+                  groups=unit.find(q('selectionEntryGroups'))
+                  if groups is None: continue
+                  for group in groups.findall(q('selectionEntryGroup')):
+                      entries=group.find(q('selectionEntries'))
+                      if entries is None: continue
+                      for up in entries.findall(q('selectionEntry')):
+                          if up.get('type')!='upgrade': continue
+                          uname=up.get('name',''); low=uname.lower()
+                          if any(x in low for x in skip_terms): continue
+                          if not any(x in low for x in weapon_terms): continue
+                          child_entries=up.find(q('selectionEntries'))
+                          marker_name=('NCO — ' if 'nco' in low else 'Soldier — ')+clean_weapon(uname)
+                          marker_id=sid(up.get('id'),'model-label')
+                          if child_entries is not None and any(x.get('id')==marker_id for x in child_entries.findall(q('selectionEntry'))):
+                              continue
+                          if child_entries is None: child_entries=ET.SubElement(up,q('selectionEntries'))
+                          marker=ET.SubElement(child_entries,q('selectionEntry'),{
+                              'id':marker_id,'name':marker_name,'hidden':'false','collective':'false','import':'true','type':'model'
+                          })
+                          ensure_constraints(marker,1,1)
+                          changed+=1
+              tree.write(path,encoding='UTF-8',xml_declaration=True)
+              return changed
+
+          cc=process('Colonial Legion.cat','colonial')
+          wc=process('Warden Army.cat','warden')
+
+          # Keep the shared game-system revision aligned.
+          GST='Bolt Action - Foxhole.gst'
+          GST_NS='http://www.battlescribe.net/schema/gameSystemSchema'
+          gt=ET.parse(GST); gr=gt.getroot(); gr.set('revision',REVISION)
+          ET.register_namespace('',GST_NS); gt.write(GST,encoding='UTF-8',xml_declaration=True)
+
+          IDX='index.xml'
+          it=ET.parse(IDX); ir=it.getroot()
+          for el in ir.iter():
+              if el.tag.rsplit('}',1)[-1]=='dataIndexEntry' and el.get('dataType') in ('gamesystem','catalogue'):
+                  el.set('dataRevision',REVISION)
+          it.write(IDX,encoding='UTF-8',xml_declaration=True)
+
+          print('Weapon model labels added/renamed:',cc,'Colonial,',wc,'Warden')
+          for p in ('Colonial Legion.cat','Warden Army.cat',GST,IDX): ET.parse(p); print('XML OK:',p)
+          PY
+      - name: Commit weapon model labels
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add 'Colonial Legion.cat' 'Warden Army.cat' 'Bolt Action - Foxhole.gst' 'index.xml'
+          if git diff --cached --quiet; then
+            echo 'Weapon model labels already present.'
+          else
+            git commit -m 'Show selected infantry weapons in YellowScribe'
+            git push
+          fi
