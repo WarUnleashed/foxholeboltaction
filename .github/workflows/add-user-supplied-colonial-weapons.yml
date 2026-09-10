@@ -1,0 +1,89 @@
+name: Add supplied Colonial weapon loadouts
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/add-user-supplied-colonial-weapons.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Apply supplied weapon loadouts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import uuid, xml.etree.ElementTree as ET
+          CAT='Colonial Legion.cat'; REV='27'
+          NS='http://www.battlescribe.net/schema/catalogueSchema'; q=lambda t:f'{{{NS}}}{t}'
+          ET.register_namespace('',NS)
+          tree=ET.parse(CAT); root=tree.getroot()
+          def norm(s): return ' '.join((s or '').lower().replace('“','"').replace('”','"').replace('–','-').replace('—','-').split())
+          def ensure(p,tag):
+              x=p.find(q(tag))
+              if x is None: x=ET.SubElement(p,q(tag))
+              return x
+          def sid(*parts): return str(uuid.uuid5(uuid.NAMESPACE_URL,'foxhole-user-weapons|'+'|'.join(map(str,parts))))
+          def set_rule(e,name,text):
+              rs=ensure(e,'rules')
+              r=next((x for x in rs.findall(q('rule')) if norm(x.get('name'))==norm(name)),None)
+              if r is None:
+                  r=ET.SubElement(rs,q('rule'),{'id':sid(e.get('id'),name),'name':name})
+                  ET.SubElement(r,q('description'))
+              d=r.find(q('description'))
+              if d is None: d=ET.SubElement(r,q('description'))
+              d.text=text
+          mapping=[
+            (('bardiche',),'68mm medium anti-tank gun.'),
+            (('ranseur',),'4 turret-mounted Cutler RPGs; Shaped Charge; HE (1”).'),
+            (('nemesis',),'68mm medium anti-tank gun and 1 front-mounted Fissura grenade launcher with 4 shots.'),
+            (('stygian bolt',),'94.5mm super-heavy anti-tank gun.'),
+            (('taurine rigger',),'None.'),
+            (('cremari mortar team',),'None.'),
+            (('polybolos',),'ARC/RPG; Shaped Charge.'),
+            (('ruptura',),'75mm heavy anti-tank gun.'),
+            (('hades',),'2 rockets; HE (1”).'),
+            (('cestus',),'2 mounted anti-tank rifles.'),
+            (('hasta',),'94.5mm super-heavy anti-tank rifle.'),
+            (('retiarius',),'4 rockets; HE (1”).'),
+            (('deioneus',),'2 rockets; HE (1”).'),
+            (('ixion',),'30mm infantry support gun; HE (2”).'),
+          ]
+          matched={k:0 for k,_ in mapping}
+          for e in root.findall('.//'+q('selectionEntry')):
+              if e.get('type')!='unit': continue
+              n=norm(e.get('name'))
+              for keys,text in mapping:
+                  if all(k in n for k in keys):
+                      set_rule(e,'Weapons',text); matched[keys]+=1; break
+          missing=[keys for keys,count in matched.items() if count==0]
+          if missing: raise SystemExit('No roster match for: '+repr(missing))
+          root.set('revision',REV); root.set('gameSystemRevision',REV)
+          tree.write(CAT,encoding='UTF-8',xml_declaration=True)
+          for fn,ns in [('Warden Army.cat',NS),('Bolt Action - Foxhole.gst','http://www.battlescribe.net/schema/gameSystemSchema')]:
+              ET.register_namespace('',ns); z=ET.parse(fn); r=z.getroot(); r.set('revision',REV)
+              if fn.endswith('.cat'): r.set('gameSystemRevision',REV)
+              z.write(fn,encoding='UTF-8',xml_declaration=True)
+          IN='http://www.battlescribe.net/schema/dataIndexSchema'; ET.register_namespace('',IN)
+          z=ET.parse('index.xml')
+          for x in z.getroot().findall('.//{'+IN+'}dataIndexEntry'): x.set('dataRevision',REV)
+          z.write('index.xml',encoding='UTF-8',xml_declaration=True)
+          for f in (CAT,'Warden Army.cat','Bolt Action - Foxhole.gst','index.xml'): ET.parse(f)
+          print('MATCH_COUNTS')
+          for keys,count in matched.items(): print('/'.join(keys),count)
+          PY
+      - name: Commit generated data
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add 'Colonial Legion.cat' 'Warden Army.cat' 'Bolt Action - Foxhole.gst' index.xml
+          git diff --cached --quiet && exit 0
+          git commit -m 'Add supplied Colonial weapon loadouts'
+          git push
