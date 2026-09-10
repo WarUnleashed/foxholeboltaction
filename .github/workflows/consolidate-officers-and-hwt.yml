@@ -1,0 +1,150 @@
+name: Consolidate officers and Heavy Weapons Team limits
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/consolidate-officers-and-hwt.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Consolidate officer category and set Heavy Weapons Team max 2
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import uuid
+          import xml.etree.ElementTree as ET
+
+          CAT_NS='http://www.battlescribe.net/schema/catalogueSchema'
+          GST_NS='http://www.battlescribe.net/schema/gameSystemSchema'
+          IDX_NS='http://www.battlescribe.net/schema/dataIndexSchema'
+          REV='10'
+          LT='5b361517-ed58-5d60-a6fd-b00e15d7f574'
+          CAP='914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a'
+          MED='4e0b9e1a-0360-51cc-a506-097a7efcd44e'
+          HWT='df95158d-692a-545b-b6da-9fc45eb1f7fa'
+          ARM_CMD='5a76adff-513b-5d97-a775-aba4be508203'
+          OFFICER='0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9'
+
+          def q(ns,tag): return f'{{{ns}}}{tag}'
+          def lname(tag): return tag.rsplit('}',1)[-1]
+          def child(parent,name): return next((x for x in parent if lname(x.tag)==name),None)
+          def ensure(parent,ns,name):
+              x=child(parent,name)
+              if x is None: x=ET.SubElement(parent,q(ns,name))
+              return x
+          def sid(*parts):
+              return str(uuid.uuid5(uuid.UUID('6ba7b810-9dad-11d1-80b4-00c04fd430c8'),'foxhole-officers|'+'|'.join(map(str,parts))))
+          def has_cat(se,cid):
+              cs=child(se,'categoryLinks')
+              return cs is not None and any(x.get('targetId')==cid for x in cs)
+          def add_cat(se,cid,name,primary=False):
+              cs=ensure(se,CAT_NS,'categoryLinks')
+              for cl in cs:
+                  if cl.get('targetId')==cid:
+                      cl.set('name',name); cl.set('primary','true' if primary else 'false'); return cl
+              return ET.SubElement(cs,q(CAT_NS,'categoryLink'),{
+                  'id':sid(se.get('id'),cid),'name':name,'hidden':'false','targetId':cid,
+                  'primary':'true' if primary else 'false'})
+          def set_max(cl,value):
+              cs=child(cl,'constraints')
+              if cs is None: cs=ET.SubElement(cl,q(CAT_NS,'constraints'))
+              found=False
+              for c in cs:
+                  if lname(c.tag)=='constraint' and c.get('type')=='max':
+                      c.set('value',str(value)); found=True
+              if not found:
+                  ET.SubElement(cs,q(CAT_NS,'constraint'),{
+                      'field':'selections','scope':'force','value':str(value),'percentValue':'false','shared':'false',
+                      'includeChildSelections':'true','includeChildForces':'false','type':'max','id':sid(cl.get('id'),'max')})
+          def ensure_visible_officer_link(force):
+              cats=ensure(force,CAT_NS,'categoryLinks')
+              # Don't alter the dedicated Armoured Platoon Commander selector.
+              if any(cl.get('targetId')==ARM_CMD for cl in cats):
+                  return
+              role_links=[cl for cl in cats if cl.get('targetId') in (LT,CAP,MED)]
+              if not role_links: return
+              # Retain the original role links hidden so their existing min/max constraints continue to enforce
+              # Lieutenant/Captain/Medic limits, while New Recruit gets one combined visible Officer section.
+              for cl in role_links: cl.set('hidden','true')
+              existing=next((cl for cl in cats if cl.get('targetId')==OFFICER),None)
+              if existing is None:
+                  existing=ET.SubElement(cats,q(CAT_NS,'categoryLink'),{
+                      'id':sid(force.get('id'),'officer-visible'),'name':'Officer','hidden':'false',
+                      'targetId':OFFICER,'primary':'false'})
+                  cs=ET.SubElement(existing,q(CAT_NS,'constraints'))
+                  ET.SubElement(cs,q(CAT_NS,'constraint'),{
+                      'field':'selections','scope':'force','value':'3','percentValue':'false','shared':'false',
+                      'includeChildSelections':'true','includeChildForces':'false','type':'max','id':sid(existing.get('id'),'max')})
+              else:
+                  existing.set('name','Officer'); existing.set('hidden','false'); set_max(existing,3)
+
+          def process_cat(path):
+              ET.register_namespace('',CAT_NS)
+              tree=ET.parse(path); root=tree.getroot()
+              # Add the combined Officer category to Lieutenant, Captain/Major and Medic units.
+              for se in root.iter(q(CAT_NS,'selectionEntry')):
+                  if se.get('type')!='unit': continue
+                  role=None
+                  for cid in (LT,CAP,MED):
+                      if has_cat(se,cid): role=cid; break
+                  if role:
+                      cs=child(se,'categoryLinks')
+                      for cl in cs:
+                          if cl.get('targetId') in (LT,CAP,MED): cl.set('primary','false')
+                      add_cat(se,OFFICER,'Officer',True)
+              # Selector changes: Heavy Weapons Team max 2, normal HQ roles combined under Officer.
+              for force in root.iter(q(CAT_NS,'forceEntry')):
+                  cats=child(force,'categoryLinks')
+                  if cats is None: continue
+                  for cl in cats:
+                      if cl.get('targetId')==HWT:
+                          cl.set('name','Heavy Weapons Team'); set_max(cl,2)
+                  ensure_visible_officer_link(force)
+              root.set('revision',REV); root.set('gameSystemRevision',REV)
+              tree.write(path,encoding='UTF-8',xml_declaration=True)
+
+          process_cat('Colonial Legion.cat')
+          process_cat('Warden Army.cat')
+
+          ET.register_namespace('',GST_NS)
+          gst=ET.parse('Bolt Action - Foxhole.gst'); g=gst.getroot()
+          cats=child(g,'categoryEntries')
+          if cats is None: cats=ET.SubElement(g,q(GST_NS,'categoryEntries'))
+          ce=next((x for x in cats if lname(x.tag)=='categoryEntry' and x.get('id')==OFFICER),None)
+          if ce is None:
+              ce=ET.SubElement(cats,q(GST_NS,'categoryEntry'),{'id':OFFICER,'name':'Officer','hidden':'false'})
+          else:
+              ce.set('name','Officer'); ce.set('hidden','false')
+          g.set('revision',REV)
+          gst.write('Bolt Action - Foxhole.gst',encoding='UTF-8',xml_declaration=True)
+
+          ET.register_namespace('',IDX_NS)
+          idx=ET.parse('index.xml'); ir=idx.getroot()
+          for el in ir.iter():
+              if lname(el.tag)=='dataIndexEntry': el.set('dataRevision',REV)
+          idx.write('index.xml',encoding='UTF-8',xml_declaration=True)
+
+          for p in ('Colonial Legion.cat','Warden Army.cat','Bolt Action - Foxhole.gst','index.xml'):
+              ET.parse(p)
+          PY
+      - name: Commit generated selector updates
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add 'Colonial Legion.cat' 'Warden Army.cat' 'Bolt Action - Foxhole.gst' index.xml
+          if git diff --cached --quiet; then
+            echo 'No selector changes needed.'
+            exit 0
+          fi
+          git commit -m 'Allow two Heavy Weapons Teams and combine officer selections'
+          git push
