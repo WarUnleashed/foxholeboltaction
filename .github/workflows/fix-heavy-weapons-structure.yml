@@ -1,0 +1,191 @@
+name: Fix Heavy Weapons Team structure
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/fix-heavy-weapons-structure.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Rebuild Heavy Weapons Teams and clean duplicate artillery
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import copy
+          import re
+          import uuid
+          import xml.etree.ElementTree as ET
+
+          CAT_NS='http://www.battlescribe.net/schema/catalogueSchema'
+          GST_NS='http://www.battlescribe.net/schema/gameSystemSchema'
+          IDX_NS='http://www.battlescribe.net/schema/dataIndexSchema'
+          POINTS='b0e5f7a2-33c8-46ce-8f8f-148d8171da43'
+          MG_CAT='df95158d-692a-545b-b6da-9fc45eb1f7fa'
+          DATA_REVISION='9'
+
+          ET.register_namespace('', CAT_NS)
+
+          def q(ns,tag): return f'{{{ns}}}{tag}'
+          def lname(tag): return tag.rsplit('}',1)[-1]
+          def norm(s): return re.sub(r'[^a-z0-9]+',' ',(s or '').lower()).strip()
+          def sid(*parts):
+              return str(uuid.uuid5(uuid.UUID('6ba7b810-9dad-11d1-80b4-00c04fd430c8'),'foxhole-hwt|'+'|'.join(map(str,parts))))
+          def child(parent, name):
+              return next((x for x in parent if lname(x.tag)==name),None)
+          def ensure(parent, ns, name):
+              x=child(parent,name)
+              if x is None: x=ET.SubElement(parent,q(ns,name))
+              return x
+          def has_cat(se,cid):
+              cs=child(se,'categoryLinks')
+              return cs is not None and any(x.get('targetId')==cid for x in cs)
+          def add_constraint(parent, ns, ctype, value, key):
+              cs=ensure(parent,ns,'constraints')
+              ET.SubElement(cs,q(ns,'constraint'),{
+                  'field':'selections','scope':'parent','value':str(value),'percentValue':'false','shared':'false',
+                  'includeChildSelections':'false','includeChildForces':'false','type':ctype,'id':sid(parent.get('id'),key,ctype)})
+          def add_cost(parent, ns, pts):
+              costs=ensure(parent,ns,'costs')
+              ET.SubElement(costs,q(ns,'cost'),{'name':'pts','typeId':POINTS,'value':str(float(pts))})
+          def top_entries(root,ns):
+              for cname in ('selectionEntries','sharedSelectionEntries'):
+                  c=child(root,cname)
+                  if c is not None:
+                      for se in list(c):
+                          if lname(se.tag)=='selectionEntry': yield c,se
+          def remove_links_to(root,ns,ids):
+              if not ids: return
+              pm={c:p for p in root.iter() for c in p}
+              for link in list(root.iter(q(ns,'entryLink'))):
+                  if link.get('targetId') in ids:
+                      p=pm.get(link)
+                      if p is not None: p.remove(link)
+
+          def exp_from_name(name):
+              n=norm(name)
+              if 'inexperienced' in n: return 'Inexperienced'
+              if 'veteran' in n: return 'Veteran'
+              if 'regular' in n: return 'Regular'
+              return None
+
+          def rebuild_hwt(path,faction,weapons):
+              tree=ET.parse(path); root=tree.getroot(); ns=CAT_NS
+              entries=child(root,'selectionEntries')
+              if entries is None: entries=ET.SubElement(root,q(ns,'selectionEntries'))
+
+              # Remove any previously generated Heavy Weapons Team parent records.
+              old_generated=set()
+              for container,se in list(top_entries(root,ns)):
+                  if se.get('id','').startswith('') and norm(se.get('name')).startswith('heavy weapons team') and se.get('id') in {sid(faction,'hwt',e) for e in ('Inexperienced','Regular','Veteran')}:
+                      old_generated.add(se.get('id')); container.remove(se)
+              remove_links_to(root,ns,old_generated)
+
+              # Source records currently exposed directly in this category are removed from the category.
+              source_by_exp={}
+              remove_ids=set()
+              for container,se in list(top_entries(root,ns)):
+                  n=norm(se.get('name'))
+                  if has_cat(se,MG_CAT):
+                      exp=exp_from_name(se.get('name'))
+                      if exp:
+                          source_by_exp.setdefault(exp,[]).append(se)
+                          remove_ids.add(se.get('id'))
+                      # remove MG category link so sources no longer show as separate category entries
+                      cs=child(se,'categoryLinks')
+                      if cs is not None:
+                          for cl in list(cs):
+                              if cl.get('targetId')==MG_CAT: cs.remove(cl)
+
+              # Remove direct top-level source records that were only serving this Heavy Weapons category.
+              # They are replaced by one parent per experience below.
+              for container,se in list(top_entries(root,ns)):
+                  if se.get('id') in remove_ids:
+                      container.remove(se)
+              remove_links_to(root,ns,remove_ids)
+
+              pts_by_exp={'Inexperienced':35,'Regular':50,'Veteran':65}
+              for exp in ('Inexperienced','Regular','Veteran'):
+                  parent=ET.SubElement(entries,q(ns,'selectionEntry'),{
+                      'id':sid(faction,'hwt',exp),'name':f'Heavy Weapons Team ({exp})','hidden':'false',
+                      'collective':'false','import':'true','type':'unit'})
+                  cats=ET.SubElement(parent,q(ns,'categoryLinks'))
+                  ET.SubElement(cats,q(ns,'categoryLink'),{
+                      'id':sid(parent.get('id'),'cat'),'name':'Heavy Weapons Team','hidden':'false','targetId':MG_CAT,'primary':'true'})
+                  add_cost(parent,ns,pts_by_exp[exp])
+
+                  groups=ET.SubElement(parent,q(ns,'selectionEntryGroups'))
+                  grp=ET.SubElement(groups,q(ns,'selectionEntryGroup'),{
+                      'id':sid(parent.get('id'),'weapon-group'),'name':'Heavy Weapon (choose one)','hidden':'false'})
+                  add_constraint(grp,ns,'min',1,'weapon-min'); add_constraint(grp,ns,'max',1,'weapon-max')
+                  ses=ET.SubElement(grp,q(ns,'selectionEntries'))
+                  for weapon in weapons:
+                      up=ET.SubElement(ses,q(ns,'selectionEntry'),{
+                          'id':sid(parent.get('id'),'weapon',weapon),'name':weapon,'hidden':'false',
+                          'collective':'false','import':'true','type':'upgrade'})
+                      add_constraint(up,ns,'max',1,'max')
+
+                  # All of the currently represented Colonial heavy weapon teams use 3 crew in the source;
+                  # use one explicit 3-man crew model so YellowScribe sees a single team, not separate top-level units.
+                  models=ET.SubElement(parent,q(ns,'selectionEntries'))
+                  crew=ET.SubElement(models,q(ns,'selectionEntry'),{
+                      'id':sid(parent.get('id'),'crew'),'name':'Heavy Weapons Crew','hidden':'false',
+                      'collective':'false','import':'true','type':'model'})
+                  add_constraint(crew,ns,'min',3,'crew-min'); add_constraint(crew,ns,'max',3,'crew-max')
+
+              root.set('revision',DATA_REVISION); root.set('gameSystemRevision',DATA_REVISION)
+              tree.write(path,encoding='UTF-8',xml_declaration=True)
+
+          rebuild_hwt('Colonial Legion.cat','colonial',['Typhoon','Daucus ISG.III','Lamentum','Fissura'])
+          rebuild_hwt('Warden Army.cat','warden',['Ratcatcher','Foebreaker','Bonesaw'])
+
+          # Remove the duplicate generic 68mm anti-tank-gun entries from Colonial catalogue.
+          ctree=ET.parse('Colonial Legion.cat'); c=ctree.getroot(); removed=set()
+          for container,se in list(top_entries(c,CAT_NS)):
+              n=norm(se.get('name'))
+              if '68mm anti tank gun' in n and 'battering ram' not in n:
+                  removed.add(se.get('id')); container.remove(se)
+          remove_links_to(c,CAT_NS,removed)
+          c.set('revision',DATA_REVISION); c.set('gameSystemRevision',DATA_REVISION)
+          ctree.write('Colonial Legion.cat',encoding='UTF-8',xml_declaration=True)
+
+          # Rename the actual game-system category. New Recruit uses this categoryEntry for the section header.
+          ET.register_namespace('', GST_NS)
+          gst=ET.parse('Bolt Action - Foxhole.gst'); g=gst.getroot()
+          for ce in g.iter(q(GST_NS,'categoryEntry')):
+              if ce.get('id')==MG_CAT: ce.set('name','Heavy Weapons Team')
+          g.set('revision',DATA_REVISION)
+          gst.write('Bolt Action - Foxhole.gst',encoding='UTF-8',xml_declaration=True)
+
+          # Keep index metadata in sync and avoid ns0 prefixes.
+          ET.register_namespace('', IDX_NS)
+          idx=ET.parse('index.xml'); ir=idx.getroot()
+          for node in ir.iter():
+              if lname(node.tag)=='dataIndexEntry' and node.get('dataRevision') is not None:
+                  node.set('dataRevision',DATA_REVISION)
+          idx.write('index.xml',encoding='UTF-8',xml_declaration=True)
+
+          for p in ('Colonial Legion.cat','Warden Army.cat','Bolt Action - Foxhole.gst','index.xml'):
+              ET.parse(p)
+          PY
+
+      - name: Commit generated fixes
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add 'Colonial Legion.cat' 'Warden Army.cat' 'Bolt Action - Foxhole.gst' index.xml
+          if git diff --cached --quiet; then
+            echo 'No generated changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Fix Heavy Weapons Team structure and remove duplicate 68mm gun'
+          git push
