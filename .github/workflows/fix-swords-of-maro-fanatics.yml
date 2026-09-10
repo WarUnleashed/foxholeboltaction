@@ -1,0 +1,85 @@
+name: Fix Swords of Maro Fanatics option
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/fix-swords-of-maro-fanatics.yml'
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Ensure Fanatics is a +10 point option
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import uuid, xml.etree.ElementTree as ET
+          CAT='Colonial Legion.cat'; REV='24'
+          NS='http://www.battlescribe.net/schema/catalogueSchema'; q=lambda t:f'{{{NS}}}{t}'
+          ET.register_namespace('',NS)
+          t=ET.parse(CAT); root=t.getroot()
+          def norm(s): return ' '.join((s or '').lower().replace('“','"').replace('”','"').split())
+          def ensure(parent, tag):
+              x=parent.find(q(tag))
+              if x is None: x=ET.SubElement(parent,q(tag))
+              return x
+          matches=0
+          for u in root.findall('.//'+q('selectionEntry')):
+              if norm(u.get('name'))!='swords of maro squad': continue
+              matches += 1
+              ses=ensure(u,'selectionEntries')
+              fan=next((x for x in ses.findall(q('selectionEntry')) if norm(x.get('name'))=='fanatics'),None)
+              if fan is None:
+                  fan=ET.SubElement(ses,q('selectionEntry'),{
+                      'id':str(uuid.uuid5(uuid.NAMESPACE_URL,'foxhole:swords-of-maro:fanatics')),
+                      'name':'Fanatics','hidden':'false','collective':'false','import':'true','type':'upgrade'})
+                  cons=ET.SubElement(fan,q('constraints'))
+                  ET.SubElement(cons,q('constraint'),{
+                      'field':'selections','scope':'parent','value':'1','percentValue':'false','shared':'false',
+                      'includeChildSelections':'false','includeChildForces':'false','type':'max',
+                      'id':str(uuid.uuid5(uuid.NAMESPACE_URL,'foxhole:swords-of-maro:fanatics:max'))})
+              costs=ensure(fan,'costs')
+              c=next((x for x in costs.findall(q('cost')) if norm(x.get('name')) in ('pts','points')),None)
+              if c is None:
+                  c=ET.SubElement(costs,q('cost'),{'name':'pts','typeId':'b0e5f7a2-33c8-46ce-8f8f-148d8171da43','value':'10'})
+              c.set('value','10')
+          if matches != 1:
+              raise SystemExit(f'Expected exactly one SWORDS OF MARO SQUAD, found {matches}')
+          root.set('revision',REV); root.set('gameSystemRevision',REV)
+          ET.register_namespace('',NS); t.write(CAT,encoding='UTF-8',xml_declaration=True)
+          for fn,ns in [('Warden Army.cat',NS),('Bolt Action - Foxhole.gst','http://www.battlescribe.net/schema/gameSystemSchema')]:
+              ET.register_namespace('',ns); z=ET.parse(fn); r=z.getroot(); r.set('revision',REV)
+              if fn.endswith('.cat'): r.set('gameSystemRevision',REV)
+              ET.register_namespace('',ns); z.write(fn,encoding='UTF-8',xml_declaration=True)
+          IN='http://www.battlescribe.net/schema/dataIndexSchema'; ET.register_namespace('',IN)
+          z=ET.parse('index.xml')
+          for e in z.getroot().findall('.//{'+IN+'}dataIndexEntry'): e.set('dataRevision',REV)
+          ET.register_namespace('',IN); z.write('index.xml',encoding='UTF-8',xml_declaration=True)
+          # verify the exact generated option and price before committing
+          t2=ET.parse(CAT); root2=t2.getroot(); ok=[]
+          for u in root2.findall('.//'+q('selectionEntry')):
+              if norm(u.get('name'))=='swords of maro squad':
+                  for e in u.findall('./'+q('selectionEntries')+'/'+q('selectionEntry')):
+                      if norm(e.get('name'))=='fanatics':
+                          vals=[x.get('value') for x in e.findall('./'+q('costs')+'/'+q('cost')) if norm(x.get('name')) in ('pts','points')]
+                          ok.extend(vals)
+          if '10' not in ok:
+              raise SystemExit('Fanatics +10 verification failed: '+repr(ok))
+          for f in [CAT,'Warden Army.cat','Bolt Action - Foxhole.gst','index.xml']: ET.parse(f)
+          print('Verified Swords of Maro Fanatics cost: +10 pts')
+          PY
+      - name: Commit generated data
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add 'Colonial Legion.cat' 'Warden Army.cat' 'Bolt Action - Foxhole.gst' index.xml
+          git diff --cached --quiet && exit 0
+          git commit -m 'Fix Swords of Maro Fanatics cost'
+          git push
