@@ -1,0 +1,176 @@
+name: Build Warden New Recruit data
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/build-wardens.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Warden catalogue and selectors
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import uuid
+          import xml.etree.ElementTree as ET
+
+          CAT_NS='http://www.battlescribe.net/schema/catalogueSchema'
+          GST_NS='http://www.battlescribe.net/schema/gameSystemSchema'
+          IDX_NS='http://www.battlescribe.net/schema/dataIndexSchema'
+          POINTS='b0e5f7a2-33c8-46ce-8f8f-148d8171da43'
+          PROFILE_TYPE='a68b29ee-bfa8-4d15-9d86-1834263553be'
+          CATS={
+            'Lieutenant':'5b361517-ed58-5d60-a6fd-b00e15d7f574','Captain / Major':'914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a','Medic':'4e0b9e1a-0360-51cc-a506-097a7efcd44e','Forward Observer':'43e65105-60f7-5bb6-a4ac-02a433a791ee','Infantry Squad':'1db0d511-ab38-5eb8-afa7-97cd18cf7d11','Machine Gun Team':'df95158d-692a-545b-b6da-9fc45eb1f7fa','Mortar Team':'f8cf368a-5e9a-5d56-8e8f-5a5e9a7977b4','Sniper Team':'62025d03-4255-56ea-870e-c3399170789d','Anti-Tank Team':'3cf48c43-9058-564e-901a-e3098be16d2f','Field / Emplaced / Immobile Weapon':'75cd78ea-f7b0-5366-b2b5-cfcaa6ba2fc6','Armoured Car':'6e1678b3-02f8-5430-9f5b-e3da292b8625','Tank / SPG':'0f9945cb-0ce1-521e-8f54-35857994efd8','Transport / Tow':'fc7f7f70-4bea-5d27-8b5e-cb2ac03797c7','Armoured Platoon Commander':'5a76adff-513b-5d97-a775-aba4be508203'
+          }
+          CH={'Experience':'4e5d25ad-f4b2-5bb2-b9d3-7ec072efc323','Composition':'87422f9d-dace-51fa-8565-fdd58537559d','Weapons':'d160b418-9093-5966-98d9-deefa7bb5fea','Damage Value':'729f88cf-cf63-5f67-8a6f-08498e525b5d','Transport':'f76bd640-5b80-51d3-9add-fc25af5ab145','Tow':'ed69d6aa-1546-5200-a906-b7964002e4fc','Options & Special Rules':'0c837bdf-17d2-5e89-8972-44c120f436ce','Source':'6d21d900-3cae-55f6-a97e-68dacc1ee737'}
+          def sid(*parts): return str(uuid.uuid5(uuid.UUID('6ba7b810-9dad-11d1-80b4-00c04fd430c8'),'warden|'+'|'.join(map(str,parts))))
+          def q(tag): return f'{{{CAT_NS}}}{tag}'
+          def gq(tag): return f'{{{GST_NS}}}{tag}'
+          def iq(tag): return f'{{{IDX_NS}}}{tag}'
+          def add_cost(el,pts):
+              costs=ET.SubElement(el,q('costs')); ET.SubElement(costs,q('cost'),{'name':'pts','typeId':POINTS,'value':str(float(pts))})
+          def add_max(el,value):
+              cs=el.find(q('constraints')) or ET.SubElement(el,q('constraints'))
+              ET.SubElement(cs,q('constraint'),{'field':'selections','scope':'parent','value':str(value),'percentValue':'false','shared':'false','includeChildSelections':'false','includeChildForces':'false','type':'max','id':sid(el.get('id'),'max')})
+          def add_rule(se,name,text):
+              rules=se.find(q('rules')) or ET.SubElement(se,q('rules'))
+              r=ET.SubElement(rules,q('rule'),{'id':sid(se.get('id'),name),'name':name,'hidden':'false'}); ET.SubElement(r,q('description')).text=text
+          def add_cat(se,cat):
+              cls=ET.SubElement(se,q('categoryLinks')); ET.SubElement(cls,q('categoryLink'),{'id':sid(se.get('id'),cat),'name':cat,'hidden':'false','targetId':CATS[cat],'primary':'true'})
+          def exp_costs(base, pairs):
+              out=[]
+              for exp,pts in pairs: out.append((f'{base} ({exp})',exp,pts))
+              return out
+
+          officer_costs=[('Inexperienced',35),('Regular',50),('Veteran',65),('Inexperienced',60),('Regular',75),('Veteran',90),('Inexperienced',95),('Regular',110),('Veteran',125),('Inexperienced',135),('Regular',150),('Veteran',165)]
+          officer_names=['2nd Lieutenant','2nd Lieutenant','2nd Lieutenant','1st Lieutenant','1st Lieutenant','1st Lieutenant','Captain','Captain','Captain','Major','Major','Major']
+          entries=[]
+          for name,(exp,pts) in zip(officer_names,officer_costs): entries.append((f'{name} ({exp})',exp,pts,'Lieutenant' if 'Lieutenant' in name else 'Captain / Major','Officer: weapon may be pistol, submachine gun, rifle, carbine, shotgun, or assault rifle. May be accompanied by up to 2 men.'))
+          for name,(exp,pts) in zip(officer_names,officer_costs): entries.append((f'Armoured Platoon Commander - {name} ({exp})',exp,pts,'Armoured Platoon Commander','Armoured Platoon-only officer. Select one attached Tank / SPG as the command vehicle; it counts toward the platoon total.'))
+          entries += [('Medic (Veteran)','Veteran',30,'Medic','Medic. May be accompanied by up to 2 men.'),('Air Force Forward Observer (Regular)','Regular',75,'Forward Observer','Air observer.'),('Air Force Forward Observer (Veteran)','Veteran',90,'Forward Observer','Air observer.'),('Artillery Forward Observer (Regular)','Regular',100,'Forward Observer','Artillery observer.'),('Artillery Forward Observer (Veteran)','Veteran',115,'Forward Observer','Artillery observer.'),('Storm Cannon Forward Observer (Regular)','Regular',150,'Forward Observer','Storm Cannon observer.'),('Storm Cannon Forward Observer (Veteran)','Veteran',165,'Forward Observer','Storm Cannon observer.')]
+          infantry=[('Inexperienced Infantry Squad (Great War Era)','Inexperienced',35,5,5,7),('Regular Infantry Squad (Great War Era)','Regular',50,5,5,10),('Veteran Infantry Squad (Great War Era)','Veteran',65,5,5,13),('Reconnaissance Squad (Great War Era) (Regular)','Regular',40,4,6,10),('Reconnaissance Squad (Great War Era) (Veteran)','Veteran',52,4,6,13),('Conscripted Squad (Great War Era)','Inexperienced',20,5,15,4),('The Hands Squad (Great War Era)','Veteran',30,2,8,15),('Eight Sons Squad (Great War Era)','Veteran',80,5,5,16),('Inexperienced Infantry Squad','Inexperienced',35,5,5,7),('Regular Infantry Squad','Regular',50,5,5,10),('Veteran Infantry Squad','Veteran',65,5,5,13),('Reconnaissance Squad (Regular)','Regular',40,4,6,10),('Reconnaissance Squad (Veteran)','Veteran',52,4,6,13),('Engineer Squad','Veteran',65,5,5,13),('Cavalry Squad (Regular)','Regular',30,3,7,10),('Cavalry Squad (Veteran)','Veteran',39,3,7,13),('Conscripted Squad','Inexperienced',20,5,15,4),('Partisan Squad (Inexperienced)','Inexperienced',28,4,6,7),('Partisan Squad (Regular)','Regular',40,4,6,10),('Partisan Squad (Veteran)','Veteran',56,4,6,14),('The Hands Squad','Veteran',30,2,8,15),('Eight Sons Squad','Veteran',80,5,5,16)]
+          for n,e,c,b,m,p in infantry: entries.append((n,e,c,'Infantry Squad',f'Composition base {b} models. Add up to {m} men at +{p} pts each. Rifle-based Warden squad options include automatic rifles, Malone/Ratcatcher support weapons, grenade launchers, bicycles/motorbikes where listed, sticky grenades, and white ash impact grenades where listed.'))
+          support=[('Ratcatcher Machine Gun Team',35,50,65,'Machine Gun Team'),('Anti-Tank Rifle Team',32,40,48,'Anti-Tank Team'),('Cutler Launcher 4 Team',48,60,72,'Anti-Tank Team'),('Cutler Foebreaker Team',60,75,90,'Anti-Tank Team'),('Bonesaw Mk. 3 Team',52,65,78,'Anti-Tank Team'),('Mounted Bonesaw Mk. 3 Team',60,75,90,'Anti-Tank Team'),('Suicide Anti-Tank Squad',25,0,0,'Anti-Tank Team'),('Sniper Team',50,65,0,'Sniper Team'),('Light Mortar Team',24,35,46,'Mortar Team')]
+          for base,i,r,v,cat in support:
+              vals=[('Inexperienced',i),('Regular',r),('Veteran',v)]
+              for exp,pts in vals:
+                  if pts: entries.append((f'{base} ({exp})',exp,pts,cat,'Warden infantry team entry from Armies of Caoiva.'))
+          fields=['Swallowtail 988/127-2','Balfour Wolfhound 40mm','Balfour Rampart 40mm','Collins Cannon 68mm','Balfour Rampart 68mm','Balfour Stockade 75mm','Rycker 4/3-F Wasp Nest','Balfour Falconer 250mm','Leary Snare Trap 127','Leary Shellbore 68mm','Huber Starbreaker 94.5mm','Huber Lariat 120mm','Huber Exalt 150mm','Emplacement Mortar','Static Artillery']
+          for base in fields:
+              for exp,pts in [('Inexperienced',40),('Regular',50),('Veteran',60)]: entries.append((f'{base} ({exp})',exp,pts,'Field / Emplaced / Immobile Weapon','Field, emplaced, or immobile weapon entry; see PDF for exact weapon profile, tow rules, and special rules.'))
+          tanks=['King Spire Mk. I & Gallant Mk. II','Carro Loriga No. 7','Devitt Mk. I & II','Devitt Mk. III & Ironhide Mk. IV','Storm Tank','Gallagher Outlaw Mk. II','Gallagher Highwayman Mk. III','Gallagher Thornfall Mk. VI','Tonttu LKS.7','Silverhand Mk. IIP','Silverhand Mk. III','Silverhand Mk. IV','Silverhand Teaglama Mk. V','Silverhand Chieftain Mk. VI','Silverhand Coinneal Mk. VII','Flood Mk. I','Flood Redemption Mk. IV & Adjuder Mk. IV ACV','Flood Ascension Mk. V','Flood Juggernaut Mk. VII','Cullen Predator Mk. III','Silverhand Lordscar Mk. X','Noble Falconer Mk. IX','Noble Widow Mk. XIV','Noble Ascension Mk. XV','Noble Firebrand Mk. XVII','Niska Mk. II Blinder','Niska-Rycker Mk. IX Skycaller','Devitt-Caine Mk. IV MMR','Dunne Flatbed 1B Portee','BMS Packmule Flakbed','74b-1 Ronan Gunship (55mm) & 74c-2 Ronan Meteora Gunship','74b-1 Ronan Gunship (120mm) & 74c-2 Ronan Meteora Gunship','74d-3 Ronan Ardaithe Gunship']
+          for base in tanks:
+              for exp,pts in [('Inexperienced',80),('Regular',100),('Veteran',120)]: entries.append((f'{base} ({exp})',exp,pts,'Tank / SPG','Warden tank or self-propelled gun entry. PDF vehicle special rules are retained as entry notes, including Caoivish Craftsmanship, HE, Thin Sides, Recce, Open-topped, and weapon-specific rules where applicable.'))
+          cars=["O'Brien V.110","O'Brien V.113 Gravekeeper","O'Brien V.121 Highlander","O'Brien V.130 Wild Jack","O'Brien V.144 Icebreaker","O'Brien V.99 Shepherd","O'Brien V.101 Freeman & V.103 Calhoun","O'Brien V.190 Knave","Drummond Spitfire 100d"]
+          for base in cars:
+              for exp,pts in [('Inexperienced',40),('Regular',50),('Veteran',60)]: entries.append((f'{base} ({exp})',exp,pts,'Armoured Car','Warden armoured car or light combat vehicle. See PDF entry notes for weapon, damage value, and special rules.'))
+          transports=['Coastal Gun','Niska Mk. I Gun Motor Carriage','Mulloy LPC','BMS Packmule Flatbed','BMS Class 2 Mobile Auto-Crane','Dunne Transport, Leatherback 2a, & Landrunner 12c','Dunne Caravaner 2f','Drummond 100a & Loscann 55c','Dunne Utility 3f','BMS Class 3 Field Tractor','Dunne Responder 3e']
+          for base in transports:
+              for exp,pts in [('Inexperienced',20),('Regular',25),('Veteran',30)]: entries.append((f'{base} ({exp})',exp,pts,'Transport / Tow','Warden transport/tow/ambulance entry. See PDF for transport capacity, tow capacity, and special rules.'))
+
+          ET.register_namespace('',CAT_NS)
+          root=ET.Element(q('catalogue'),{'id':'8f43f0a9-20e0-52cf-b5c5-2f8a0c5d0001','name':'Warden Army - Armies of Caoiva','revision':'1','battleScribeVersion':'2.03','gameSystemId':'4c6f1c8a-9f4d-4e4d-b2f7-2d71860d3f21','gameSystemRevision':'1','library':'false','type':'catalogue'})
+          sel=ET.SubElement(root,q('selectionEntries'))
+          tank_names=[e for e in entries if e[3]=='Tank / SPG']; transport_names=[e for e in entries if e[3]=='Transport / Tow']
+          for name,exp,pts,cat,note in entries:
+              se=ET.SubElement(sel,q('selectionEntry'),{'id':sid('entry',name),'name':name,'hidden':'false','collective':'false','import':'true','type':'unit'})
+              add_cat(se,cat); add_cost(se,pts); add_rule(se,'PDF Entry Notes',note)
+              groups=ET.SubElement(se,q('selectionEntryGroups'))
+              if cat in ['Lieutenant','Captain / Major','Forward Observer','Armoured Platoon Commander']:
+                  wg=ET.SubElement(groups,q('selectionEntryGroup'),{'id':sid(se.get('id'),'weapons'),'name':'Weapon Replacements (choose one weapon)','hidden':'false'}); add_max(wg,1); wes=ET.SubElement(wg,q('selectionEntries'))
+                  for w in ['Pistol','Submachine gun','Rifle','Carbine','Shotgun','Assault rifle']:
+                      up=ET.SubElement(wes,q('selectionEntry'),{'id':sid(se.get('id'),w),'name':w,'hidden':'false','import':'true','type':'upgrade'}); add_max(up,1); add_cost(up,0)
+              if cat=='Armoured Platoon Commander':
+                  cg=ET.SubElement(groups,q('selectionEntryGroup'),{'id':sid(se.get('id'),'cmdtank'),'name':'Armoured Command Vehicle (Armoured Platoon only)','hidden':'false'}); add_max(cg,1); links=ET.SubElement(cg,q('entryLinks'))
+                  for tname,texp,tpts,tcat,tnote in tank_names:
+                      if exp and texp and exp!=texp: continue
+                      link=ET.SubElement(links,q('entryLink'),{'id':sid(se.get('id'),'tank',tname),'name':tname,'hidden':'false','collective':'false','import':'true','targetId':sid('entry',tname),'type':'selectionEntry'}); add_max(link,1)
+              if cat=='Infantry Squad':
+                  m=5; p={'Inexperienced':7,'Regular':10,'Veteran':13}.get(exp,10)
+                  if 'Conscripted' in name: m=15; p=4
+                  if 'Hands' in name: m=8; p=15
+                  if 'Eight Sons' in name: p=16
+                  sg=ET.SubElement(groups,q('selectionEntryGroup'),{'id':sid(se.get('id'),'size'),'name':'Squad Size','hidden':'false'}); ents=ET.SubElement(sg,q('selectionEntries'))
+                  up=ET.SubElement(ents,q('selectionEntry'),{'id':sid(se.get('id'),'addman'),'name':'Additional man','hidden':'false','import':'true','type':'upgrade'}); add_max(up,m); add_cost(up,p)
+                  eq=ET.SubElement(groups,q('selectionEntryGroup'),{'id':sid(se.get('id'),'equip'),'name':'Squad Equipment','hidden':'false'}); ees=ET.SubElement(eq,q('selectionEntries'))
+                  st=ET.SubElement(ees,q('selectionEntry'),{'id':sid(se.get('id'),'sticky'),'name':'Sticky grenades (whole squad)','hidden':'false','import':'true','type':'upgrade'}); add_max(st,1); add_cost(st,10)
+                  wa=ET.SubElement(ees,q('selectionEntry'),{'id':sid(se.get('id'),'whiteash'),'name':'White ash impact grenades (requires sticky grenades)','hidden':'false','import':'true','type':'upgrade'}); add_max(wa,1); add_cost(wa,5)
+                  tg=ET.SubElement(groups,q('selectionEntryGroup'),{'id':sid(se.get('id'),'transport'),'name':'Attached Transport / Tow','hidden':'false'}); add_max(tg,1); links=ET.SubElement(tg,q('entryLinks'))
+                  for trname,trexp,tpts,tcat,tnote in transport_names:
+                      if exp and trexp and exp!=trexp: continue
+                      link=ET.SubElement(links,q('entryLink'),{'id':sid(se.get('id'),'tr',trname),'name':trname,'hidden':'false','collective':'false','import':'true','targetId':sid('entry',trname),'type':'selectionEntry'}); add_max(link,1)
+          shared=ET.SubElement(root,q('sharedRules'))
+          warden_rules={
+            'Large Batteries':'When rolling for whether a unit is hit by fire for effect from an artillery barrage, roll two dice and take the highest result. This applies to friendly and enemy targets.',
+            'Arsenal of the North':'Warden light and medium machine guns are replaced by the Malone and Ratcatcher machine guns. Grenade launchers may be taken alongside rifles for free instead of replacing them.',
+            'Caoivish Craftsmanship':'The first time a vehicle with this rule is hit in the front arc by a heavy weapon with Pen +3 or more, treat its armour rating as one higher. Super-heavy tanks may be treated as 12+.',
+            'Defence of Caoiva (Great War Era)':'In attacker/defender scenarios, the Warden player may choose to defend. If defending, use the PDF advantages for barrage rerolls, Hidden/Ambush setup, Down-to-Ambush order tests, and sandbag placement.',
+            'In the Name of Callahan! (Modern Era)':'Infantry or artillery activated by an officer Snap To Action loses 2 pins on a successful order test. Veteran officers may inspire temporary Fanatics on a 4+ with modifiers.',
+            'Powerful anti-tank grenades':'Each close-quarters hit against a tank counts as 2 hits when calculating damage.',
+            'Emplacements':'Emplacements may be mounted and dismounted from suitable transports by a crane within 9 inches using the PDF special Advance order procedure.',
+            'No Shrapnel (X)':'For hits against infantry not inside a building, treat the weapon as having HE value X. Pinning remains based on the normal HE value.'
+          }
+          for rn,rd in warden_rules.items():
+              r=ET.SubElement(shared,q('rule'),{'id':sid('rule',rn),'name':rn,'hidden':'false'}); ET.SubElement(r,q('description')).text=rd
+          ET.indent(root); ET.ElementTree(root).write('Warden Army.cat',encoding='UTF-8',xml_declaration=True)
+
+          # Update GST with Warden selectors and commander category/rules
+          ET.register_namespace('',GST_NS)
+          gst=ET.parse('Bolt Action - Foxhole.gst'); gr=gst.getroot(); gr.set('name','Bolt Action: Foxhole (Unofficial)')
+          cats=gr.find(gq('categoryEntries')) or ET.SubElement(gr,gq('categoryEntries'))
+          existing={c.get('id') for c in list(cats)}
+          for cn,cid in CATS.items():
+              if cid not in existing: ET.SubElement(cats,gq('categoryEntry'),{'id':cid,'name':cn,'hidden':'false'})
+          forces=gr.find(gq('forceEntries')) or ET.SubElement(gr,gq('forceEntries'))
+          def add_force(name,limits):
+              if any(f.get('name')==name for f in list(forces)): return
+              fe=ET.SubElement(forces,gq('forceEntry'),{'id':sid('force',name),'name':name,'hidden':'false'}); cls=ET.SubElement(fe,gq('categoryLinks'))
+              for cat,mi,ma in limits:
+                  cl=ET.SubElement(cls,gq('categoryLink'),{'id':sid('force',name,cat),'name':cat,'hidden':'false','targetId':CATS[cat],'primary':'false'})
+                  if mi is None and ma is None: continue
+                  cs=ET.SubElement(cl,gq('constraints'))
+                  if mi is not None: ET.SubElement(cs,gq('constraint'),{'field':'selections','scope':'force','value':str(mi),'percentValue':'false','shared':'false','includeChildSelections':'true','includeChildForces':'false','type':'min','id':sid('force',name,cat,'min')})
+                  if ma is not None: ET.SubElement(cs,gq('constraint'),{'field':'selections','scope':'force','value':str(ma),'percentValue':'false','shared':'false','includeChildSelections':'true','includeChildForces':'false','type':'max','id':sid('force',name,cat,'max')})
+          base=[('Lieutenant',1,1),('Captain / Major',None,1),('Medic',None,1),('Forward Observer',None,1),('Infantry Squad',2,5),('Machine Gun Team',None,1),('Mortar Team',None,1),('Sniper Team',None,1),('Anti-Tank Team',None,1),('Field / Emplaced / Immobile Weapon',None,1),('Armoured Car',None,1),('Tank / SPG',None,1),('Transport / Tow',None,None)]
+          mech=[('Lieutenant',1,1),('Captain / Major',None,1),('Medic',None,1),('Forward Observer',None,1),('Infantry Squad',2,5),('Machine Gun Team',None,1),('Mortar Team',None,1),('Sniper Team',None,1),('Anti-Tank Team',None,1),('Field / Emplaced / Immobile Weapon',None,1),('Armoured Car',None,1),('Tank / SPG',None,1),('Transport / Tow',2,8)]
+          arm=[('Armoured Platoon Commander',1,1),('Forward Observer',None,1),('Infantry Squad',1,2),('Armoured Car',None,2),('Tank / SPG',3,6),('Transport / Tow',None,2)]
+          add_force('Warden Reinforced Platoon',base); add_force('Warden Mechanized / Motorized Platoon',mech); add_force('Warden Armoured Platoon',arm)
+          sr=gr.find(gq('sharedRules')) or ET.SubElement(gr,gq('sharedRules')); existing_rules={r.get('name') for r in list(sr)}
+          for rn,rd in warden_rules.items():
+              name='Warden - '+rn
+              if name in existing_rules: continue
+              r=ET.SubElement(sr,gq('rule'),{'id':sid('gst-rule',rn),'name':name,'hidden':'false'}); ET.SubElement(r,gq('description')).text=rd
+          ET.indent(gr); gst.write('Bolt Action - Foxhole.gst',encoding='UTF-8',xml_declaration=True)
+
+          # Update index
+          ET.register_namespace('',IDX_NS)
+          idx=ET.parse('index.xml'); ir=idx.getroot(); ir.set('name','Bolt Action: Foxhole')
+          entries_node=ir.find(iq('dataIndexEntries')) or ET.SubElement(ir,iq('dataIndexEntries'))
+          if not any(e.get('filePath')=='Warden Army.cat' for e in list(entries_node)):
+              ET.SubElement(entries_node,iq('dataIndexEntry'),{'filePath':'Warden Army.cat','dataType':'catalogue','dataId':'8f43f0a9-20e0-52cf-b5c5-2f8a0c5d0001','dataName':'Warden Army - Armies of Caoiva','dataBattleScribeVersion':'2.03','dataRevision':'1'})
+          ET.indent(ir); idx.write('index.xml',encoding='UTF-8',xml_declaration=True)
+          for path in ['Warden Army.cat','Bolt Action - Foxhole.gst','index.xml']:
+              ET.parse(path); print('XML OK:',path)
+          print('Warden entries generated:',len(entries))
+          print('Warden selectors ensured: Reinforced, Mechanized / Motorized, Armoured')
+          PY
+      - name: Commit Warden data
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add 'Warden Army.cat' 'Bolt Action - Foxhole.gst' 'index.xml'
+          if git diff --cached --quiet; then
+            echo 'No generated changes.'
+          else
+            git commit -m 'Add Warden army catalogue and selectors'
+            git push
+          fi
