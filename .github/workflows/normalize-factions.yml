@@ -29,6 +29,7 @@ jobs:
           GST_NS='http://www.battlescribe.net/schema/gameSystemSchema'
           CAT_NS='http://www.battlescribe.net/schema/catalogueSchema'
           IDX_NS='http://www.battlescribe.net/schema/dataIndexSchema'
+          DATA_REVISION='2'
 
           def lname(tag):
               return tag.rsplit('}',1)[-1]
@@ -112,8 +113,15 @@ jobs:
                   target.append(retag_tree(rule,CAT_NS))
                   shared.remove(rule)
 
+          # One shared game system, two separate faction catalogues. Bump the published
+          # revision so New Recruit refreshes its cached repository metadata and discovers
+          # newly-added faction catalogues.
           g.set('name','Bolt Action: Foxhole (Unofficial)')
           g.set('authorName','Foxhole Bolt Action data')
+          g.set('revision',DATA_REVISION)
+          for cat_root in (c,w):
+              cat_root.set('revision',DATA_REVISION)
+              cat_root.set('gameSystemRevision',DATA_REVISION)
 
           ET.register_namespace('',GST_NS)
           gst.write('Bolt Action - Foxhole.gst',encoding='UTF-8',xml_declaration=True)
@@ -124,8 +132,12 @@ jobs:
           idx=ET.parse('index.xml')
           ir=idx.getroot()
           for e in ir.iter():
-              if lname(e.tag)=='dataIndexEntry' and e.get('dataType')=='gamesystem':
+              if lname(e.tag)!='dataIndexEntry':
+                  continue
+              if e.get('dataType')=='gamesystem':
                   e.set('dataName','Bolt Action: Foxhole (Unofficial)')
+              if e.get('dataType') in ('gamesystem','catalogue'):
+                  e.set('dataRevision',DATA_REVISION)
           ET.register_namespace('',IDX_NS)
           idx.write('index.xml',encoding='UTF-8',xml_declaration=True)
 
@@ -142,6 +154,6 @@ jobs:
           if git diff --cached --quiet; then
             echo 'Faction structure already normalized.'
           else
-            git commit -m 'Separate Colonial and Warden factions'
+            git commit -m 'Separate Colonial and Warden factions and bump revision'
             git push
           fi
