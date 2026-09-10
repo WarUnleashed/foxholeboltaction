@@ -1,0 +1,79 @@
+name: Repair New Recruit repository compatibility
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/repair-newrecruit-compat.yml'
+  workflow_run:
+    workflows:
+      - 'Apply requested faction and roster cleanup'
+    types:
+      - completed
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Normalize XML namespaces and index revisions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import xml.etree.ElementTree as ET
+
+          CAT_NS='http://www.battlescribe.net/schema/catalogueSchema'
+          GST_NS='http://www.battlescribe.net/schema/gameSystemSchema'
+          IDX_NS='http://www.battlescribe.net/schema/dataIndexSchema'
+          REV='8'
+
+          def lname(tag):
+              return tag.rsplit('}',1)[-1]
+
+          # ElementTree otherwise serializes these as ns0:, which some roster
+          # consumers are unnecessarily strict about. Keep the standard default
+          # BattleScribe namespaces on each file.
+          ET.register_namespace('', CAT_NS)
+          for path in ('Colonial Legion.cat','Warden Army.cat'):
+              tree=ET.parse(path)
+              root=tree.getroot()
+              root.set('revision',REV)
+              root.set('gameSystemRevision',REV)
+              tree.write(path,encoding='UTF-8',xml_declaration=True)
+
+          ET.register_namespace('', GST_NS)
+          gst=ET.parse('Bolt Action - Foxhole.gst')
+          gst.getroot().set('revision',REV)
+          gst.write('Bolt Action - Foxhole.gst',encoding='UTF-8',xml_declaration=True)
+
+          ET.register_namespace('', IDX_NS)
+          idx=ET.parse('index.xml')
+          ir=idx.getroot()
+          for node in ir.iter():
+              if lname(node.tag)=='dataIndexEntry':
+                  node.set('dataRevision',REV)
+          idx.write('index.xml',encoding='UTF-8',xml_declaration=True)
+
+          for path in ('Colonial Legion.cat','Warden Army.cat','Bolt Action - Foxhole.gst','index.xml'):
+              ET.parse(path)
+          PY
+      - name: Commit compatibility repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add 'Colonial Legion.cat' 'Warden Army.cat' 'Bolt Action - Foxhole.gst' index.xml
+          if git diff --cached --quiet; then
+            echo 'No compatibility changes needed.'
+            exit 0
+          fi
+          git commit -m 'Repair New Recruit repository compatibility'
+          git push
