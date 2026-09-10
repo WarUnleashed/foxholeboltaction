@@ -1,0 +1,206 @@
+name: Apply Colonial book weapon audit and per-model Fanatics
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/book-to-roster-weapons-audit.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Apply source-backed weapons and Fanatics pricing
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import uuid, xml.etree.ElementTree as ET
+          CAT='Colonial Legion.cat'; REV='26'
+          NS='http://www.battlescribe.net/schema/catalogueSchema'; PTS='b0e5f7a2-33c8-46ce-8f8f-148d8171da43'
+          q=lambda t:f'{{{NS}}}{t}'
+          ET.register_namespace('',NS)
+          tree=ET.parse(CAT); root=tree.getroot()
+          def norm(s): return ' '.join((s or '').lower().replace('“','"').replace('”','"').replace('–','-').replace('—','-').split())
+          def ensure(p,tag):
+              x=p.find(q(tag))
+              if x is None: x=ET.SubElement(p,q(tag))
+              return x
+          def sid(*parts): return str(uuid.uuid5(uuid.NAMESPACE_URL,'foxhole-book-audit|'+'|'.join(map(str,parts))))
+          def set_rule(e,name,text):
+              rs=ensure(e,'rules')
+              r=next((x for x in rs.findall(q('rule')) if norm(x.get('name'))==norm(name)),None)
+              if r is None:
+                  r=ET.SubElement(rs,q('rule'),{'id':sid(e.get('id'),name),'name':name})
+                  ET.SubElement(r,q('description'))
+              d=r.find(q('description'))
+              if d is None: d=ET.SubElement(r,q('description'))
+              d.text=text
+          # Book-to-roster weapon lines from Armies of the Colonial Legion Alpha 0.1.
+          # Rules supplied by the user for newer/custom units are intentionally left intact.
+          weapons=[
+            (('lieutenant','captain','major','officer'),'Pistol, submachine gun, carbine, shotgun, assault rifle, or Volta Repeater, as depicted on the models.'),
+            (('medic',),'Pistol or none, as depicted on the models.'),
+            (('forward observer',),'Pistol, submachine gun, carbine, shotgun, assault rifle, or Volta Repeater, as depicted on the models.'),
+            (('recruit squad',),'Carbines.'),
+            (('regular infantry squad',),'Carbines.'),
+            (('veteran infantry squad',),'Carbines.'),
+            (('drafted squad',),'Modern entry: rifles. Great War entry: Volta Repeaters.'),
+            (('reconnaissance squad',),'Carbines.'),
+            (('engineer squad',),'Carbines.'),
+            (('marine squad',),'Carbines.'),
+            (('cavalry squad',),'Cavalry carbines.'),
+            (('paratrooper squad',),'Carbines.'),
+            (('partisan squad',),'Carbines.'),
+            (('republic rangers squad',),'Carbines.'),
+            (('swords of maro squad',),'Carbines.'),
+            (('medium machine gun team',),'1 medium machine gun.'),
+            (('venom',),'1 Venom RPG.'),
+            (('bane',),'1 Bane RPG.'),
+            (('suicide anti-tank',),'Unarmed with anti-tank grenades (sticky grenades).'),
+            (('daucus isg',),'1 30mm infantry support gun.'),
+            (('sniper team',),'Sniper: rifle with scope and pistol. Spotter: pistol.'),
+            (('light mortar team',),'1 light mortar.'),
+            (('120-68','koronides'),'1 field artillery.'),
+            (('20-120','koronides'),'1 120mm medium howitzer.'),
+            (('sagittarii',),'2 heavy machine guns.'),
+            (('battering ram',),'1 68mm medium anti-tank gun.'),
+            (('smelter',),'1 68mm HVAP medium anti-tank gun.'),
+            (('12.7','flak'),'2 HMGs on a rotating platform.'),
+            (('68mm anti-tank gun',),'1 68mm medium anti-tank gun on a rotating platform.'),
+            (('thunderbolt',),'1 150mm heavy howitzer on a rotating platform.'),
+            (('emplacement mortar',),'1 medium mortar on a rotating platform.'),
+            (('howitzer',),'1 medium howitzer on a rotating platform.'),
+            (('static artillery',),'1 heavy howitzer on a rotating platform.'),
+            (('armoured fighting tractor',),'2 turret-mounted light machine guns.'),
+            (('phalanx',),'1 left sponson-mounted 40mm light anti-tank gun and 1 right sponson-mounted 40mm light anti-tank gun.'),
+            (('heavy infantry tank',),'2 forward hull-mounted medium machine guns plus left and right sponson-mounted 40mm light anti-tank guns.'),
+            (('actaeon',),'1 forward-facing hull-mounted medium machine gun; may replace it with a forward-facing hull-mounted anti-tank rifle for the T13 Aristaeus variant.'),
+            (('pugio',),'2 medium machine guns, one covering forward/left and one covering forward/right arcs.'),
+            (('sica',),'1 turret-mounted 40mm light anti-tank gun.'),
+            (('hatchet',),'1 turret-mounted 40mm light anti-tank gun.'),
+            (('vulcan',),'1 turret-mounted flamethrower.'),
+            (('kranesca',),'1 turret-mounted 40mm light anti-tank gun.'),
+            (('falchion',),'Base Falchion: 1 turret-mounted 40mm light anti-tank gun. The Spatha upgrade replaces it with 40mm HVAP; the Talos conversion uses the user-specified heavy anti-tank gun variant.'),
+            (('lance-36',),'Battle tank armament as represented in this roster; source family entry includes turret main gun and hull machine-gun armament.'),
+            (('onager',),'1 turret-mounted 120mm medium howitzer and 1 forward-facing hull-mounted MMG.'),
+            (('dragoon',),'1 turret-mounted 85mm super-heavy anti-tank gun with coaxial machine gun.'),
+            (('pelekys',),'1 forward-facing hull-mounted 68mm medium anti-tank gun.'),
+            (('labrys',),'1 forward-facing hull-mounted 120mm medium howitzer.'),
+            (('pilum',),'1 turret-mounted 68mm medium anti-tank gun.'),
+            (('scorpion',),'2 forward-facing hull-mounted medium machine guns.'),
+            (('ballista',),'1 forward-facing hull-mounted 250mm petard mortar.'),
+            (('arbalest',),'1 forward-facing hull-mounted 40mm HVAP light anti-tank gun.'),
+            (('peltast',),'1 medium mortar on a rotating platform.'),
+            (('flakbed',),'2 platform-mounted heavy machine guns.'),
+            (('charon',),'Type C/D family carries forward/side machine-gun armament and a turret-mounted 55mm light howitzer covering rear/side arcs.'),
+            (('danace',),'Type C/D family carries forward/side machine-gun armament and a turret-mounted 55mm light howitzer covering rear/side arcs.'),
+            (('xiphos',),'2 turret-mounted light machine guns.'),
+            (('percutio',),'1 turret-mounted anti-tank rifle.'),
+            (('icarus',),'1 pintle-mounted Venom RPG covering the forward arc.'),
+            (('motorbike squad',),'1 forward-facing rifle or submachine gun.'),
+            (('stinger',),'1 forward-facing light machine gun covering the front arc.'),
+            (('gun turret',),'1 turret-mounted medium anti-tank gun.'),
+            (('coastal gun',),'1 turret-mounted heavy howitzer.'),
+            (('javelin',),'1 pintle-mounted MMG covering the forward arc.'),
+            (('javlin',),'1 pintle-mounted MMG covering the forward arc.'),
+            (('hoplite',),'1 pintle-mounted MMG covering the forward arc.'),
+            (('acheron',),'None by default; Doru option may add a pintle-mounted medium machine gun.'),
+            (('doru',),'None by default; Doru option may add a pintle-mounted medium machine gun.'),
+            (('heavy infantry carrier',),'Hull-mounted medium machine guns covering the forward arcs.'),
+            (('packmule flatbed',),'None.'),
+            (('mobile auto-crane',),'None.'),
+            (('r-1 hauler',),'None by default; R-9 Speartip option may add a pintle-mounted light machine gun covering the forward arc.'),
+            (('speartip',),'None by default; R-9 Speartip option may add a pintle-mounted light machine gun covering the forward arc.'),
+            (('sisyphus',),'None by default; Escort option may add a pintle-mounted light machine gun covering the forward arc.'),
+            (('chariot',),'None.'),
+            (('collector',),'None.'),
+            (('argonaut',),'None.'),
+            (('odyssey',),'None.'),
+            (('diana',),'None.'),
+            (('varys',),'None.'),
+            (('salus',),'None.'),
+          ]
+          # More specific match wins.
+          weapons.sort(key=lambda x:sum(len(k) for k in x[0]), reverse=True)
+          matched=[]; unresolved=[]
+          for e in root.findall('.//'+q('selectionEntry')):
+              if e.get('type')!='unit': continue
+              n=norm(e.get('name'))
+              text=None
+              for keys,w in weapons:
+                  if all(k in n for k in keys): text=w; break
+              if text:
+                  set_rule(e,'Weapons',text); matched.append(e.get('name'))
+              else:
+                  unresolved.append(e.get('name'))
+          # Swords of Maro: only conditional Stubborn on the unit; Fanatics rule is attached to the option.
+          shared=root.find(q('sharedRules'))
+          fan_rule=next((r for r in (shared.findall(q('rule')) if shared is not None else []) if norm(r.get('name'))=='fanatics'),None)
+          for u in root.findall('.//'+q('selectionEntry')):
+              if norm(u.get('name'))!='swords of maro squad': continue
+              # Remove unconditional Stubborn and old local duplicate rules.
+              il=u.find(q('infoLinks'))
+              if il is not None:
+                  for x in list(il):
+                      if norm(x.get('name'))=='stubborn': il.remove(x)
+              rs=u.find(q('rules'))
+              if rs is not None:
+                  for r in list(rs):
+                      if norm(r.get('name')) in ('stubborn','fanatics'): rs.remove(r)
+              ses=ensure(u,'selectionEntries')
+              fan=next((x for x in ses.findall(q('selectionEntry')) if norm(x.get('name'))=='fanatics'),None)
+              if fan is None:
+                  fan=ET.SubElement(ses,q('selectionEntry'),{'id':sid('swords','fanatics'),'name':'Fanatics','hidden':'false','collective':'false','import':'true','type':'upgrade'})
+                  cs=ET.SubElement(fan,q('constraints')); ET.SubElement(cs,q('constraint'),{'field':'selections','scope':'parent','value':'1','percentValue':'false','shared':'false','includeChildSelections':'false','includeChildForces':'false','type':'max','id':sid('swords','fanatics','max')})
+              costs=ensure(fan,'costs')
+              c=next((x for x in costs.findall(q('cost')) if x.get('typeId')==PTS or norm(x.get('name')) in ('pts','points')),None)
+              if c is None: c=ET.SubElement(costs,q('cost'),{'name':'pts','typeId':PTS,'value':'10'})
+              c.set('name','pts'); c.set('typeId',PTS); c.set('value','10')
+              # Remove stale cost entries using bogus typeId="points".
+              for x in list(costs):
+                  if x is not c and norm(x.get('name')) in ('pts','points'): costs.remove(x)
+              # Fanatics is +2 pts/model. Base squad is 5 models => 10 pts; +2 for every additional man selected.
+              mods=ensure(fan,'modifiers')
+              for m in list(mods):
+                  if m.get('field')==PTS: mods.remove(m)
+              additional=[]
+              for x in u.findall('.//'+q('selectionEntry')):
+                  if 'additional man' in norm(x.get('name')) and x is not fan: additional.append(x)
+              for i,a in enumerate(additional):
+                  m=ET.SubElement(mods,q('modifier'),{'type':'increment','field':PTS,'value':'2'})
+                  reps=ET.SubElement(m,q('repeats'))
+                  ET.SubElement(reps,q('repeat'),{'field':'selections','scope':'parent','value':'1','percentValue':'false','shared':'true','includeChildSelections':'true','includeChildForces':'false','childId':a.get('id'),'repeats':'1','roundUp':'false'})
+              if fan_rule is not None:
+                  fil=ensure(fan,'infoLinks')
+                  if not any(x.get('targetId')==fan_rule.get('id') for x in fil.findall(q('infoLink'))):
+                      ET.SubElement(fil,q('infoLink'),{'id':sid('swords','fanatics','rulelink'),'name':'Fanatics','hidden':'false','targetId':fan_rule.get('id'),'type':'rule'})
+          root.set('revision',REV); root.set('gameSystemRevision',REV)
+          tree.write(CAT,encoding='UTF-8',xml_declaration=True)
+          # Sync revisions.
+          for fn,ns in [('Warden Army.cat',NS),('Bolt Action - Foxhole.gst','http://www.battlescribe.net/schema/gameSystemSchema')]:
+              ET.register_namespace('',ns); z=ET.parse(fn); r=z.getroot(); r.set('revision',REV)
+              if fn.endswith('.cat'): r.set('gameSystemRevision',REV)
+              z.write(fn,encoding='UTF-8',xml_declaration=True)
+          IN='http://www.battlescribe.net/schema/dataIndexSchema'; ET.register_namespace('',IN)
+          z=ET.parse('index.xml')
+          for x in z.getroot().findall('.//{'+IN+'}dataIndexEntry'): x.set('dataRevision',REV)
+          z.write('index.xml',encoding='UTF-8',xml_declaration=True)
+          for f in (CAT,'Warden Army.cat','Bolt Action - Foxhole.gst','index.xml'): ET.parse(f)
+          print('BOOK_WEAPON_MATCHED',len(matched))
+          print('BOOK_WEAPON_UNRESOLVED',len(unresolved))
+          for n in sorted(set(unresolved)): print('UNRESOLVED:',n)
+          PY
+      - name: Commit generated data
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add 'Colonial Legion.cat' 'Warden Army.cat' 'Bolt Action - Foxhole.gst' index.xml
+          git diff --cached --quiet && exit 0
+          git commit -m 'Apply Colonial book weapon audit and per-model Fanatics'
+          git push
