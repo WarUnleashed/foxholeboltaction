@@ -1,0 +1,57 @@
+name: Complete source-backed Colonial weapon mappings
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/complete-colonial-book-weapon-audit.yml'
+permissions:
+  contents: write
+jobs:
+  complete:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Fill source-backed wrapper and officer weapons
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import uuid, xml.etree.ElementTree as ET
+          NS='http://www.battlescribe.net/schema/catalogueSchema'; q=lambda t:f'{{{NS}}}{t}'
+          ET.register_namespace('',NS); t=ET.parse('Colonial Legion.cat'); root=t.getroot()
+          def norm(s): return ' '.join((s or '').lower().replace('“','"').replace('”','"').replace('–','-').replace('—','-').split())
+          def ensure(p,tag):
+              x=p.find(q(tag))
+              if x is None: x=ET.SubElement(p,q(tag))
+              return x
+          def set_rule(e,text):
+              rs=ensure(e,'rules'); r=next((x for x in rs.findall(q('rule')) if norm(x.get('name'))=='weapons'),None)
+              if r is None:
+                  r=ET.SubElement(rs,q('rule'),{'id':str(uuid.uuid5(uuid.NAMESPACE_URL,'foxhole-weapons|'+e.get('id',''))),'name':'Weapons'}); ET.SubElement(r,q('description'))
+              d=r.find(q('description'))
+              if d is None: d=ET.SubElement(r,q('description'))
+              d.text=text
+          officer='Pistol, submachine gun, carbine, shotgun, assault rifle, or Volta Repeater, as depicted on the models.'
+          for e in root.findall('.//'+q('selectionEntry')):
+              if e.get('type')!='unit': continue
+              n=norm(e.get('name'))
+              if any(x in n for x in ('1st lieutenant','2nd lieutenant','captain','major')):
+                  set_rule(e,officer)
+              elif n=='infantry squad':
+                  set_rule(e,'Carbines are the standard armament for the consolidated infantry entry; the selected squad/experience options determine the permitted replacements and additional weapons from the book.')
+              elif n=='heavy weapons team':
+                  set_rule(e,'Choose one team weapon from the roster options. Colonial heavy-weapon team entries in the book include medium machine gun, Venom/Bane anti-tank weapons, Daucus infantry support gun, and mortar/sniper team entries; this consolidated roster also includes the approved Foxhole heavy-weapon choices.')
+          t.write('Colonial Legion.cat',encoding='UTF-8',xml_declaration=True); ET.parse('Colonial Legion.cat')
+          PY
+      - name: Commit generated data
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add 'Colonial Legion.cat'
+          git diff --cached --quiet && exit 0
+          git commit -m 'Complete source-backed Colonial weapon mappings'
+          git push
