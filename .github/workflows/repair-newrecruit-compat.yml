@@ -32,7 +32,7 @@ jobs:
           CAT_NS='http://www.battlescribe.net/schema/catalogueSchema'
           GST_NS='http://www.battlescribe.net/schema/gameSystemSchema'
           IDX_NS='http://www.battlescribe.net/schema/dataIndexSchema'
-          REV='11'
+          REV='16'
 
           def lname(tag):
               return tag.rsplit('}',1)[-1]
