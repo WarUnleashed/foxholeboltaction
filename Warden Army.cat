@@ -2,7 +2,7 @@
 <catalogue xmlns="http://www.battlescribe.net/schema/catalogueSchema" id="8f43f0a9-20e0-52cf-b5c5-2f8a0c5d0001" name="Warden Army - Armies of Caoiva" revision="11" battleScribeVersion="2.03" gameSystemId="4c6f1c8a-9f4d-4e4d-b2f7-2d71860d3f21" gameSystemRevision="11" library="false" type="catalogue">
   <forceEntries><forceEntry id="04992577-e146-5453-afb1-457912d24c5b" name="Warden Reinforced Platoon" hidden="false">
       <categoryLinks>
-        <categoryLink id="303dc0f4-f777-5b41-bbf6-d3f176ddb697" name="Lieutenant" hidden="true" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="false">
+        <categoryLink id="9596077e-7bb9-541b-b418-ae68d0f13d3b" name="HQ" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="false"><constraints><constraint field="selections" scope="force" value="3" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="a35567f8-5f5f-5b11-837d-d5b8f0576aeb" /><constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="min" id="caba4572-bf64-5d10-aa9e-0f2619074e6d" /></constraints></categoryLink><categoryLink id="303dc0f4-f777-5b41-bbf6-d3f176ddb697" name="Lieutenant" hidden="true" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="false">
           <constraints>
             <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="min" id="12ca5a41-b950-5e09-bc86-49685603232b" />
             <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="88a5620e-9edf-555e-899a-3e5a67152b89" />
@@ -65,11 +65,11 @@
           </constraints>
         </categoryLink>
         <categoryLink id="558d792b-9d47-54fc-b5a7-cecd7ba81a3e" name="Transport / Tow" hidden="false" targetId="fc7f7f70-4bea-5d27-8b5e-cb2ac03797c7" primary="false" />
-      <categoryLink id="9596077e-7bb9-541b-b418-ae68d0f13d3b" name="Officer" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="false"><constraints><constraint field="selections" scope="force" value="3" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="a35567f8-5f5f-5b11-837d-d5b8f0576aeb" /></constraints></categoryLink></categoryLinks>
+      </categoryLinks>
     </forceEntry>
     <forceEntry id="b735a4f4-f8d0-540f-af55-9393dda50015" name="Warden Mechanized / Motorized Platoon" hidden="false">
       <categoryLinks>
-        <categoryLink id="48f7fa2f-e82b-5495-94ab-70683cff50f7" name="Lieutenant" hidden="true" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="false">
+        <categoryLink id="e0b878d8-da42-5712-b624-73b2985178dd" name="HQ" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="false"><constraints><constraint field="selections" scope="force" value="3" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="a81d8e27-ba4c-5d48-a4e6-1514d898cac7" /><constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="min" id="558ca6a6-19b2-5d23-8429-85bdd1b76206" /></constraints></categoryLink><categoryLink id="48f7fa2f-e82b-5495-94ab-70683cff50f7" name="Lieutenant" hidden="true" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="false">
           <constraints>
             <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="min" id="33de755d-8b13-5849-9e11-a72f1878e757" />
             <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="72bc62c4-05fb-54da-b21f-4a9f089faae5" />
@@ -137,7 +137,7 @@
             <constraint field="selections" scope="force" value="8" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="c3f66ba0-485f-5133-9d60-528a9cd55229" />
           </constraints>
         </categoryLink>
-      <categoryLink id="e0b878d8-da42-5712-b624-73b2985178dd" name="Officer" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="false"><constraints><constraint field="selections" scope="force" value="3" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="a81d8e27-ba4c-5d48-a4e6-1514d898cac7" /></constraints></categoryLink></categoryLinks>
+      </categoryLinks>
     </forceEntry>
     <forceEntry id="5514efbe-f782-5931-b014-0aac40cbc85e" name="Warden Armoured Platoon" hidden="false">
       <categoryLinks>
@@ -180,7 +180,7 @@
     <selectionEntry id="9bfac0e3-d743-55da-80dd-f81c318b3b75" name="2nd Lieutenant (Inexperienced)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
         <categoryLink id="84b3919d-ecf9-5eb5-b307-f360fe39ab4f" name="Lieutenant" hidden="false" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="false" />
-      <categoryLink id="514d12ac-d31d-5a0c-82ee-ef66038e8533" name="Officer" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
+      <categoryLink id="514d12ac-d31d-5a0c-82ee-ef66038e8533" name="HQ" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="35.0" />
       </costs>
@@ -250,7 +250,7 @@
     <selectionEntry id="c857f60a-f2de-5ac9-a132-28049026a5ee" name="2nd Lieutenant (Regular)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
         <categoryLink id="a8a2ccc4-82e9-514d-ab9d-ee8876d0e975" name="Lieutenant" hidden="false" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="false" />
-      <categoryLink id="23785d18-fe93-54ac-95b9-e37e0e47a0f3" name="Officer" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
+      <categoryLink id="23785d18-fe93-54ac-95b9-e37e0e47a0f3" name="HQ" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="50.0" />
       </costs>
@@ -320,7 +320,7 @@
     <selectionEntry id="5017e553-26b9-5318-a82b-92c62c6f9329" name="2nd Lieutenant (Veteran)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
         <categoryLink id="56105a48-b462-5229-b378-c0a502b408c0" name="Lieutenant" hidden="false" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="false" />
-      <categoryLink id="e5d830e6-f7f2-5778-acf4-28ec847c35b2" name="Officer" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
+      <categoryLink id="e5d830e6-f7f2-5778-acf4-28ec847c35b2" name="HQ" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="65.0" />
       </costs>
@@ -390,7 +390,7 @@
     <selectionEntry id="eeccea24-b31c-51d8-99e9-deb51d3a15ea" name="1st Lieutenant (Inexperienced)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
         <categoryLink id="84c39eba-a02d-528c-9da8-79f7f0574582" name="Lieutenant" hidden="false" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="false" />
-      <categoryLink id="6dfef56d-bc97-5fc2-9763-d07a824b0858" name="Officer" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
+      <categoryLink id="6dfef56d-bc97-5fc2-9763-d07a824b0858" name="HQ" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="60.0" />
       </costs>
@@ -460,7 +460,7 @@
     <selectionEntry id="e47f6ab4-08db-5c24-8f06-8c825ae4fe1c" name="1st Lieutenant (Regular)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
         <categoryLink id="1128afe3-ba12-586a-bc6e-d663baab87e7" name="Lieutenant" hidden="false" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="false" />
-      <categoryLink id="ff52314e-d9b9-5a55-9ed2-6c57443ff941" name="Officer" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
+      <categoryLink id="ff52314e-d9b9-5a55-9ed2-6c57443ff941" name="HQ" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="75.0" />
       </costs>
@@ -530,7 +530,7 @@
     <selectionEntry id="fdd8cda9-cd45-5601-b4bf-6ae16759205a" name="1st Lieutenant (Veteran)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
         <categoryLink id="fff1c08e-aede-5c5d-83cf-536ab409f548" name="Lieutenant" hidden="false" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="false" />
-      <categoryLink id="618ae470-84ab-5fdd-8b41-97e2f8011919" name="Officer" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
+      <categoryLink id="618ae470-84ab-5fdd-8b41-97e2f8011919" name="HQ" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="90.0" />
       </costs>
@@ -600,7 +600,7 @@
     <selectionEntry id="33ab7730-deb9-594b-98d5-9e312471b478" name="Captain (Inexperienced)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
         <categoryLink id="56cc74f6-025b-5636-b226-ad8177bdb237" name="Captain / Major" hidden="false" targetId="914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a" primary="false" />
-      <categoryLink id="a6ff9a53-4b45-5465-88fc-ba8ff91d1829" name="Officer" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
+      <categoryLink id="a6ff9a53-4b45-5465-88fc-ba8ff91d1829" name="HQ" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="95.0" />
       </costs>
@@ -670,7 +670,7 @@
     <selectionEntry id="5b8d1982-77c2-5c42-b72a-95a7d9814124" name="Captain (Regular)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
         <categoryLink id="3b74bf54-e68a-5e8b-b5ec-997d77efcdec" name="Captain / Major" hidden="false" targetId="914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a" primary="false" />
-      <categoryLink id="25375d28-9d8f-5a5c-b1ed-f5815c190341" name="Officer" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
+      <categoryLink id="25375d28-9d8f-5a5c-b1ed-f5815c190341" name="HQ" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="110.0" />
       </costs>
@@ -740,7 +740,7 @@
     <selectionEntry id="afab3856-3c70-539c-8f8d-df375eda6894" name="Captain (Veteran)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
         <categoryLink id="b8146b45-db44-593b-8ade-863da7cab4eb" name="Captain / Major" hidden="false" targetId="914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a" primary="false" />
-      <categoryLink id="8473b58a-f1c3-5a1d-80a2-cad318b23c4a" name="Officer" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
+      <categoryLink id="8473b58a-f1c3-5a1d-80a2-cad318b23c4a" name="HQ" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="125.0" />
       </costs>
@@ -810,7 +810,7 @@
     <selectionEntry id="53a2d653-568d-5ffa-ac03-fffd27f12dc3" name="Major (Inexperienced)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
         <categoryLink id="59e27c87-a99c-5e45-a44c-f79f9703f976" name="Captain / Major" hidden="false" targetId="914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a" primary="false" />
-      <categoryLink id="19416c5a-9d01-5102-a10b-3e39d9c7a480" name="Officer" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
+      <categoryLink id="19416c5a-9d01-5102-a10b-3e39d9c7a480" name="HQ" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="135.0" />
       </costs>
@@ -880,7 +880,7 @@
     <selectionEntry id="35ec8c28-85f5-576c-bbd1-c90a3ce73a54" name="Major (Regular)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
         <categoryLink id="6ffc8ed1-db07-5e95-8c3b-47b458ff113a" name="Captain / Major" hidden="false" targetId="914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a" primary="false" />
-      <categoryLink id="85a52419-61f2-5bfc-863b-ab0e0eb531cd" name="Officer" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
+      <categoryLink id="85a52419-61f2-5bfc-863b-ab0e0eb531cd" name="HQ" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="150.0" />
       </costs>
@@ -950,7 +950,7 @@
     <selectionEntry id="5727335c-0f68-5902-a6e8-6ab0060e27b8" name="Major (Veteran)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
         <categoryLink id="ba1ccade-8740-5971-8bdd-cca4b3b4b10c" name="Captain / Major" hidden="false" targetId="914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a" primary="false" />
-      <categoryLink id="1d1ce77d-6e05-5637-bc30-4c72649b7073" name="Officer" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
+      <categoryLink id="1d1ce77d-6e05-5637-bc30-4c72649b7073" name="HQ" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="165.0" />
       </costs>
@@ -3864,7 +3864,7 @@
     <selectionEntry id="e0ab08d9-7149-50f1-8247-7fd2ddde06b0" name="Medic (Veteran)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
         <categoryLink id="0286859c-31d5-5ffb-aeab-ecf31f76c5be" name="Medic" hidden="false" targetId="4e0b9e1a-0360-51cc-a506-097a7efcd44e" primary="false" />
-      <categoryLink id="58acbbfa-39f5-560e-b0ce-8d165d915c22" name="Officer" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
+      <categoryLink id="58acbbfa-39f5-560e-b0ce-8d165d915c22" name="HQ" hidden="false" targetId="0a8d85ef-5eb7-5d82-b0fa-4b65fa8b16c9" primary="true" /></categoryLinks>
       <costs>
         <cost name="pts" typeId="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" value="30.0" />
       </costs>
