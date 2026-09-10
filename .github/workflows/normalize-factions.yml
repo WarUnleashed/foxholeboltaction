@@ -24,6 +24,7 @@ jobs:
           set -euo pipefail
           python - <<'PY'
           import copy
+          import re
           import uuid
           import xml.etree.ElementTree as ET
 
@@ -31,11 +32,21 @@ jobs:
           CAT_NS='http://www.battlescribe.net/schema/catalogueSchema'
           IDX_NS='http://www.battlescribe.net/schema/dataIndexSchema'
           POINTS='b0e5f7a2-33c8-46ce-8f8f-148d8171da43'
-          DATA_REVISION='4'
+          DATA_REVISION='5'
+
           INFANTRY_CAT='1db0d511-ab38-5eb8-afa7-97cd18cf7d11'
+          LIEUTENANT_CAT='5b361517-ed58-5d60-a6fd-b00e15d7f574'
+          CAPTAIN_MAJOR_CAT='914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a'
+          MEDIC_CAT='4e0b9e1a-0360-51cc-a506-097a7efcd44e'
+          OBSERVER_CAT='43e65105-60f7-5bb6-a4ac-02a433a791ee'
+          MG_CAT='df95158d-692a-545b-b6da-9fc45eb1f7fa'
           MORTAR_CAT='f8cf368a-5e9a-5d56-8e8f-5a5e9a7977b4'
+          SNIPER_CAT='62025d03-4255-56ea-870e-c3399170789d'
+          AT_CAT='3cf48c43-9058-564e-901a-e3098be16d2f'
           FIELD_CAT='75cd78ea-f7b0-5366-b2b5-cfcaa6ba2fc6'
           ARMOURED_CAR_CAT='6e1678b3-02f8-5430-9f5b-e3da292b8625'
+          TANK_CAT='0f9945cb-0ce1-521e-8f54-35857994efd8'
+          TRANSPORT_CAT='fc7f7f70-4bea-5d27-8b5e-cb2ac03797c7'
 
           def lname(tag): return tag.rsplit('}',1)[-1]
           def q(tag): return f'{{{CAT_NS}}}{tag}'
@@ -62,13 +73,27 @@ jobs:
           def has_category(se,target_id):
               cats=se.find(q('categoryLinks'))
               return cats is not None and any(cl.get('targetId')==target_id for cl in cats.findall(q('categoryLink')))
-          def add_max(parent,value,key):
+          def add_constraint(parent,ctype,value,key,scope='parent'):
               cs=ensure_child(parent,'constraints')
-              ET.SubElement(cs,q('constraint'),{'field':'selections','scope':'parent','value':str(value),'percentValue':'false','shared':'false','includeChildSelections':'false','includeChildForces':'false','type':'max','id':sid(parent.get('id'),key,'max')})
+              ET.SubElement(cs,q('constraint'),{'field':'selections','scope':scope,'value':str(value),'percentValue':'false','shared':'false','includeChildSelections':'false','includeChildForces':'false','type':ctype,'id':sid(parent.get('id'),key,ctype)})
+          def add_max(parent,value,key): add_constraint(parent,'max',value,key)
+          def add_min(parent,value,key): add_constraint(parent,'min',value,key)
           def add_upgrade(entries,parent_id,name,pts,max_count):
               up=ET.SubElement(entries,q('selectionEntry'),{'id':sid(parent_id,'warden-weapon',name),'name':name,'hidden':'false','collective':'false','import':'true','type':'upgrade'})
               add_max(up,max_count,name)
               costs=ET.SubElement(up,q('costs')); ET.SubElement(costs,q('cost'),{'name':'pts','typeId':POINTS,'value':str(float(pts))})
+          def direct_models(unit):
+              ses=unit.find(q('selectionEntries'))
+              if ses is None: return []
+              return [x for x in ses.findall(q('selectionEntry')) if x.get('type')=='model']
+          def add_model(unit,name,min_count=1,max_count=1,pts=0):
+              ses=ensure_child(unit,'selectionEntries')
+              model=ET.SubElement(ses,q('selectionEntry'),{'id':sid(unit.get('id'),'ys-model',name),'name':name,'hidden':'false','collective':'false','import':'true','type':'model'})
+              add_min(model,min_count,name)
+              add_max(model,max_count,name)
+              if pts:
+                  costs=ET.SubElement(model,q('costs')); ET.SubElement(costs,q('cost'),{'name':'pts','typeId':POINTS,'value':str(float(pts))})
+              return model
 
           gst=ET.parse('Bolt Action - Foxhole.gst'); g=gst.getroot()
           colonial=ET.parse('Colonial Legion.cat'); c=colonial.getroot()
@@ -100,9 +125,7 @@ jobs:
                       if old.get('name')==name: target.remove(old)
                   target.append(retag_tree(rule,CAT_NS)); shared.remove(rule)
 
-          # User-requested selector limits: up to 2 mortars, 2 field/emplaced/immobile
-          # weapons, and 2 armoured cars in every Colonial or Warden selector where that
-          # category is present.
+          # User-requested selector limits.
           for cat_root in (c,w):
               forces=get_child(cat_root,'forceEntries')
               if forces is None: continue
@@ -112,29 +135,23 @@ jobs:
                   for cl in list(links):
                       if cl.get('targetId') not in (MORTAR_CAT,FIELD_CAT,ARMOURED_CAR_CAT): continue
                       constraints=get_child(cl,'constraints')
-                      if constraints is None:
-                          constraints=ET.SubElement(cl,q('constraints'))
+                      if constraints is None: constraints=ET.SubElement(cl,q('constraints'))
                       found=False
                       for con in list(constraints):
-                          if con.get('type')=='max' and con.get('scope')=='force':
-                              con.set('value','2'); found=True
+                          if con.get('type')=='max' and con.get('scope')=='force': con.set('value','2'); found=True
                       if not found:
                           ET.SubElement(constraints,q('constraint'),{'field':'selections','scope':'force','value':'2','percentValue':'false','shared':'false','includeChildSelections':'true','includeChildForces':'false','type':'max','id':sid(force.get('id'),cl.get('targetId'),'max2')})
 
-          # Infantry-attached Warden transports should be actual personnel carriers/tows,
-          # not logistics/emplacement equipment.
+          # Warden infantry-attached transport filtering.
           excluded_transport_terms=('crane','tractor','flatbed','coastal gun')
           for group in w.iter(q('selectionEntryGroup')):
               if group.get('name')!='Attached Transport / Tow': continue
               links=group.find(q('entryLinks'))
               if links is None: continue
               for link in list(links):
-                  if any(term in link.get('name','').lower() for term in excluded_transport_terms):
-                      links.remove(link)
+                  if any(term in link.get('name','').lower() for term in excluded_transport_terms): links.remove(link)
 
-          # Command vehicles are restricted to actual tank/SPG choices appropriate for an
-          # armoured commander. Remove the explicitly excluded light, static, transport,
-          # heavy-infantry and special-platform entries from commander pickers.
+          # Armoured commander vehicle filtering.
           excluded_command_vehicle_terms=(
               '93k-a','sica','agb.88','pilum','flatbed','gun turret','labrys',
               'heavy infantry tank','onager','phalanx','type c','charon','danace',
@@ -143,17 +160,13 @@ jobs:
           for cat_root in (c,w):
               for group in cat_root.iter(q('selectionEntryGroup')):
                   gname=group.get('name','').lower()
-                  if 'command tank' not in gname and 'armoured command vehicle' not in gname:
-                      continue
+                  if 'command tank' not in gname and 'armoured command vehicle' not in gname: continue
                   links=group.find(q('entryLinks'))
                   if links is None: continue
                   for link in list(links):
-                      lname_text=link.get('name','').lower()
-                      if any(term in lname_text for term in excluded_command_vehicle_terms):
-                          links.remove(link)
+                      if any(term in link.get('name','').lower() for term in excluded_command_vehicle_terms): links.remove(link)
 
-          # Warden infantry gun selections from Armies of Caoiva. Values are per model;
-          # maximums follow the individual squad entries in the PDF.
+          # Warden infantry weapon selections from Armies of Caoiva.
           def weapon_spec(name):
               n=name.lower(); gw='great war era' in n
               if gw and 'inexperienced infantry squad' in n: return [('Automatic rifle',5,1)]
@@ -189,6 +202,71 @@ jobs:
               wes=ET.SubElement(wg,q('selectionEntries'))
               for wname,pts,max_count in specs: add_upgrade(wes,se.get('id'),wname,pts,max_count)
 
+          # YellowScribe compatibility: every selectable unit should expose actual model
+          # selection entries. Existing model entries are preserved. Infantry units gain an
+          # NCO plus required troopers, and the old Additional man upgrade becomes a model
+          # so extra figures selected in New Recruit are visible to YellowScribe. Vehicles
+          # expose one vehicle model; HQ/support units expose officer/crew models.
+          def infantry_base(name):
+              n=name.lower()
+              if 'the hands' in n or 'hands squad' in n: return 2
+              if 'reconnaissance squad' in n or 'partisan squad' in n: return 4
+              if 'cavalry squad' in n: return 3 if 'colonial' in n else 5
+              return 5
+
+          def support_crew(name,cat_ids):
+              n=name.lower()
+              if SNIPER_CAT in cat_ids: return ('Sniper Team',2)
+              if MORTAR_CAT in cat_ids:
+                  if 'light mortar' in n: return ('Mortar Crew',2)
+                  return ('Mortar Crew',3)
+              if MG_CAT in cat_ids: return ('Machine Gun Crew',3)
+              if AT_CAT in cat_ids:
+                  if 'suicide anti-tank squad' in n: return ('Anti-Tank Soldier',5)
+                  return ('Anti-Tank Crew',2)
+              if FIELD_CAT in cat_ids: return ('Weapon / Crew Base',1)
+              return None
+
+          def modelize(cat_root):
+              top=get_child(cat_root,'selectionEntries')
+              if top is None: return 0
+              changed=0
+              for unit in top.findall(q('selectionEntry')):
+                  if unit.get('type')!='unit' or direct_models(unit): continue
+                  name=unit.get('name','')
+                  cats=unit.find(q('categoryLinks'))
+                  cat_ids={x.get('targetId') for x in cats.findall(q('categoryLink'))} if cats is not None else set()
+
+                  if INFANTRY_CAT in cat_ids:
+                      base=infantry_base(name)
+                      add_model(unit,'NCO',1,1)
+                      add_model(unit,'Soldier',max(1,base-1),max(1,base-1))
+                      # Convert generated Additional man upgrade into a true model entry,
+                      # retaining its point cost and max constraint.
+                      groups=unit.find(q('selectionEntryGroups'))
+                      if groups is not None:
+                          for group in groups.findall(q('selectionEntryGroup')):
+                              for entries in group.findall(q('selectionEntries')):
+                                  for child in entries.findall(q('selectionEntry')):
+                                      if child.get('name')=='Additional man':
+                                          child.set('type','model'); child.set('name','Additional Soldier')
+                      changed+=1; continue
+
+                  if any(x in cat_ids for x in (LIEUTENANT_CAT,CAPTAIN_MAJOR_CAT,MEDIC_CAT,OBSERVER_CAT)) or 'armoured commander' in name.lower():
+                      role='Medic' if MEDIC_CAT in cat_ids else ('Forward Observer' if OBSERVER_CAT in cat_ids else 'Officer')
+                      add_model(unit,role,1,1); changed+=1; continue
+
+                  crew=support_crew(name,cat_ids)
+                  if crew:
+                      add_model(unit,crew[0],crew[1],crew[1]); changed+=1; continue
+
+                  if any(x in cat_ids for x in (ARMOURED_CAR_CAT,TANK_CAT,TRANSPORT_CAT)):
+                      add_model(unit,name,1,1); changed+=1; continue
+              return changed
+
+          c_models=modelize(c); w_models=modelize(w)
+          print('YellowScribe modelized units:',c_models,'Colonial,',w_models,'Warden')
+
           g.set('name','Bolt Action: Foxhole (Unofficial)'); g.set('authorName','Foxhole Bolt Action data'); g.set('revision',DATA_REVISION)
           for cat_root in (c,w): cat_root.set('revision',DATA_REVISION); cat_root.set('gameSystemRevision',DATA_REVISION)
 
@@ -214,6 +292,6 @@ jobs:
           if git diff --cached --quiet; then
             echo 'Faction structure already normalized.'
           else
-            git commit -m 'Filter armoured commander vehicle options'
+            git commit -m 'Add YellowScribe model selection structure'
             git push
           fi
