@@ -31,7 +31,7 @@ jobs:
           CAT_NS='http://www.battlescribe.net/schema/catalogueSchema'
           GST_NS='http://www.battlescribe.net/schema/gameSystemSchema'
           IDX_NS='http://www.battlescribe.net/schema/dataIndexSchema'
-          REV='24'
+          REV='25'
           def lname(tag): return tag.rsplit('}',1)[-1]
           ET.register_namespace('', CAT_NS)
           for path in ('Colonial Legion.cat','Warden Army.cat'):
