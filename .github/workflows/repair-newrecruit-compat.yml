@@ -32,14 +32,11 @@ jobs:
           CAT_NS='http://www.battlescribe.net/schema/catalogueSchema'
           GST_NS='http://www.battlescribe.net/schema/gameSystemSchema'
           IDX_NS='http://www.battlescribe.net/schema/dataIndexSchema'
-          REV='8'
+          REV='11'
 
           def lname(tag):
               return tag.rsplit('}',1)[-1]
 
-          # ElementTree otherwise serializes these as ns0:, which some roster
-          # consumers are unnecessarily strict about. Keep the standard default
-          # BattleScribe namespaces on each file.
           ET.register_namespace('', CAT_NS)
           for path in ('Colonial Legion.cat','Warden Army.cat'):
               tree=ET.parse(path)
