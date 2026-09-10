@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<gameSystem xmlns="http://www.battlescribe.net/schema/gameSystemSchema" id="4c6f1c8a-9f4d-4e4d-b2f7-2d71860d3f21" name="Bolt Action: Foxhole (Unofficial)" revision="8" battleScribeVersion="2.03" authorName="Foxhole Bolt Action data" type="gameSystem">
+<gameSystem xmlns="http://www.battlescribe.net/schema/gameSystemSchema" id="4c6f1c8a-9f4d-4e4d-b2f7-2d71860d3f21" name="Bolt Action: Foxhole (Unofficial)" revision="9" battleScribeVersion="2.03" authorName="Foxhole Bolt Action data" type="gameSystem">
   <costTypes>
     <costType id="b0e5f7a2-33c8-46ce-8f8f-148d8171da43" name="pts" defaultCostLimit="-1.0" />
   </costTypes>
@@ -23,7 +23,7 @@
     <categoryEntry id="4e0b9e1a-0360-51cc-a506-097a7efcd44e" name="Medic" hidden="false" />
     <categoryEntry id="43e65105-60f7-5bb6-a4ac-02a433a791ee" name="Forward Observer" hidden="false" />
     <categoryEntry id="1db0d511-ab38-5eb8-afa7-97cd18cf7d11" name="Infantry Squad" hidden="false" />
-    <categoryEntry id="df95158d-692a-545b-b6da-9fc45eb1f7fa" name="Machine Gun Team" hidden="false" />
+    <categoryEntry id="df95158d-692a-545b-b6da-9fc45eb1f7fa" name="Heavy Weapons Team" hidden="false" />
     <categoryEntry id="f8cf368a-5e9a-5d56-8e8f-5a5e9a7977b4" name="Mortar Team" hidden="false" />
     <categoryEntry id="62025d03-4255-56ea-870e-c3399170789d" name="Sniper Team" hidden="false" />
     <categoryEntry id="3cf48c43-9058-564e-901a-e3098be16d2f" name="Anti-Tank Team" hidden="false" />
