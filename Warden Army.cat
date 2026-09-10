@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<catalogue xmlns="http://www.battlescribe.net/schema/catalogueSchema" id="8f43f0a9-20e0-52cf-b5c5-2f8a0c5d0001" name="Warden Army - Armies of Caoiva" revision="3" battleScribeVersion="2.03" gameSystemId="4c6f1c8a-9f4d-4e4d-b2f7-2d71860d3f21" gameSystemRevision="3" library="false" type="catalogue">
+<catalogue xmlns="http://www.battlescribe.net/schema/catalogueSchema" id="8f43f0a9-20e0-52cf-b5c5-2f8a0c5d0001" name="Warden Army - Armies of Caoiva" revision="4" battleScribeVersion="2.03" gameSystemId="4c6f1c8a-9f4d-4e4d-b2f7-2d71860d3f21" gameSystemRevision="4" library="false" type="catalogue">
   <forceEntries><forceEntry id="04992577-e146-5453-afb1-457912d24c5b" name="Warden Reinforced Platoon" hidden="false">
       <categoryLinks>
         <categoryLink id="303dc0f4-f777-5b41-bbf6-d3f176ddb697" name="Lieutenant" hidden="false" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="false">
@@ -1230,11 +1230,6 @@
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="9b9ab41b-adc0-5a1f-9f63-9c17f18fe6de" />
               </constraints>
             </entryLink>
-            <entryLink id="e54f608e-ee2f-5681-a893-de3b454e0c5d" name="Dunne Flatbed 1B Portee (Inexperienced)" hidden="false" collective="false" import="true" targetId="5dc4bd6a-1e3a-56ca-b2bb-d6fb6a06d61b" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="fe3e51a0-f860-5737-9005-7a2b8d1db5ce" />
-              </constraints>
-            </entryLink>
             <entryLink id="45b9fe84-3590-59f8-90b1-5b3cf45d0ff3" name="BMS Packmule Flakbed (Inexperienced)" hidden="false" collective="false" import="true" targetId="3cf1d028-132d-5cb4-984c-2dfdedb4f23c" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="5c41dbd4-4c9e-507b-8acd-9d56a37cc21e" />
@@ -1470,11 +1465,6 @@
             <entryLink id="dea2df0b-ea23-5417-8641-866ab21365ed" name="Devitt-Caine Mk. IV MMR (Regular)" hidden="false" collective="false" import="true" targetId="6ff7c0b2-2788-5a83-b79f-2b3d9c93a22a" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="14bb40db-6d5c-57f8-a2ad-2af958f18a35" />
-              </constraints>
-            </entryLink>
-            <entryLink id="104a881b-25bc-512d-b40a-56cb37295794" name="Dunne Flatbed 1B Portee (Regular)" hidden="false" collective="false" import="true" targetId="a29d4f22-866c-589a-b2dc-982b558210b3" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="c3ac9115-4876-5b5e-abbc-ebc2355f5621" />
               </constraints>
             </entryLink>
             <entryLink id="e47a7cbe-ebfc-50fc-b089-fed5ce97cfbd" name="BMS Packmule Flakbed (Regular)" hidden="false" collective="false" import="true" targetId="5187062c-f557-594c-8e74-b195d1f24de5" type="selectionEntry">
@@ -1714,11 +1704,6 @@
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="a0c56ced-bd48-5511-892a-426387800f6d" />
               </constraints>
             </entryLink>
-            <entryLink id="eb2400fe-ba8c-57f5-b8a6-a6e04d4be281" name="Dunne Flatbed 1B Portee (Veteran)" hidden="false" collective="false" import="true" targetId="0c566bca-7c1a-503c-8dee-e41eb9263976" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="30dc4e43-f52f-5fc5-b44a-2bed46355fd1" />
-              </constraints>
-            </entryLink>
             <entryLink id="90c152fc-c299-5718-8751-2b65fd024173" name="BMS Packmule Flakbed (Veteran)" hidden="false" collective="false" import="true" targetId="d07c6164-2c7b-580f-917a-834783f57692" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="ed786ae0-a699-5977-9f4b-c9882de6386d" />
@@ -1954,11 +1939,6 @@
             <entryLink id="403db363-1443-582e-9296-52f0deabfdde" name="Devitt-Caine Mk. IV MMR (Inexperienced)" hidden="false" collective="false" import="true" targetId="0b0a4ae9-33ac-5f10-ac58-1818fd0121f1" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="a98da116-8b19-597a-b9f7-b682162d58d7" />
-              </constraints>
-            </entryLink>
-            <entryLink id="d3a5d65b-6020-5be4-946e-63f7ea79d2e2" name="Dunne Flatbed 1B Portee (Inexperienced)" hidden="false" collective="false" import="true" targetId="5dc4bd6a-1e3a-56ca-b2bb-d6fb6a06d61b" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="816664b8-32e7-5c11-9a1e-fdc04fb65701" />
               </constraints>
             </entryLink>
             <entryLink id="5fbfd008-18a5-5988-81d2-6a17050834a3" name="BMS Packmule Flakbed (Inexperienced)" hidden="false" collective="false" import="true" targetId="3cf1d028-132d-5cb4-984c-2dfdedb4f23c" type="selectionEntry">
@@ -2198,11 +2178,6 @@
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="67bf92b9-953d-55d1-917a-defada98466e" />
               </constraints>
             </entryLink>
-            <entryLink id="5ba51397-ba3a-5833-a65a-88255008fe6d" name="Dunne Flatbed 1B Portee (Regular)" hidden="false" collective="false" import="true" targetId="a29d4f22-866c-589a-b2dc-982b558210b3" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="bdcdd589-5e71-5968-87c6-9d7022484af4" />
-              </constraints>
-            </entryLink>
             <entryLink id="b55491f7-08dd-51d4-9da9-9418974c7f22" name="BMS Packmule Flakbed (Regular)" hidden="false" collective="false" import="true" targetId="5187062c-f557-594c-8e74-b195d1f24de5" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="b6306555-a9cd-5e83-bb1b-8e8ccf5ff0ac" />
@@ -2438,11 +2413,6 @@
             <entryLink id="66b8e98e-bee6-51ee-aec3-9185b3c721e3" name="Devitt-Caine Mk. IV MMR (Veteran)" hidden="false" collective="false" import="true" targetId="1590807f-c951-5eb5-bda5-4ec958473674" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="abbd2128-fac5-511f-95a4-a82f23a844cf" />
-              </constraints>
-            </entryLink>
-            <entryLink id="39217bba-efc6-5eab-8399-1071c71dd909" name="Dunne Flatbed 1B Portee (Veteran)" hidden="false" collective="false" import="true" targetId="0c566bca-7c1a-503c-8dee-e41eb9263976" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="c879f900-50a0-5caf-b60f-c225bdaa6f86" />
               </constraints>
             </entryLink>
             <entryLink id="1d76117c-97b0-570b-bdfe-548722230316" name="BMS Packmule Flakbed (Veteran)" hidden="false" collective="false" import="true" targetId="d07c6164-2c7b-580f-917a-834783f57692" type="selectionEntry">
@@ -2682,11 +2652,6 @@
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="86889a5e-47c8-5cac-817b-2a101eb7dd66" />
               </constraints>
             </entryLink>
-            <entryLink id="39dfc992-6091-55b2-a81d-8c7f5cdc4dfd" name="Dunne Flatbed 1B Portee (Inexperienced)" hidden="false" collective="false" import="true" targetId="5dc4bd6a-1e3a-56ca-b2bb-d6fb6a06d61b" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="a095d9d3-0e86-5353-bdc9-111908f76640" />
-              </constraints>
-            </entryLink>
             <entryLink id="0031f474-442e-5aae-9422-86d9c8bacb1d" name="BMS Packmule Flakbed (Inexperienced)" hidden="false" collective="false" import="true" targetId="3cf1d028-132d-5cb4-984c-2dfdedb4f23c" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="e3ebec57-9503-54d9-b807-61aa2d184bd9" />
@@ -2922,11 +2887,6 @@
             <entryLink id="09fa0cb6-4d80-5e43-9c11-48e4f9fdba82" name="Devitt-Caine Mk. IV MMR (Regular)" hidden="false" collective="false" import="true" targetId="6ff7c0b2-2788-5a83-b79f-2b3d9c93a22a" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="304abc8c-a2c5-5cd8-bcb3-ccb8d5214848" />
-              </constraints>
-            </entryLink>
-            <entryLink id="7cd2d539-0efb-54e4-af58-598d968b7182" name="Dunne Flatbed 1B Portee (Regular)" hidden="false" collective="false" import="true" targetId="a29d4f22-866c-589a-b2dc-982b558210b3" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="28640e62-93eb-58f9-a6e1-4341e1a2012e" />
               </constraints>
             </entryLink>
             <entryLink id="c490ce55-2390-5f00-bcac-9f6ba628348a" name="BMS Packmule Flakbed (Regular)" hidden="false" collective="false" import="true" targetId="5187062c-f557-594c-8e74-b195d1f24de5" type="selectionEntry">
@@ -3166,11 +3126,6 @@
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="b19f5aec-15e6-58b5-9e71-4369d816e099" />
               </constraints>
             </entryLink>
-            <entryLink id="2abbde9f-8248-5c4c-a812-5173fec0c74f" name="Dunne Flatbed 1B Portee (Veteran)" hidden="false" collective="false" import="true" targetId="0c566bca-7c1a-503c-8dee-e41eb9263976" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="e4ee7b52-2283-5a14-b22e-e1a292935ee5" />
-              </constraints>
-            </entryLink>
             <entryLink id="aa577d11-eb18-5427-97d0-8534602a9ac0" name="BMS Packmule Flakbed (Veteran)" hidden="false" collective="false" import="true" targetId="d07c6164-2c7b-580f-917a-834783f57692" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="6f1846ec-c8a4-5469-ada7-b88284c39f70" />
@@ -3406,11 +3361,6 @@
             <entryLink id="627aa51d-d0f0-52c3-82e8-5fce3fe3dcf5" name="Devitt-Caine Mk. IV MMR (Inexperienced)" hidden="false" collective="false" import="true" targetId="0b0a4ae9-33ac-5f10-ac58-1818fd0121f1" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="3a0f36e5-c7ea-59de-b465-478adff99907" />
-              </constraints>
-            </entryLink>
-            <entryLink id="86968f1b-2597-516e-81fe-e9280e78107a" name="Dunne Flatbed 1B Portee (Inexperienced)" hidden="false" collective="false" import="true" targetId="5dc4bd6a-1e3a-56ca-b2bb-d6fb6a06d61b" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="c4eb1f89-f0eb-5119-b8b3-19d07139dd09" />
               </constraints>
             </entryLink>
             <entryLink id="a733188a-88af-58bf-8d34-c2509c76d6c4" name="BMS Packmule Flakbed (Inexperienced)" hidden="false" collective="false" import="true" targetId="3cf1d028-132d-5cb4-984c-2dfdedb4f23c" type="selectionEntry">
@@ -3650,11 +3600,6 @@
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="46b4fe9f-09fe-5cac-a2ee-5f9ea2407dd6" />
               </constraints>
             </entryLink>
-            <entryLink id="65609cc1-011c-519f-98c1-c692eaa5e60e" name="Dunne Flatbed 1B Portee (Regular)" hidden="false" collective="false" import="true" targetId="a29d4f22-866c-589a-b2dc-982b558210b3" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="c45e874c-69ff-50d2-90b1-0f1fc8675c53" />
-              </constraints>
-            </entryLink>
             <entryLink id="5301695b-fcb4-5b3e-ae8e-9fb61011b455" name="BMS Packmule Flakbed (Regular)" hidden="false" collective="false" import="true" targetId="5187062c-f557-594c-8e74-b195d1f24de5" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="46575b3b-fb90-5ebd-8ce8-0bc5b7df0b1c" />
@@ -3890,11 +3835,6 @@
             <entryLink id="4aedd426-76c3-5d93-b36b-fdad3be11e64" name="Devitt-Caine Mk. IV MMR (Veteran)" hidden="false" collective="false" import="true" targetId="1590807f-c951-5eb5-bda5-4ec958473674" type="selectionEntry">
               <constraints>
                 <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="185b7681-b758-5587-a21d-1f0505e719f0" />
-              </constraints>
-            </entryLink>
-            <entryLink id="e2068644-6145-56b5-87bc-d7537ce62c47" name="Dunne Flatbed 1B Portee (Veteran)" hidden="false" collective="false" import="true" targetId="0c566bca-7c1a-503c-8dee-e41eb9263976" type="selectionEntry">
-              <constraints>
-                <constraint field="selections" scope="parent" value="1" percentValue="false" shared="false" includeChildSelections="false" includeChildForces="false" type="max" id="92e06d4b-2978-5b8d-ae6a-ebbcd9e9555e" />
               </constraints>
             </entryLink>
             <entryLink id="53f41f01-492b-50ed-90ff-72d2fa03db89" name="BMS Packmule Flakbed (Veteran)" hidden="false" collective="false" import="true" targetId="d07c6164-2c7b-580f-917a-834783f57692" type="selectionEntry">
