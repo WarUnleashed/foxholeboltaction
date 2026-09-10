@@ -1,0 +1,202 @@
+name: Fix Colonial vehicle points and obsolete entries
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/fix-colonial-vehicle-points.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Remove obsolete entries and set experience-tier points
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import re
+          import copy
+          import xml.etree.ElementTree as ET
+
+          CAT='Colonial Legion.cat'
+          GST='Bolt Action - Foxhole.gst'
+          IDX='index.xml'
+          REV='18'
+          NS='http://www.battlescribe.net/schema/catalogueSchema'
+          q=lambda t:f'{{{NS}}}{t}'
+
+          def norm(s):
+              return (s or '').replace('“','"').replace('”','"').replace('’',"'").replace('–','-').replace('—','-').lower().strip()
+
+          tree=ET.parse(CAT)
+          root=tree.getroot()
+          top=root.find(q('selectionEntries'))
+          if top is None:
+              raise SystemExit('Colonial catalogue has no top-level selectionEntries')
+
+          # Remove the explicitly obsolete/duplicate entries shown in New Recruit.
+          def obsolete(name):
+              n=norm(name)
+              if 'dmmt-56' in n and 'dragoon' in n:
+                  return True
+              if 'lance-36 & lance-40' in n and 'halberd' in n:
+                  return True
+              if re.fullmatch(r'lance-40(?:\s*\([^)]*\))?', n):
+                  return True
+              return False
+
+          removed=[]
+          removed_ids=set()
+          for e in list(top):
+              if e.tag==q('selectionEntry') and obsolete(e.get('name','')):
+                  removed.append(e.get('name',''))
+                  if e.get('id'):
+                      removed_ids.add(e.get('id'))
+                  top.remove(e)
+
+          # Remove links targeting deleted selections anywhere in the catalogue.
+          if removed_ids:
+              for parent in root.iter():
+                  for child in list(parent):
+                      if child.tag==q('entryLink') and child.get('targetId') in removed_ids:
+                          parent.remove(child)
+
+          # Inexperienced base points supplied by the project owner.
+          bases={
+              'talos':150,
+              'bardiche':140,
+              'ranseur':145,
+              'nemesis':160,
+              'peltast':80,
+              'hasta':260,
+              'retiarius':220,
+              'deioneus':160,
+              'ixion':60,
+          }
+          aliases={
+              'talos':['talos'],
+              'bardiche':['bardiche'],
+              'ranseur':['ranseur'],
+              'nemesis':['nemesis'],
+              'peltast':['peltast'],
+              'hasta':['hasta'],
+              'retiarius':['retiarius'],
+              'deioneus':['deioneus'],
+              'ixion':['ixion'],
+          }
+          multipliers={'inexperienced':1.0,'regular':1.25,'veteran':1.5}
+
+          # Template for a points cost element if a child happens not to contain one already.
+          template_cost=next(root.iter(q('cost')), None)
+          if template_cost is None:
+              raise SystemExit('Could not find a points cost template in Colonial catalogue')
+
+          def set_points(entry, value):
+              costs=entry.find(q('costs'))
+              if costs is None:
+                  costs=ET.SubElement(entry,q('costs'))
+              pts=None
+              for c in costs.findall(q('cost')):
+                  if (c.get('name') or '').lower() in ('pts','points'):
+                      pts=c; break
+              if pts is None:
+                  pts=copy.deepcopy(template_cost)
+                  costs.append(pts)
+              if float(value).is_integer():
+                  pts.set('value',str(int(value)))
+              else:
+                  pts.set('value',('{:.2f}'.format(value)).rstrip('0').rstrip('.'))
+
+          updated=[]
+          for unit in list(top):
+              if unit.tag!=q('selectionEntry') or unit.get('type')!='unit':
+                  continue
+              un=norm(unit.get('name',''))
+              key=None
+              for k, needles in aliases.items():
+                  if any(x in un for x in needles):
+                      key=k; break
+              if key is None:
+                  continue
+
+              base=bases[key]
+              touched=False
+
+              # Preferred revision-17 structure: Experience choices nested under the unit.
+              for ch in unit.iter(q('selectionEntry')):
+                  if ch is unit:
+                      continue
+                  xp=norm(ch.get('name',''))
+                  if xp in multipliers:
+                      val=base*multipliers[xp]
+                      set_points(ch,val)
+                      updated.append((unit.get('name',''),xp,val))
+                      touched=True
+
+              # Also support any remaining top-level experience-suffixed legacy unit.
+              if not touched:
+                  m=re.search(r'\((inexperienced|regular|veteran)\)\s*$',un)
+                  if m:
+                      xp=m.group(1)
+                      val=base*multipliers[xp]
+                      set_points(unit,val)
+                      updated.append((unit.get('name',''),xp,val))
+
+          expected=set(bases)
+          found=set()
+          for name, xp, val in updated:
+              nn=norm(name)
+              for k in bases:
+                  if k in nn:
+                      found.add(k)
+          missing=expected-found
+          if missing:
+              raise SystemExit('Did not find experience choices for: '+', '.join(sorted(missing)))
+
+          root.set('revision',REV)
+          root.set('gameSystemRevision',REV)
+          ET.register_namespace('',NS)
+          tree.write(CAT,encoding='UTF-8',xml_declaration=True)
+
+          G='http://www.battlescribe.net/schema/gameSystemSchema'
+          gt=ET.parse(GST)
+          gt.getroot().set('revision',REV)
+          ET.register_namespace('',G)
+          gt.write(GST,encoding='UTF-8',xml_declaration=True)
+
+          I='http://www.battlescribe.net/schema/dataIndexSchema'
+          it=ET.parse(IDX)
+          for d in it.getroot().iter(f'{{{I}}}dataIndexEntry'):
+              d.set('dataRevision',REV)
+          ET.register_namespace('',I)
+          it.write(IDX,encoding='UTF-8',xml_declaration=True)
+
+          ET.parse(CAT); ET.parse(GST); ET.parse(IDX)
+          print('removed:', removed)
+          for row in updated:
+              print('points:', row)
+          print('revision',REV)
+          PY
+
+      - name: Commit generated data
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add 'Colonial Legion.cat' 'Bolt Action - Foxhole.gst' index.xml
+          if git diff --cached --quiet; then
+            echo 'No generated changes.'
+          else
+            git commit -m 'Apply Colonial vehicle points and remove obsolete entries'
+            git push
+          fi
