@@ -8,6 +8,7 @@ on:
       - 'Colonial Legion.cat'
       - 'Warden Army.cat'
       - 'index.xml'
+      - '.github/workflows/normalize-factions.yml'
 
 permissions:
   contents: write
@@ -86,7 +87,6 @@ jobs:
               if len(source_forces)==0:
                   g.remove(source_forces)
 
-          # Move faction-specific shared rules out of the shared game system too.
           colonial_rule_names={
               'Mechanized / Motorized Platoon','Armoured Platoon','Close Air Support',
               'March of the Legion','Faith in Armour','Meticulous Assault (Great War Era)',
@@ -112,7 +112,6 @@ jobs:
                   target.append(retag_tree(rule,CAT_NS))
                   shared.remove(rule)
 
-          # The game system is shared by both factions and must not be faction-branded.
           g.set('name','Bolt Action: Foxhole (Unofficial)')
           g.set('authorName','Foxhole Bolt Action data')
 
