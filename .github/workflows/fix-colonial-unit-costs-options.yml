@@ -1,0 +1,208 @@
+name: Fix Colonial medic, weapon costs, and NCO options
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/fix-colonial-unit-costs-options.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Apply Colonial cleanup, costs, and options
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import copy, re, uuid
+          import xml.etree.ElementTree as ET
+
+          CAT='Colonial Legion.cat'
+          WARDEN='Warden Army.cat'
+          GST='Bolt Action - Foxhole.gst'
+          IDX='index.xml'
+          REV='19'
+          NS='http://www.battlescribe.net/schema/catalogueSchema'
+          q=lambda t:f'{{{NS}}}{t}'
+          U=uuid.UUID('73a8328a-cdd7-4698-af43-7f62d0bf17a9')
+          INF_CAT='1db0d511-ab38-5eb8-afa7-97cd18cf7d11'
+          HWT_CAT='df95158d-692a-545b-b6da-9fc45eb1f7fa'
+
+          def norm(s):
+              return (s or '').replace('“','"').replace('”','"').replace('’',"'").replace('–','-').replace('—','-').lower().strip()
+
+          tree=ET.parse(CAT)
+          root=tree.getroot()
+          top=root.find(q('selectionEntries'))
+          if top is None:
+              raise SystemExit('Missing Colonial top-level selectionEntries')
+
+          template_cost=next(root.iter(q('cost')), None)
+          if template_cost is None:
+              raise SystemExit('No points cost template found')
+
+          def set_points(entry, value):
+              costs=entry.find(q('costs'))
+              if costs is None:
+                  costs=ET.SubElement(entry,q('costs'))
+              pts=None
+              for c in costs.findall(q('cost')):
+                  if norm(c.get('name')) in ('pts','points'):
+                      pts=c; break
+              if pts is None:
+                  pts=copy.deepcopy(template_cost)
+                  costs.append(pts)
+              value=float(value)
+              pts.set('value', str(int(value)) if value.is_integer() else ('{:.2f}'.format(value).rstrip('0').rstrip('.')))
+
+          def has_category(unit, catid):
+              return any(c.get('targetId')==catid for c in unit.findall('./'+q('categoryLinks')+'/'+q('categoryLink')))
+
+          # Keep exactly one MEDIC entry: prefer the unsuffixed base entry.
+          medics=[e for e in list(top) if e.tag==q('selectionEntry') and norm(e.get('name')).startswith('medic')]
+          keep=next((e for e in medics if norm(e.get('name'))=='medic'), medics[0] if medics else None)
+          removed_medics=[]; removed_ids=set()
+          for e in medics:
+              if e is keep: continue
+              removed_medics.append(e.get('name',''))
+              if e.get('id'): removed_ids.add(e.get('id'))
+              top.remove(e)
+          if removed_ids:
+              for parent in root.iter():
+                  for child in list(parent):
+                      if child.tag==q('entryLink') and child.get('targetId') in removed_ids:
+                          parent.remove(child)
+
+          # Quickhatch is +20 points.
+          quickhatch=0
+          for e in root.iter(q('selectionEntry')):
+              if 'quickhatch' in norm(e.get('name')):
+                  set_points(e,20); quickhatch+=1
+
+          # Field weapon base points; Regular = +25%, Veteran = +50%.
+          field_bases={
+              'stygian':150,
+              'polybolos':80,
+              'ruptura':100,
+              'hades':210,
+              'cestus':40,
+          }
+          mult={'inexperienced':1.0,'regular':1.25,'veteran':1.5}
+          field_updates=[]
+          for unit in list(top):
+              if unit.tag!=q('selectionEntry') or unit.get('type')!='unit': continue
+              un=norm(unit.get('name'))
+              key=next((k for k in field_bases if k in un or (k=='ruptura' and 'rupture' in un)), None)
+              if not key: continue
+              base=field_bases[key]
+              exp_children=[]
+              for ch in unit.iter(q('selectionEntry')):
+                  if ch is unit: continue
+                  xp=norm(ch.get('name'))
+                  if xp in mult:
+                      set_points(ch,base*mult[xp]); exp_children.append(xp)
+                      field_updates.append((unit.get('name'),xp,base*mult[xp]))
+              if not exp_children:
+                  set_points(unit,base)
+                  field_updates.append((unit.get('name'),'base',base))
+
+          # Heavy Weapons Team upgrade prices: Lamentum included, Fissura +10, Typhoon +15, Daucus +20.
+          hwt_prices={'lamentum':0,'fissura':10,'typhoon':15,'daucus':20}
+          hwt_updates=[]
+          for unit in list(top):
+              if unit.tag!=q('selectionEntry') or unit.get('type')!='unit' or not has_category(unit,HWT_CAT): continue
+              for e in unit.iter(q('selectionEntry')):
+                  if e is unit: continue
+                  en=norm(e.get('name'))
+                  key=next((k for k in hwt_prices if k in en),None)
+                  if key:
+                      set_points(e,hwt_prices[key]); hwt_updates.append((unit.get('name'),e.get('name'),hwt_prices[key]))
+
+          # Every Colonial infantry NCO Loadout gets Lionclaw SMG as a +3 point alternative.
+          nco_groups=0; nco_added=0
+          for unit in list(top):
+              if unit.tag!=q('selectionEntry') or unit.get('type')!='unit' or not has_category(unit,INF_CAT): continue
+              for group in unit.iter(q('selectionEntryGroup')):
+                  if norm(group.get('name'))!='nco loadout': continue
+                  nco_groups+=1
+                  ses=group.find(q('selectionEntries'))
+                  if ses is None:
+                      ses=ET.SubElement(group,q('selectionEntries'))
+                  existing=next((e for e in ses.findall(q('selectionEntry')) if 'lionclaw' in norm(e.get('name'))),None)
+                  if existing is not None:
+                      set_points(existing,3)
+                      continue
+                  base=next((e for e in ses.findall(q('selectionEntry')) if norm(e.get('name')).startswith('nco')),None)
+                  if base is None:
+                      continue
+                  lion_id=str(uuid.uuid5(U,(unit.get('id','')+group.get('id','')+':lionclaw')))
+                  lion=ET.SubElement(ses,q('selectionEntry'),{'id':lion_id,'name':'NCO — "Lionclaw" mc.VIII','hidden':'false','collective':'false','import':'true','type':'model'})
+                  cs=ET.SubElement(lion,q('constraints'))
+                  maxid=str(uuid.uuid5(U,lion_id+':max'))
+                  ET.SubElement(cs,q('constraint'),{'field':'selections','scope':'parent','value':'1','percentValue':'false','shared':'false','includeChildSelections':'false','includeChildForces':'false','type':'max','id':maxid})
+                  set_points(lion,3)
+
+                  # Choosing Lionclaw replaces the required base NCO model, not adds a second NCO.
+                  bcs=base.find(q('constraints'))
+                  if bcs is not None:
+                      mods=base.find(q('modifiers'))
+                      if mods is None: mods=ET.SubElement(base,q('modifiers'))
+                      for bc in bcs.findall(q('constraint')):
+                          if bc.get('type') not in ('min','max') or bc.get('value')!='1' or not bc.get('id'): continue
+                          mod=ET.SubElement(mods,q('modifier'),{'type':'decrement','field':bc.get('id'),'value':'1'})
+                          reps=ET.SubElement(mod,q('repeats'))
+                          ET.SubElement(reps,q('repeat'),{'field':'selections','scope':'parent','value':'1','percentValue':'false','shared':'true','includeChildSelections':'true','includeChildForces':'false','childId':lion_id,'repeats':'1','roundUp':'false'})
+                  nco_added+=1
+
+          if quickhatch==0: raise SystemExit('Quickhatch entry not found')
+          missing_fields=[k for k in field_bases if not any(k in norm(str(row[0])) or (k=='ruptura' and 'rupture' in norm(str(row[0]))) for row in field_updates)]
+          if missing_fields: raise SystemExit('Missing field weapons: '+', '.join(missing_fields))
+          if not hwt_updates: raise SystemExit('No Heavy Weapons Team weapon choices updated')
+          if nco_groups==0: raise SystemExit('No infantry NCO Loadout groups found')
+
+          # Revision and namespace synchronization.
+          root.set('revision',REV); root.set('gameSystemRevision',REV)
+          ET.register_namespace('',NS); tree.write(CAT,encoding='UTF-8',xml_declaration=True)
+
+          wt=ET.parse(WARDEN); wr=wt.getroot(); wr.set('revision',REV); wr.set('gameSystemRevision',REV)
+          ET.register_namespace('',NS); wt.write(WARDEN,encoding='UTF-8',xml_declaration=True)
+
+          G='http://www.battlescribe.net/schema/gameSystemSchema'
+          gt=ET.parse(GST); gt.getroot().set('revision',REV); ET.register_namespace('',G); gt.write(GST,encoding='UTF-8',xml_declaration=True)
+          I='http://www.battlescribe.net/schema/dataIndexSchema'
+          it=ET.parse(IDX)
+          for d in it.getroot().iter(f'{{{I}}}dataIndexEntry'): d.set('dataRevision',REV)
+          ET.register_namespace('',I); it.write(IDX,encoding='UTF-8',xml_declaration=True)
+
+          for p in (CAT,WARDEN,GST,IDX): ET.parse(p)
+          print('removed medic variants:', removed_medics)
+          print('remaining medics:', [e.get('name') for e in top if norm(e.get('name')).startswith('medic')])
+          print('quickhatch entries:',quickhatch)
+          for row in field_updates: print('field points:',row)
+          for row in hwt_updates: print('HWT price:',row)
+          print('NCO groups:',nco_groups,'Lionclaw added:',nco_added)
+          print('revision',REV)
+          PY
+
+      - name: Commit generated data
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add 'Colonial Legion.cat' 'Warden Army.cat' 'Bolt Action - Foxhole.gst' index.xml
+          if git diff --cached --quiet; then
+            echo 'No generated changes.'
+          else
+            git commit -m 'Fix Colonial medic, weapon costs, and NCO options'
+            git push
+          fi
