@@ -18,132 +18,172 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Keep factions as separate catalogues under one game system
+      - name: Normalize factions and apply roster options
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
           import copy
+          import uuid
           import xml.etree.ElementTree as ET
 
           GST_NS='http://www.battlescribe.net/schema/gameSystemSchema'
           CAT_NS='http://www.battlescribe.net/schema/catalogueSchema'
           IDX_NS='http://www.battlescribe.net/schema/dataIndexSchema'
-          DATA_REVISION='2'
+          POINTS='b0e5f7a2-33c8-46ce-8f8f-148d8171da43'
+          DATA_REVISION='3'
+          INFANTRY_CAT='1db0d511-ab38-5eb8-afa7-97cd18cf7d11'
+          MORTAR_CAT='f8cf368a-5e9a-5d56-8e8f-5a5e9a7977b4'
+          FIELD_CAT='75cd78ea-f7b0-5366-b2b5-cfcaa6ba2fc6'
+          ARMOURED_CAR_CAT='6e1678b3-02f8-5430-9f5b-e3da292b8625'
 
-          def lname(tag):
-              return tag.rsplit('}',1)[-1]
-
-          def retag_tree(el, ns):
+          def lname(tag): return tag.rsplit('}',1)[-1]
+          def q(tag): return f'{{{CAT_NS}}}{tag}'
+          def retag_tree(el,ns):
               out=copy.deepcopy(el)
-              for node in out.iter():
-                  node.tag=f'{{{ns}}}{lname(node.tag)}'
+              for node in out.iter(): node.tag=f'{{{ns}}}{lname(node.tag)}'
               return out
-
-          def get_child(root, local):
-              return next((c for c in root if lname(c.tag)==local), None)
-
+          def get_child(root,local): return next((c for c in root if lname(c.tag)==local),None)
+          def sid(*parts): return str(uuid.uuid5(uuid.UUID('6ba7b810-9dad-11d1-80b4-00c04fd430c8'),'foxhole-factions|'+'|'.join(map(str,parts))))
+          def ensure_child(parent,tag):
+              el=parent.find(q(tag))
+              if el is None: el=ET.SubElement(parent,q(tag))
+              return el
           def ensure_force_entries(cat_root):
               existing=get_child(cat_root,'forceEntries')
-              if existing is not None:
-                  return existing
-              fe=ET.Element(f'{{{CAT_NS}}}forceEntries')
-              children=list(cat_root)
+              if existing is not None: return existing
+              fe=ET.Element(q('forceEntries')); children=list(cat_root)
               insert_at=next((i for i,c in enumerate(children) if lname(c.tag) in ('selectionEntries','entryLinks','sharedSelectionEntries','sharedSelectionEntryGroups','sharedRules')),len(children))
-              cat_root.insert(insert_at,fe)
-              return fe
-
+              cat_root.insert(insert_at,fe); return fe
           def ensure_shared_rules(cat_root):
               existing=get_child(cat_root,'sharedRules')
-              if existing is not None:
-                  return existing
-              sr=ET.Element(f'{{{CAT_NS}}}sharedRules')
-              cat_root.append(sr)
-              return sr
+              if existing is not None: return existing
+              sr=ET.Element(q('sharedRules')); cat_root.append(sr); return sr
+          def has_category(se,target_id):
+              cats=se.find(q('categoryLinks'))
+              return cats is not None and any(cl.get('targetId')==target_id for cl in cats.findall(q('categoryLink')))
+          def add_max(parent,value,key):
+              cs=ensure_child(parent,'constraints')
+              ET.SubElement(cs,q('constraint'),{'field':'selections','scope':'parent','value':str(value),'percentValue':'false','shared':'false','includeChildSelections':'false','includeChildForces':'false','type':'max','id':sid(parent.get('id'),key,'max')})
+          def add_upgrade(entries,parent_id,name,pts,max_count):
+              up=ET.SubElement(entries,q('selectionEntry'),{'id':sid(parent_id,'warden-weapon',name),'name':name,'hidden':'false','collective':'false','import':'true','type':'upgrade'})
+              add_max(up,max_count,name)
+              costs=ET.SubElement(up,q('costs')); ET.SubElement(costs,q('cost'),{'name':'pts','typeId':POINTS,'value':str(float(pts))})
 
-          gst=ET.parse('Bolt Action - Foxhole.gst')
-          g=gst.getroot()
-          colonial=ET.parse('Colonial Legion.cat')
-          c=colonial.getroot()
-          warden=ET.parse('Warden Army.cat')
-          w=warden.getroot()
+          gst=ET.parse('Bolt Action - Foxhole.gst'); g=gst.getroot()
+          colonial=ET.parse('Colonial Legion.cat'); c=colonial.getroot()
+          warden=ET.parse('Warden Army.cat'); w=warden.getroot()
 
-          cforces=ensure_force_entries(c)
-          wforces=ensure_force_entries(w)
-
+          cforces=ensure_force_entries(c); wforces=ensure_force_entries(w)
           source_forces=get_child(g,'forceEntries')
           if source_forces is not None:
               for force in list(source_forces):
-                  name=force.get('name','')
-                  target=None
+                  name=force.get('name',''); target=None
                   if name.startswith('Colonial '): target=cforces
                   elif name.startswith('Warden '): target=wforces
-                  if target is None:
-                      continue
+                  if target is None: continue
                   for old in list(target):
-                      if old.get('name')==name:
-                          target.remove(old)
-                  target.append(retag_tree(force,CAT_NS))
-                  source_forces.remove(force)
-              if len(source_forces)==0:
-                  g.remove(source_forces)
+                      if old.get('name')==name: target.remove(old)
+                  target.append(retag_tree(force,CAT_NS)); source_forces.remove(force)
+              if len(source_forces)==0: g.remove(source_forces)
 
-          colonial_rule_names={
-              'Mechanized / Motorized Platoon','Armoured Platoon','Close Air Support',
-              'March of the Legion','Faith in Armour','Meticulous Assault (Great War Era)',
-              'Inspiring Courage (Modern Era)'
-          }
-          warden_rule_names={
-              'Warden Mechanized / Motorized Platoon','Warden Armoured Platoon','Large Batteries',
-              'Arsenal of the North','Caoivish Craftsmanship','Defence of Caoiva (Great War Era)',
-              'In the Name of Callahan! (Modern Era)','Powerful Anti-Tank Grenades'
-          }
+          colonial_rule_names={'Mechanized / Motorized Platoon','Armoured Platoon','Close Air Support','March of the Legion','Faith in Armour','Meticulous Assault (Great War Era)','Inspiring Courage (Modern Era)'}
+          warden_rule_names={'Warden Mechanized / Motorized Platoon','Warden Armoured Platoon','Large Batteries','Arsenal of the North','Caoivish Craftsmanship','Defence of Caoiva (Great War Era)','In the Name of Callahan! (Modern Era)','Powerful Anti-Tank Grenades'}
           shared=get_child(g,'sharedRules')
           if shared is not None:
-              crules=ensure_shared_rules(c)
-              wrules=ensure_shared_rules(w)
+              crules=ensure_shared_rules(c); wrules=ensure_shared_rules(w)
               for rule in list(shared):
                   name=rule.get('name','')
                   target=crules if name in colonial_rule_names else (wrules if name in warden_rule_names else None)
-                  if target is None:
-                      continue
+                  if target is None: continue
                   for old in list(target):
-                      if old.get('name')==name:
-                          target.remove(old)
-                  target.append(retag_tree(rule,CAT_NS))
-                  shared.remove(rule)
+                      if old.get('name')==name: target.remove(old)
+                  target.append(retag_tree(rule,CAT_NS)); shared.remove(rule)
 
-          # One shared game system, two separate faction catalogues. Bump the published
-          # revision so New Recruit refreshes its cached repository metadata and discovers
-          # newly-added faction catalogues.
-          g.set('name','Bolt Action: Foxhole (Unofficial)')
-          g.set('authorName','Foxhole Bolt Action data')
-          g.set('revision',DATA_REVISION)
+          # User-requested selector limits: up to 2 mortars, 2 field/emplaced/immobile
+          # weapons, and 2 armoured cars in every Colonial or Warden selector where that
+          # category is present.
           for cat_root in (c,w):
-              cat_root.set('revision',DATA_REVISION)
-              cat_root.set('gameSystemRevision',DATA_REVISION)
+              forces=get_child(cat_root,'forceEntries')
+              if forces is None: continue
+              for force in list(forces):
+                  links=get_child(force,'categoryLinks')
+                  if links is None: continue
+                  for cl in list(links):
+                      if cl.get('targetId') not in (MORTAR_CAT,FIELD_CAT,ARMOURED_CAR_CAT): continue
+                      constraints=get_child(cl,'constraints')
+                      if constraints is None:
+                          constraints=ET.SubElement(cl,q('constraints'))
+                      found=False
+                      for con in list(constraints):
+                          if con.get('type')=='max' and con.get('scope')=='force':
+                              con.set('value','2'); found=True
+                      if not found:
+                          ET.SubElement(constraints,q('constraint'),{'field':'selections','scope':'force','value':'2','percentValue':'false','shared':'false','includeChildSelections':'true','includeChildForces':'false','type':'max','id':sid(force.get('id'),cl.get('targetId'),'max2')})
 
-          ET.register_namespace('',GST_NS)
-          gst.write('Bolt Action - Foxhole.gst',encoding='UTF-8',xml_declaration=True)
-          ET.register_namespace('',CAT_NS)
-          colonial.write('Colonial Legion.cat',encoding='UTF-8',xml_declaration=True)
-          warden.write('Warden Army.cat',encoding='UTF-8',xml_declaration=True)
+          # Infantry-attached Warden transports should be actual personnel carriers/tows,
+          # not logistics/emplacement equipment.
+          excluded_transport_terms=('crane','tractor','flatbed','coastal gun')
+          for group in w.iter(q('selectionEntryGroup')):
+              if group.get('name')!='Attached Transport / Tow': continue
+              links=group.find(q('entryLinks'))
+              if links is None: continue
+              for link in list(links):
+                  if any(term in link.get('name','').lower() for term in excluded_transport_terms):
+                      links.remove(link)
 
-          idx=ET.parse('index.xml')
-          ir=idx.getroot()
+          # Warden infantry gun selections from Armies of Caoiva. Values are per model;
+          # maximums follow the individual squad entries in the PDF.
+          def weapon_spec(name):
+              n=name.lower(); gw='great war era' in n
+              if gw and 'inexperienced infantry squad' in n: return [('Automatic rifle',5,1)]
+              if gw and 'regular infantry squad' in n: return [('NCO submachine gun',3,1),('Automatic rifle',5,1),('Pistol',-3,1),('Malone machine gun',20,1),('Grenade launcher (alongside rifle)',20,1)]
+              if gw and 'veteran infantry squad' in n: return [('Submachine gun',3,3),('Automatic rifle',5,2),('Pistol',-3,1),('Malone machine gun',20,1),('Grenade launcher (alongside rifle)',20,1)]
+              if gw and 'reconnaissance squad' in n: return [('Submachine gun',3,4),('Shotgun',3,2),('Automatic rifle',5,2),('Grenade launcher (alongside rifle)',20,1)]
+              if gw and 'conscripted squad' in n: return [('Automatic rifle',5,1)]
+              if gw and 'hands squad' in n: return [('Submachine gun',3,3),('Automatic rifle',5,1),('Pistol',-3,1),('Malone machine gun',20,1),('Grenade launcher (alongside rifle)',20,1)]
+              if gw and 'eight sons squad' in n: return [('Submachine gun',3,3),('Automatic rifle',5,2),('Pistol',-3,2),('Malone machine gun',20,2),('Grenade launcher (alongside rifle)',20,1)]
+              if 'inexperienced infantry squad' in n: return [('NCO submachine gun',3,1),('Automatic rifle',5,1),('Pistol',-3,1),('Malone machine gun',20,1)]
+              if 'regular infantry squad' in n: return [('Submachine gun',3,2),('Assault rifle',5,3),('Carbine',1,3),('Automatic rifle',5,1),('Pistol',-3,1),('Malone machine gun',20,1),('Grenade launcher (alongside rifle/carbine)',20,1)]
+              if 'veteran infantry squad' in n: return [('Submachine gun',3,7),('Assault rifle',5,10),('Carbine',1,10),('Automatic rifle',5,2),('Pistol',-3,2),('Malone machine gun',20,2),('Grenade launcher (alongside rifle/carbine)',20,1)]
+              if 'reconnaissance squad' in n: return [('Submachine gun',3,3),('Shotgun',3,5),('Assault rifle',5,3),('Carbine',1,10),('Automatic rifle',5,3),('Grenade launcher (alongside rifle/carbine)',20,1)]
+              if 'engineer squad' in n: return [('Submachine gun',3,7),('Shotgun',3,10),('Assault rifle',5,7),('Carbine',1,7),('Pistol',-3,2),('Malone machine gun',20,1),('Flamethrower',20,1),('Grenade launcher (alongside rifle)',20,2)]
+              if 'cavalry squad' in n: return [('Submachine gun',2,3),('Automatic rifle',4,2),('Pistol',-4,10),('Malone machine gun',19,1)]
+              if 'conscripted squad' in n: return [('NCO submachine gun',3,1),('Automatic rifle',5,1)]
+              if 'partisan squad' in n:
+                  malone=1 if 'inexperienced' in n else 3
+                  return [('Submachine gun',3,5),('Shotgun',3,5),('Assault rifle',5,5),('Carbine',1,5),('Automatic rifle',5,2),('Pistol',-3,3),('Malone machine gun',20,malone),('Grenade launcher (alongside rifle)',20,1)]
+              if 'hands squad' in n: return [('Submachine gun',3,7),('Assault rifle',5,10),('Carbine',1,10),('Automatic rifle',5,2),('Pistol',-3,2),('Malone machine gun',20,2),('Grenade launcher (alongside rifle)',20,1)]
+              if 'eight sons squad' in n: return [('Submachine gun',3,10),('Shotgun',3,10),('Assault rifle',5,10),('Carbine',1,10),('Automatic rifle',5,3),('Pistol',-3,2),('Malone machine gun',20,2),('Grenade launcher (alongside rifle)',20,1)]
+              return []
+
+          for se in w.iter(q('selectionEntry')):
+              if se.get('type')!='unit' or not has_category(se,INFANTRY_CAT): continue
+              specs=weapon_spec(se.get('name',''))
+              if not specs: continue
+              groups=se.find(q('selectionEntryGroups'))
+              if groups is None: groups=ET.SubElement(se,q('selectionEntryGroups'))
+              for old in list(groups):
+                  if old.get('name')=='Warden Weapon Replacements': groups.remove(old)
+              wg=ET.SubElement(groups,q('selectionEntryGroup'),{'id':sid(se.get('id'),'warden-weapons'),'name':'Warden Weapon Replacements','hidden':'false'})
+              wes=ET.SubElement(wg,q('selectionEntries'))
+              for wname,pts,max_count in specs: add_upgrade(wes,se.get('id'),wname,pts,max_count)
+
+          g.set('name','Bolt Action: Foxhole (Unofficial)'); g.set('authorName','Foxhole Bolt Action data'); g.set('revision',DATA_REVISION)
+          for cat_root in (c,w): cat_root.set('revision',DATA_REVISION); cat_root.set('gameSystemRevision',DATA_REVISION)
+
+          ET.register_namespace('',GST_NS); gst.write('Bolt Action - Foxhole.gst',encoding='UTF-8',xml_declaration=True)
+          ET.register_namespace('',CAT_NS); colonial.write('Colonial Legion.cat',encoding='UTF-8',xml_declaration=True); warden.write('Warden Army.cat',encoding='UTF-8',xml_declaration=True)
+
+          idx=ET.parse('index.xml'); ir=idx.getroot()
           for e in ir.iter():
-              if lname(e.tag)!='dataIndexEntry':
-                  continue
-              if e.get('dataType')=='gamesystem':
-                  e.set('dataName','Bolt Action: Foxhole (Unofficial)')
-              if e.get('dataType') in ('gamesystem','catalogue'):
-                  e.set('dataRevision',DATA_REVISION)
-          ET.register_namespace('',IDX_NS)
-          idx.write('index.xml',encoding='UTF-8',xml_declaration=True)
+              if lname(e.tag)!='dataIndexEntry': continue
+              if e.get('dataType')=='gamesystem': e.set('dataName','Bolt Action: Foxhole (Unofficial)')
+              if e.get('dataType') in ('gamesystem','catalogue'): e.set('dataRevision',DATA_REVISION)
+          ET.register_namespace('',IDX_NS); idx.write('index.xml',encoding='UTF-8',xml_declaration=True)
 
           for path in ['Bolt Action - Foxhole.gst','Colonial Legion.cat','Warden Army.cat','index.xml']:
-              ET.parse(path)
-              print('XML OK:',path)
+              ET.parse(path); print('XML OK:',path)
           PY
       - name: Commit normalized faction structure
         shell: bash
@@ -154,6 +194,6 @@ jobs:
           if git diff --cached --quiet; then
             echo 'Faction structure already normalized.'
           else
-            git commit -m 'Separate Colonial and Warden factions and bump revision'
+            git commit -m 'Apply faction limits and Warden weapon selections'
             git push
           fi
