@@ -1,0 +1,243 @@
+name: Apply requested faction and roster cleanup
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'Colonial Legion.cat'
+      - 'Warden Army.cat'
+      - '.github/workflows/normalize-factions.yml'
+      - '.github/workflows/annotate-model-weapons.yml'
+      - '.github/workflows/apply-requested-cleanup.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply requested catalogue cleanup
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import copy
+          import re
+          import uuid
+          import xml.etree.ElementTree as ET
+
+          CAT_NS='http://www.battlescribe.net/schema/catalogueSchema'
+          GST_NS='http://www.battlescribe.net/schema/gameSystemSchema'
+          IDX_NS='http://www.battlescribe.net/schema/dataIndexSchema'
+          DATA_REVISION='8'
+          MG_CAT='df95158d-692a-545b-b6da-9fc45eb1f7fa'
+          MORTAR_CAT='f8cf368a-5e9a-5d56-8e8f-5a5e9a7977b4'
+          AT_CAT='3cf48c43-9058-564e-901a-e3098be16d2f'
+          INFANTRY_CAT='1db0d511-ab38-5eb8-afa7-97cd18cf7d11'
+
+          ET.register_namespace('', CAT_NS)
+
+          def q(tag): return f'{{{CAT_NS}}}{tag}'
+          def lname(tag): return tag.rsplit('}',1)[-1]
+          def sid(*parts):
+              return str(uuid.uuid5(uuid.UUID('6ba7b810-9dad-11d1-80b4-00c04fd430c8'), 'foxhole-cleanup|'+'|'.join(map(str,parts))))
+          def norm(s):
+              return re.sub(r'[^a-z0-9]+',' ',(s or '').lower()).strip()
+          def child(parent, name):
+              return next((x for x in parent if lname(x.tag)==name), None)
+          def ensure(parent, name):
+              x=child(parent,name)
+              if x is None: x=ET.SubElement(parent,q(name))
+              return x
+          def has_cat(se, cid):
+              cs=child(se,'categoryLinks')
+              return cs is not None and any(x.get('targetId')==cid for x in cs)
+          def ensure_cat(se, cid, label, primary=True):
+              cs=ensure(se,'categoryLinks')
+              found=None
+              for x in cs:
+                  if x.get('targetId')==cid:
+                      found=x; break
+              if found is None:
+                  found=ET.SubElement(cs,q('categoryLink'),{
+                      'id':sid(se.get('id'),cid),'name':label,'hidden':'false',
+                      'targetId':cid,'primary':'true' if primary else 'false'})
+              else:
+                  found.set('name',label)
+                  if primary: found.set('primary','true')
+              return found
+          def remove_cat(se,cid):
+              cs=child(se,'categoryLinks')
+              if cs is None: return
+              for x in list(cs):
+                  if x.get('targetId')==cid: cs.remove(x)
+          def parent_map(root): return {c:p for p in root.iter() for c in p}
+          def remove_descendants_by_name(unit, terms):
+              pm=parent_map(unit)
+              removed=[]
+              for se in list(unit.iter(q('selectionEntry'))):
+                  n=norm(se.get('name'))
+                  if any(t in n for t in terms):
+                      p=pm.get(se)
+                      if p is not None:
+                          removed.append(copy.deepcopy(se)); p.remove(se)
+              return removed
+          def strip_modifiers(se):
+              for x in list(se):
+                  if lname(x.tag) in ('modifiers','modifierGroups'): se.remove(x)
+              for x in se.iter():
+                  if lname(x.tag)=='constraint' and x.get('type')=='min': x.set('value','0')
+          def clone_with_new_ids(el, key):
+              out=copy.deepcopy(el)
+              for i,node in enumerate(out.iter()):
+                  if node.get('id'):
+                      node.set('id',sid(key,i,node.get('id')))
+              return out
+          def top_entries(root):
+              for container_name in ('selectionEntries','sharedSelectionEntries'):
+                  container=child(root,container_name)
+                  if container is not None:
+                      for se in list(container):
+                          if lname(se.tag)=='selectionEntry': yield container,se
+          def remove_dead_links(root, removed_ids):
+              if not removed_ids: return
+              pm=parent_map(root)
+              for link in list(root.iter(q('entryLink'))):
+                  if link.get('targetId') in removed_ids:
+                      p=pm.get(link)
+                      if p is not None: p.remove(link)
+
+          def split_combined(root, a_term, b_term, a_name, b_name):
+              for container,se in list(top_entries(root)):
+                  n=norm(se.get('name'))
+                  if a_term in n and b_term in n:
+                      # Do not split if this is merely a command/link wrapper without both variants as the actual unit name.
+                      a=clone_with_new_ids(se,se.get('id')+'|'+a_name)
+                      b=clone_with_new_ids(se,se.get('id')+'|'+b_name)
+                      a.set('name',a_name); b.set('name',b_name)
+                      idx=list(container).index(se)
+                      container.remove(se); container.insert(idx,a); container.insert(idx+1,b)
+                      return True
+              return False
+
+          def apply_common(root, faction):
+              # Rename selector label to Heavy Weapons Team everywhere.
+              for cl in root.iter(q('categoryLink')):
+                  if cl.get('targetId')==MG_CAT: cl.set('name','Heavy Weapons Team')
+
+              # Light mortar naming requested for the Colonial catalogue.
+              if faction=='colonial':
+                  for se in root.iter(q('selectionEntry')):
+                      n=norm(se.get('name'))
+                      if 'light mortar team' in n:
+                          se.set('name', re.sub(r'(?i)light\s+mortar\s+team','Cremari Mortar Team',se.get('name')))
+
+              # Attached transport exclusions. These are logistics/special vehicles, not squad transports.
+              excluded=('crane','flatbed','heavy infantry carrier','diana field car','varys')
+              for group in root.iter(q('selectionEntryGroup')):
+                  if group.get('name')!='Attached Transport / Tow': continue
+                  links=child(group,'entryLinks')
+                  if links is None: continue
+                  for link in list(links):
+                      if any(t in norm(link.get('name')) for t in excluded): links.remove(link)
+
+          def apply_heavy_weapons(root, faction):
+              terms = ('typhoon','daucus','lamentum','fissura') if faction=='colonial' else ('ratcatcher','foebreaker','bonesaw')
+              for _container,se in top_entries(root):
+                  n=norm(se.get('name'))
+                  if any(t in n for t in terms):
+                      ensure_cat(se,MG_CAT,'Heavy Weapons Team',True)
+                      # These options belong to Heavy Weapons Team, not Anti-Tank Team.
+                      if (faction=='colonial' and 'daucus' in n) or (faction=='warden' and ('foebreaker' in n or 'bonesaw' in n)):
+                          remove_cat(se,AT_CAT)
+              # Rename generic MG-team entries but retain their points/rules.
+              for _container,se in top_entries(root):
+                  if has_cat(se,MG_CAT) and norm(se.get('name')) in ('machine gun team','heavy machine gun team'):
+                      se.set('name','Heavy Weapons Team')
+
+          def apply_colonial(root):
+              # Ignifist is additional equipment. It does not replace/decrement the rifle model.
+              # Sticky grenades and Ignifist are mutually exclusive squad equipment choices.
+              for unit in list(root.iter(q('selectionEntry'))):
+                  if unit.get('type')!='unit' or not has_cat(unit,INFANTRY_CAT): continue
+                  ign=remove_descendants_by_name(unit,('ignifist',))
+                  sticky=remove_descendants_by_name(unit,('sticky grenade',))
+                  if not ign and not sticky: continue
+                  groups=ensure(unit,'selectionEntryGroups')
+                  for old in list(groups):
+                      if old.get('name')=='Squad Anti-Tank Equipment (choose one)': groups.remove(old)
+                  grp=ET.SubElement(groups,q('selectionEntryGroup'),{
+                      'id':sid(unit.get('id'),'squad-at-equipment'),'name':'Squad Anti-Tank Equipment (choose one)','hidden':'false'})
+                  cs=ET.SubElement(grp,q('constraints'))
+                  ET.SubElement(cs,q('constraint'),{
+                      'field':'selections','scope':'parent','value':'1','percentValue':'false','shared':'false',
+                      'includeChildSelections':'false','includeChildForces':'false','type':'max','id':sid(unit.get('id'),'squad-at-max')})
+                  ses=ET.SubElement(grp,q('selectionEntries'))
+                  if sticky:
+                      x=clone_with_new_ids(sticky[0],unit.get('id')+'|sticky')
+                      x.set('type','upgrade'); x.set('name','Sticky grenades')
+                      strip_modifiers(x); ses.append(x)
+                  if ign:
+                      x=clone_with_new_ids(ign[0],unit.get('id')+'|ignifist')
+                      x.set('type','upgrade'); x.set('name','Ignifist (additional weapon)')
+                      strip_modifiers(x); ses.append(x)
+
+              # Remove obsolete/duplicate generic artillery and unwanted vehicle entries.
+              remove_exact={'68mm anti tank gun','coastal gun','howitzer','static artillery'}
+              remove_terms=('falcata','93k a sica',' sica','agb 88 pilum',' pilum','flakbed','labrys','onager','t13 aristaeus','type c charon','type c danace','pugio','arbalest')
+              removed_ids=set()
+              for container,se in list(top_entries(root)):
+                  n=norm(se.get('name'))
+                  # Keep the named Battering Ram even if its descriptive subtitle mentions 68mm AT gun.
+                  bad = (n in remove_exact and 'battering ram' not in n) or any(t.strip() in n for t in remove_terms)
+                  if bad:
+                      removed_ids.add(se.get('id')); container.remove(se)
+              remove_dead_links(root,removed_ids)
+
+              # Split combined vehicle records while preserving their existing rules/costs.
+              split_combined(root,'spatha','falchion','85K-b “Spatha”','85K-a “Falchion”')
+              split_combined(root,'lance 36','lance 40','Lance-36','Lance-40')
+
+          def load(path):
+              tree=ET.parse(path); return tree,tree.getroot()
+
+          ctree,c=load('Colonial Legion.cat')
+          wtree,w=load('Warden Army.cat')
+          apply_common(c,'colonial'); apply_common(w,'warden')
+          apply_heavy_weapons(c,'colonial'); apply_heavy_weapons(w,'warden')
+          apply_colonial(c)
+
+          # Revision bump so New Recruit invalidates cached catalogue data.
+          c.set('revision',DATA_REVISION); c.set('gameSystemRevision',DATA_REVISION)
+          w.set('revision',DATA_REVISION); w.set('gameSystemRevision',DATA_REVISION)
+          ctree.write('Colonial Legion.cat',encoding='UTF-8',xml_declaration=True)
+          wtree.write('Warden Army.cat',encoding='UTF-8',xml_declaration=True)
+
+          # Keep GST/index revisions aligned.
+          gst=ET.parse('Bolt Action - Foxhole.gst'); gr=gst.getroot(); gr.set('revision',DATA_REVISION)
+          gst.write('Bolt Action - Foxhole.gst',encoding='UTF-8',xml_declaration=True)
+          idx=ET.parse('index.xml'); ir=idx.getroot()
+          for node in ir.iter():
+              if lname(node.tag) in ('gameSystem','catalogue'):
+                  if node.get('dataRevision') is not None: node.set('dataRevision',DATA_REVISION)
+          idx.write('index.xml',encoding='UTF-8',xml_declaration=True)
+
+          # Parse once more as a basic build sanity check.
+          for p in ('Colonial Legion.cat','Warden Army.cat','Bolt Action - Foxhole.gst','index.xml'):
+              ET.parse(p)
+          PY
+      - name: Commit generated catalogue changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add 'Colonial Legion.cat' 'Warden Army.cat' 'Bolt Action - Foxhole.gst' index.xml
+          if git diff --cached --quiet; then
+            echo 'No generated changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Apply requested faction and roster cleanup'
+          git push
