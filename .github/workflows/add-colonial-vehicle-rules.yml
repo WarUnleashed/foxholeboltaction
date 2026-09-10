@@ -1,0 +1,107 @@
+name: Add Colonial vehicle weapons and special rules
+on:
+  workflow_dispatch:
+  push:
+    paths: ['.github/workflows/add-colonial-vehicle-rules.yml']
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply vehicle rules
+        run: |
+          python - <<'PY'
+          import xml.etree.ElementTree as ET, uuid
+          CAT='Colonial Legion.cat'; REV='22'; NS='http://www.battlescribe.net/schema/catalogueSchema'; ET.register_namespace('',NS)
+          t=ET.parse(CAT); root=t.getroot(); q=lambda x:f'{{{NS}}}{x}'
+          def norm(s): return ' '.join((s or '').lower().replace('“','"').replace('”','"').replace('–','-').split())
+          def holder(e,tag):
+            x=e.find(q(tag))
+            if x is None: x=ET.SubElement(e,q(tag))
+            return x
+          def rule(e,n,d):
+            rs=holder(e,'rules')
+            if not any(norm(x.get('name'))==norm(n) for x in rs.findall(q('rule'))):
+              x=ET.SubElement(rs,q('rule'),{'id':str(uuid.uuid4()),'name':n}); ET.SubElement(x,q('description')).text=d
+          def opt(e,n,c=0):
+            ss=holder(e,'selectionEntries')
+            if any(norm(x.get('name'))==norm(n) for x in ss.findall(q('selectionEntry'))): return
+            x=ET.SubElement(ss,q('selectionEntry'),{'id':str(uuid.uuid4()),'name':n,'hidden':'false','collective':'false','import':'true','type':'upgrade'})
+            cs=ET.SubElement(x,q('costs')); ET.SubElement(cs,q('cost'),{'name':'pts','typeId':'points','value':str(c)})
+            co=ET.SubElement(x,q('constraints')); ET.SubElement(co,q('constraint'),{'field':'selections','scope':'parent','value':'1','percentValue':'false','shared':'false','includeChildSelections':'false','includeChildForces':'false','id':str(uuid.uuid4()),'type':'max'})
+          def common_dv(e,dv,label): rule(e,'Damage Value',f'{dv}+ ({label}).')
+          top=root.find(q('sharedSelectionEntries'))
+          if top is None: top=root.find(q('selectionEntries'))
+          # remove standalone Spatha and Talos entries/links; variants are options on Falchion
+          removed=set()
+          if top is not None:
+            for e in list(top.findall(q('selectionEntry'))):
+              n=norm(e.get('name'))
+              if 'spatha' in n or 'talos' in n:
+                removed.add(e.get('id')); top.remove(e)
+          if removed:
+            for p in root.iter():
+              for x in list(p):
+                if x.tag==q('entryLink') and x.get('targetId') in removed: p.remove(x)
+          for e in root.findall('.//'+q('selectionEntry')):
+            n=norm(e.get('name'))
+            if 'actaeon' in n: rule(e,'Open-topped','Open-topped.')
+            if 'hatchet' in n:
+              common_dv(e,8,'light tank'); rule(e,'HE','Instead of having a rating of 1”, the 40mm anti-tank gun’s HE shell has a rating of 2”.')
+            if 'vulcan' in n:
+              opt(e,'Fuel trailer',-10); opt(e,'Empty internal fuel tanks (requires fuel trailer)',10)
+              rule(e,'Jettison fuel trailer','If the fuel trailer is taken and the internal fuel tanks are emptied, the normal bonus for trying to damage flame-throwing vehicles does not apply to the H-5-Beta “Vulcan”.')
+              rule(e,'Slow','If the fuel trailer is taken, the H-5-Beta “Vulcan” is slow: its move is reduced to 6" Advance and 12" Run.')
+              rule(e,'Volatile fuel tanks','Unless the internal fuel tanks are emptied, when rolling on the damage table against this unit, add +1 to the roll.')
+            if 'kranesca' in n:
+              common_dv(e,8,'light tank'); rule(e,'HE','Instead of having a rating of 1”, the 40mm anti-tank gun’s HE shell has a rating of 2”.')
+              rule(e,'Manoeuvrable design','This unit doesn’t suffer the -1 to-hit penalty when firing on the move, unless it boosts.')
+              rule(e,'Boost','When this unit Advances, before resolving movement, you may declare a boost. After the first move, immediately perform another move if able; you cannot fire between the moves. At the end of the activation change its Advance order die to Run and roll: 1 or less — Out of fuel, immediately immobilised but may continue to fire; 2 — Fuel low, may make one more non-boosted move after this round then runs out of fuel; 3+ — Fuel OK. Apply -1 for inexperienced crew and +1 for veteran crew.')
+            if 'falchion' in n:
+              common_dv(e,9,'medium tank'); opt(e,'85K-a “Spatha” — 40mm HVAP + rangefinder (Regular)',10); opt(e,'85K-a “Spatha” — 40mm HVAP + rangefinder (Veteran)',15); opt(e,'85V-g “Talos” — 55mm heavy anti-tank gun',10)
+              rule(e,'40mm HVAP (Spatha only)','The 40mm HVAP light anti-tank gun gets a +1 modifier to results rolled on the Damage Results table.')
+              rule(e,'HE','Spatha/Falchion: 40mm and 40mm HVAP anti-tank gun HE shells have a 2” rating instead of 1”. Talos: the 75mm anti-tank gun HE shell has a 3” rating instead of 2”.')
+              rule(e,'Rangefinder (Spatha only)','When taken as Veteran, this vehicle doesn’t suffer the -1 to-hit penalty when shooting at targets at over half range.')
+            if 'hasta' in n:
+              common_dv(e,10,'heavy tank'); rule(e,'Super-heavy anti-tank gun','Equipped with a super-heavy anti-tank gun; use the Bolt Action super-heavy anti-tank gun rules.')
+            if 'lance-36' in n or 'lance 36' in n:
+              if 'battle tank' not in norm(e.get('name')): e.set('name',e.get('name')+' Battle Tank')
+              common_dv(e,10,'heavy tank'); rule(e,'75mm HE','The 75mm heavy anti-tank gun’s HE shell has a 3” rating.')
+            if 'pelekys' in n:
+              common_dv(e,8,'light tank'); rule(e,'Long barrel','This vehicle doesn’t suffer the -1 to-hit penalty when shooting at targets at over half range.'); rule(e,'Open-topped','Open-topped.')
+            if 'scorpion' in n:
+              common_dv(e,9,'medium tank'); rule(e,'Weapons','2 forward-facing hull-mounted medium machine guns.'); rule(e,'Anti-Structure (3D6)','Anti-Structure (3D6).'); rule(e,'Slow','Slow.')
+            if 'peltast' in n:
+              common_dv(e,7,'armoured carrier'); rule(e,'Open-topped','Open-topped.')
+            if 'xiphos' in n:
+              common_dv(e,7,'armoured carrier'); rule(e,'Weapons','2 turret-mounted light machine guns.'); rule(e,'Recce','Recce.')
+            if 'percutio' in n:
+              common_dv(e,7,'armoured carrier'); rule(e,'Weapons','1 turret-mounted anti-tank rifle.'); rule(e,'Open-topped','Open-topped.'); rule(e,'Recce','Recce.')
+            if 'gemini' in n:
+              common_dv(e,7,'armoured carrier'); rule(e,'Weapons','2 turret-mounted Cutler RPGs (HE 1”, Shaped Charge).'); rule(e,'Recce','Recce.')
+            if 'stinger' in n:
+              common_dv(e,6,'soft-skin'); rule(e,'Weapons','1 forward-facing light machine gun covering the front arc.'); rule(e,'Recce','Recce.'); rule(e,'Turn on the spot','Motorbikes are so small and agile that they can turn on the spot, enabling them to execute a full-speed Run in reverse, finishing the move facing the direction of travel.')
+            if 'javlin' in n or 'javelin' in n or 'hoplite' in n:
+              common_dv(e,7,'armoured carrier'); rule(e,'Transport','Up to 5 men.'); rule(e,'Tow','Light howitzer; light or medium anti-tank gun; light anti-aircraft gun.'); rule(e,'Open-topped','Open-topped.')
+            if 'acheron' in n or 'doru' in n:
+              common_dv(e,7,'armoured carrier'); rule(e,'Weapons','None by default.'); rule(e,'Transport','Up to 8 men.'); rule(e,'Tow','None.'); opt(e,'AB-11 “Doru” — pintle-mounted medium machine gun (forward arc)',15); rule(e,'Amphibious','The LPC may turn, reverse, and move at its full Run rate (and therefore be given a Run order) in shallow and deep water.'); rule(e,'Open-topped','Open-topped.')
+          root.set('revision',REV); root.set('gameSystemRevision',REV); ET.register_namespace('',NS); t.write(CAT,encoding='UTF-8',xml_declaration=True)
+          for fn,ns in [('Warden Army.cat',NS),('Bolt Action - Foxhole.gst','http://www.battlescribe.net/schema/gameSystemSchema')]:
+            ET.register_namespace('',ns); z=ET.parse(fn); r=z.getroot(); r.set('revision',REV)
+            if fn.endswith('.cat'): r.set('gameSystemRevision',REV)
+            ET.register_namespace('',ns); z.write(fn,encoding='UTF-8',xml_declaration=True)
+          ins='http://www.battlescribe.net/schema/dataIndexSchema'; ET.register_namespace('',ins); z=ET.parse('index.xml')
+          for x in z.getroot().findall('.//{'+ins+'}dataIndexEntry'): x.set('dataRevision',REV)
+          ET.register_namespace('',ins); z.write('index.xml',encoding='UTF-8',xml_declaration=True)
+          for f in [CAT,'Warden Army.cat','Bolt Action - Foxhole.gst','index.xml']: ET.parse(f)
+          PY
+      - name: Commit generated data
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add 'Colonial Legion.cat' 'Warden Army.cat' 'Bolt Action - Foxhole.gst' index.xml
+          git diff --cached --quiet && exit 0
+          git commit -m 'Add Colonial vehicle weapons and special rules'
+          git push
