@@ -1,0 +1,142 @@
+name: Add Colonial unit special rules and support options
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/add-colonial-unit-special-rules.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Add rules and options
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import copy, uuid
+          import xml.etree.ElementTree as ET
+          CAT='Colonial Legion.cat'; WARDEN='Warden Army.cat'; GST='Bolt Action - Foxhole.gst'; IDX='index.xml'; REV='20'
+          NS='http://www.battlescribe.net/schema/catalogueSchema'; q=lambda t:f'{{{NS}}}{t}'
+          U=uuid.UUID('8d24f1db-4b33-4f2d-b331-8bb1a7f11220')
+          INF='1db0d511-ab38-5eb8-afa7-97cd18cf7d11'; HWT='df95158d-692a-545b-b6da-9fc45eb1f7fa'; LT='5b361517-ed58-5d60-a6fd-b00e15d7f574'; CAP='914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a'; MED='4e0b9e1a-0360-51cc-a506-097a7efcd44e'
+          def norm(s): return (s or '').replace('“','"').replace('”','"').replace('’',"'").replace('–','-').replace('—','-').lower().strip()
+          tree=ET.parse(CAT); root=tree.getroot(); top=root.find(q('selectionEntries'))
+          template_cost=next(root.iter(q('cost')))
+          def hascat(e,c): return any(x.get('targetId')==c for x in e.findall('./'+q('categoryLinks')+'/'+q('categoryLink')))
+          def child(parent,tag):
+              x=parent.find(q(tag))
+              if x is None: x=ET.SubElement(parent,q(tag))
+              return x
+          def setpts(e,v):
+              cs=child(e,'costs'); p=next((c for c in cs.findall(q('cost')) if norm(c.get('name')) in ('pts','points')),None)
+              if p is None: p=copy.deepcopy(template_cost); cs.append(p)
+              p.set('value',str(v))
+          shared=root.find(q('sharedRules'))
+          if shared is None: shared=ET.SubElement(root,q('sharedRules'))
+          rules={
+            'green':('Green','This unit has the Green special rule.'),
+            'tank_hunters':('Tank Hunters','This unit has the Tank Hunters special rule while sticky grenades or Ignifists are selected.'),
+            'stubborn':('Stubborn','Disciplined troops ignore pin marker penalties during the applicable morale tests.'),
+            'lead_example':('Lead by example','Friendly “green” units within 6” of this unit receive a +1 bonus to their morale if this unit has not failed an order test or morale test this round.'),
+            'fanatics_cond':('Fanatics','This unit has the Fanatics special rule if the Fanatics option is taken.'),
+            'stubborn_cond':('Stubborn (if Fanatics not taken)','This unit has Stubborn unless the Fanatics option is taken.'),
+            'motorbikes':('Motorbikes','If taken, a mounted squad uses the motorbikes rules (see main rulebook).'),
+            'behind_lines':('Behind enemy lines','When outflanking as described on page 119 of the main Bolt Action rulebook, partisans of all veterancies ignore the -1 modifier to the order test for coming onto the table.'),
+            'partisan_green':('Inexperienced partisans are Green','Inexperienced partisans (rebels) have the Green special rule.'),
+            'partisan_stubborn':('Veteran partisans are Stubborn','Veteran partisans (commandos) have the Stubborn special rule.'),
+            'fixed':('Fixed','This unit has the Fixed special rule.'),
+            'shaped':('Shaped charge','This weapon has the Shaped Charge special rule.'),
+            'bane_range':('Bane long-range accuracy','This weapon does not suffer the -1 “to hit” penalty when shooting at targets at over half range.'),
+            'gast_loader':('Gast loader','If a Gast is taken, one soldier must use a pistol to act as its loader.'),
+            'sniper_full':('Sniper','Sniper scope range is 12” to 36”. Shots under 12” cannot use the scope and fire as a normal rifle.\n\nTo Hit: Receive a +1 modifier to hit when using the special sniper ability.\nCover: Snipers ignore cover modifiers completely.\nCasualty Selection: If a sniper scores a hit and damage using the scope, the attacking player chooses the team leader (or specific model depending on the exact ruling context) as the casualty.\nOrders: A Fire or Ambush order is required to use the scope; the scope cannot be used with an Advance order.')
+          }
+          rid={}
+          existing={norm(r.get('name')):r for r in shared.findall(q('rule'))}
+          for key,(name,desc) in rules.items():
+              r=existing.get(norm(name))
+              if r is None:
+                  i=str(uuid.uuid5(U,'rule:'+key)); r=ET.SubElement(shared,q('rule'),{'id':i,'name':name,'hidden':'false'}); ET.SubElement(r,q('description')).text=desc
+              else:
+                  i=r.get('id'); d=r.find(q('description'))
+                  if d is None: d=ET.SubElement(r,q('description'))
+                  d.text=desc
+              rid[key]=i
+          def link(e,key,name=None):
+              links=child(e,'infoLinks'); target=rid[key]
+              if any(x.get('targetId')==target for x in links.findall(q('infoLink'))): return
+              ET.SubElement(links,q('infoLink'),{'id':str(uuid.uuid5(U,(e.get('id','')+':'+key))),'name':name or rules[key][0],'hidden':'false','targetId':target,'type':'rule'})
+          def add_counter(parent,name,cost,maxv=2):
+              ses=child(parent,'selectionEntries')
+              e=next((x for x in ses.findall(q('selectionEntry')) if norm(x.get('name'))==norm(name)),None)
+              if e is None:
+                  eid=str(uuid.uuid5(U,(parent.get('id','')+':'+name))); e=ET.SubElement(ses,q('selectionEntry'),{'id':eid,'name':name,'hidden':'false','collective':'false','import':'true','type':'model'})
+                  cs=ET.SubElement(e,q('constraints')); ET.SubElement(cs,q('constraint'),{'field':'selections','scope':'parent','value':str(maxv),'percentValue':'false','shared':'false','includeChildSelections':'false','includeChildForces':'false','type':'max','id':str(uuid.uuid5(U,eid+':max'))})
+              setpts(e,cost)
+              return e
+          units=[e for e in list(top) if e.tag==q('selectionEntry') and e.get('type')=='unit']
+          # Officer bodyguards are priced by the selected experience.
+          officer_added=0
+          for u in units:
+              if not (hascat(u,LT) or hascat(u,CAP)): continue
+              if 'armoured commander' in norm(u.get('name')): continue
+              for e in u.iter(q('selectionEntry')):
+                  xp=norm(e.get('name'))
+                  if xp in ('inexperienced','regular','veteran'):
+                      add_counter(e,'Additional man',{'inexperienced':7,'regular':10,'veteran':13}[xp]); officer_added+=1
+          # Medic may take up to two assistants at +8 each.
+          medic_added=0
+          for u in units:
+              if hascat(u,MED): add_counter(u,'Additional medic assistant',8); medic_added+=1
+          # Unit-level and conditional rules.
+          counts={k:0 for k in rules}
+          for u in units:
+              n=norm(u.get('name'))
+              if hascat(u,INF):
+                  # Conditional Tank Hunters and Gast-loader rules live on the chosen upgrades.
+                  for e in u.iter(q('selectionEntry')):
+                      en=norm(e.get('name'))
+                      if 'sticky' in en or 'ignifist' in en: link(e,'tank_hunters'); counts['tank_hunters']+=1
+                      if 'gast' in en: link(e,'gast_loader'); counts['gast_loader']+=1
+              if 'drafted squad' in n: link(u,'green'); counts['green']+=1
+              if 'republic rangers' in n:
+                  link(u,'stubborn'); link(u,'lead_example'); counts['stubborn']+=1; counts['lead_example']+=1
+              if 'swords of maro' in n:
+                  link(u,'stubborn_cond'); link(u,'fanatics_cond'); counts['stubborn_cond']+=1; counts['fanatics_cond']+=1
+              if 'reconnaissance squad' in n: link(u,'motorbikes'); counts['motorbikes']+=1
+              if 'paratrooper squad' in n: link(u,'stubborn'); counts['stubborn']+=1
+              if 'partisan squad' in n:
+                  link(u,'partisan_green'); link(u,'partisan_stubborn'); link(u,'behind_lines'); counts['partisan_green']+=1; counts['partisan_stubborn']+=1; counts['behind_lines']+=1
+              if hascat(u,HWT): link(u,'fixed'); counts['fixed']+=1
+              if 'venom' in n and 'team' in n: link(u,'shaped'); counts['shaped']+=1
+              if 'bane' in n and 'team' in n: link(u,'shaped'); link(u,'bane_range'); counts['shaped']+=1; counts['bane_range']+=1
+              if 'sniper team' in n: link(u,'sniper_full'); counts['sniper_full']+=1
+          if officer_added==0: raise SystemExit('No officer experience entries updated')
+          if medic_added==0: raise SystemExit('Medic not found')
+          for req in ('green','lead_example','stubborn_cond','motorbikes','partisan_green','behind_lines','fixed','shaped','bane_range','sniper_full'):
+              if counts[req]==0: raise SystemExit('No matches for rule '+req)
+          root.set('revision',REV); root.set('gameSystemRevision',REV); ET.register_namespace('',NS); tree.write(CAT,encoding='UTF-8',xml_declaration=True)
+          wt=ET.parse(WARDEN); wt.getroot().set('revision',REV); wt.getroot().set('gameSystemRevision',REV); ET.register_namespace('',NS); wt.write(WARDEN,encoding='UTF-8',xml_declaration=True)
+          G='http://www.battlescribe.net/schema/gameSystemSchema'; gt=ET.parse(GST); gt.getroot().set('revision',REV); ET.register_namespace('',G); gt.write(GST,encoding='UTF-8',xml_declaration=True)
+          I='http://www.battlescribe.net/schema/dataIndexSchema'; it=ET.parse(IDX)
+          for d in it.getroot().iter(f'{{{I}}}dataIndexEntry'): d.set('dataRevision',REV)
+          ET.register_namespace('',I); it.write(IDX,encoding='UTF-8',xml_declaration=True)
+          for p in (CAT,WARDEN,GST,IDX): ET.parse(p)
+          print('officer experience options:',officer_added,'medic:',medic_added,'rules:',counts,'revision',REV)
+          PY
+      - name: Commit generated data
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add 'Colonial Legion.cat' 'Warden Army.cat' 'Bolt Action - Foxhole.gst' index.xml
+          if git diff --cached --quiet; then echo 'No generated changes.'; else git commit -m 'Add Colonial unit special rules and support options'; git push; fi
