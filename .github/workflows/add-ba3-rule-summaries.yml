@@ -1,0 +1,73 @@
+name: Add Bolt Action 3E special rule summaries
+on:
+  workflow_dispatch:
+  push:
+    paths: ['.github/workflows/add-ba3-rule-summaries.yml']
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add rule summaries and fix Maro Fanatics
+        run: |
+          python - <<'PY'
+          import xml.etree.ElementTree as ET, uuid
+          CAT='Colonial Legion.cat'; REV='23'; NS='http://www.battlescribe.net/schema/catalogueSchema'; ET.register_namespace('',NS)
+          t=ET.parse(CAT); root=t.getroot(); q=lambda x:f'{{{NS}}}{x}'; norm=lambda s:' '.join((s or '').lower().replace('“','"').replace('”','"').split())
+          summaries={
+          'fanatics':'Fanatical troops are exceptionally difficult to break in close combat and follow the Bolt Action Third Edition Fanatics rules.',
+          'stubborn':'Stubborn troops use their unmodified morale value when taking morale tests caused by casualties, as defined by Bolt Action Third Edition.',
+          'green':'Green inexperienced troops can improve their experience after first taking casualties, following the Bolt Action Third Edition Green rule.',
+          'fixed':'A Fixed weapon is restricted in how it can move and fire; use the Bolt Action Third Edition Fixed weapon rules.',
+          'team weapon':'A Team Weapon is operated by a crew and is affected by crew casualties according to the Bolt Action Third Edition Team Weapon rules.',
+          'gun shield':'A gun shield improves protection for an artillery crew against appropriate incoming fire, following the Bolt Action Third Edition Gun Shield rules.',
+          'open-topped':'Open-topped armoured vehicles are more vulnerable to pins and assault effects than fully enclosed vehicles; use the Bolt Action Third Edition Open-topped rules.',
+          'recce':'Recce vehicles have enhanced reconnaissance movement and reaction capabilities, including their special reverse/evasive movement rules in Bolt Action Third Edition.',
+          'slow':'Slow vehicles use the reduced movement allowances specified by their unit entry and the Bolt Action Third Edition Slow rules.',
+          'flak':'Flak weapons may engage aircraft using the Bolt Action Third Edition Flak rules. Vehicle-mounted flak machine guns do not halve their shots against aircraft under the current errata.',
+          'shaped charge':'Shaped Charge weapons use their special armour-penetration behaviour against armoured targets as defined in Bolt Action Third Edition.',
+          'howitzer':'Howitzers may use indirect fire and HE ammunition according to their weapon profile and the Bolt Action Third Edition Howitzer/HE rules.',
+          'tank hunters':'Tank Hunters are infantry equipped and trained for close assault against armoured vehicles and use the Bolt Action Third Edition Tank Hunters rules.',
+          'sniper':'Snipers use the special sniper shooting rules for accuracy, cover and casualty selection when eligible to use their scope.',
+          'infiltrator':'Infiltrators have special deployment capabilities under the Bolt Action Third Edition Infiltrator rule. Current official errata also gives this rule to spotters.',
+          'emplacement':'An Emplacement uses the emplacement restrictions and protections specified by its unit entry and applicable Bolt Action Third Edition rules.',
+          'command vehicle':'A Command Vehicle provides the command benefits specified by the Bolt Action Third Edition Command Vehicle rule.',
+          'amphibious':'Amphibious vehicles can operate through water according to their unit entry and the Bolt Action Third Edition amphibious movement rules.'}
+          # Update any existing rule with a standard name, without replacing custom Foxhole-specific text.
+          for r in root.findall('.//'+q('rule')):
+            key=norm(r.get('name')).split(' (')[0]
+            if key in summaries:
+              d=r.find(q('description'))
+              if d is None: d=ET.SubElement(r,q('description'))
+              # Preserve longer bespoke rules (e.g. custom sniper) rather than overwrite them.
+              if not d.text or len(d.text.strip())<80: d.text=summaries[key]
+          # Maro Fanatics option = +10 pts.
+          for u in root.findall('.//'+q('selectionEntry')):
+            if 'swords of maro' not in norm(u.get('name')): continue
+            for e in u.findall('.//'+q('selectionEntry')):
+              if norm(e.get('name'))=='fanatics':
+                cs=e.find(q('costs'))
+                if cs is None: cs=ET.SubElement(e,q('costs'))
+                c=next((x for x in cs.findall(q('cost')) if norm(x.get('name')) in ('pts','points')),None)
+                if c is None: c=ET.SubElement(cs,q('cost'),{'name':'pts','typeId':'points','value':'10'})
+                c.set('value','10')
+          root.set('revision',REV); root.set('gameSystemRevision',REV); ET.register_namespace('',NS); t.write(CAT,encoding='UTF-8',xml_declaration=True)
+          for fn,ns in [('Warden Army.cat',NS),('Bolt Action - Foxhole.gst','http://www.battlescribe.net/schema/gameSystemSchema')]:
+            ET.register_namespace('',ns); z=ET.parse(fn); r=z.getroot(); r.set('revision',REV)
+            if fn.endswith('.cat'): r.set('gameSystemRevision',REV)
+            ET.register_namespace('',ns); z.write(fn,encoding='UTF-8',xml_declaration=True)
+          ins='http://www.battlescribe.net/schema/dataIndexSchema'; ET.register_namespace('',ins); z=ET.parse('index.xml')
+          for x in z.getroot().findall('.//{'+ins+'}dataIndexEntry'): x.set('dataRevision',REV)
+          ET.register_namespace('',ins); z.write('index.xml',encoding='UTF-8',xml_declaration=True)
+          for f in [CAT,'Warden Army.cat','Bolt Action - Foxhole.gst','index.xml']: ET.parse(f)
+          PY
+      - name: Commit generated data
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add 'Colonial Legion.cat' 'Warden Army.cat' 'Bolt Action - Foxhole.gst' index.xml
+          git diff --cached --quiet && exit 0
+          git commit -m 'Add Bolt Action 3E special rule summaries'
+          git push
