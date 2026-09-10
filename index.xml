@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dataIndex xmlns="http://www.battlescribe.net/schema/dataIndexSchema" battleScribeVersion="2.03" name="Bolt Action: Foxhole">
   <dataIndexEntries>
-    <dataIndexEntry filePath="Bolt Action - Foxhole.gst" dataType="gamesystem" dataId="4c6f1c8a-9f4d-4e4d-b2f7-2d71860d3f21" dataName="Bolt Action: Foxhole (Unofficial)" dataBattleScribeVersion="2.03" dataRevision="21" />
-    <dataIndexEntry filePath="Colonial Legion.cat" dataType="catalogue" dataId="ca91b894-5f26-495d-9309-6515686fcd24" dataName="Colonial Legion - Armies of the Colonial Legion Alpha 0.1" dataBattleScribeVersion="2.03" dataRevision="21" />
-    <dataIndexEntry filePath="Warden Army.cat" dataType="catalogue" dataId="8f43f0a9-20e0-52cf-b5c5-2f8a0c5d0001" dataName="Warden Army - Armies of Caoiva" dataBattleScribeVersion="2.03" dataRevision="21" />
+    <dataIndexEntry filePath="Bolt Action - Foxhole.gst" dataType="gamesystem" dataId="4c6f1c8a-9f4d-4e4d-b2f7-2d71860d3f21" dataName="Bolt Action: Foxhole (Unofficial)" dataBattleScribeVersion="2.03" dataRevision="22" />
+    <dataIndexEntry filePath="Colonial Legion.cat" dataType="catalogue" dataId="ca91b894-5f26-495d-9309-6515686fcd24" dataName="Colonial Legion - Armies of the Colonial Legion Alpha 0.1" dataBattleScribeVersion="2.03" dataRevision="22" />
+    <dataIndexEntry filePath="Warden Army.cat" dataType="catalogue" dataId="8f43f0a9-20e0-52cf-b5c5-2f8a0c5d0001" dataName="Warden Army - Armies of Caoiva" dataBattleScribeVersion="2.03" dataRevision="22" />
   </dataIndexEntries>
 </dataIndex>
