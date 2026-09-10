@@ -28,38 +28,22 @@ jobs:
           set -euo pipefail
           python - <<'PY'
           import xml.etree.ElementTree as ET
-
           CAT_NS='http://www.battlescribe.net/schema/catalogueSchema'
           GST_NS='http://www.battlescribe.net/schema/gameSystemSchema'
           IDX_NS='http://www.battlescribe.net/schema/dataIndexSchema'
-          REV='19'
-
-          def lname(tag):
-              return tag.rsplit('}',1)[-1]
-
+          REV='20'
+          def lname(tag): return tag.rsplit('}',1)[-1]
           ET.register_namespace('', CAT_NS)
           for path in ('Colonial Legion.cat','Warden Army.cat'):
-              tree=ET.parse(path)
-              root=tree.getroot()
-              root.set('revision',REV)
-              root.set('gameSystemRevision',REV)
-              tree.write(path,encoding='UTF-8',xml_declaration=True)
-
+              tree=ET.parse(path); root=tree.getroot(); root.set('revision',REV); root.set('gameSystemRevision',REV); tree.write(path,encoding='UTF-8',xml_declaration=True)
           ET.register_namespace('', GST_NS)
-          gst=ET.parse('Bolt Action - Foxhole.gst')
-          gst.getroot().set('revision',REV)
-          gst.write('Bolt Action - Foxhole.gst',encoding='UTF-8',xml_declaration=True)
-
+          gst=ET.parse('Bolt Action - Foxhole.gst'); gst.getroot().set('revision',REV); gst.write('Bolt Action - Foxhole.gst',encoding='UTF-8',xml_declaration=True)
           ET.register_namespace('', IDX_NS)
           idx=ET.parse('index.xml')
-          ir=idx.getroot()
-          for node in ir.iter():
-              if lname(node.tag)=='dataIndexEntry':
-                  node.set('dataRevision',REV)
+          for node in idx.getroot().iter():
+              if lname(node.tag)=='dataIndexEntry': node.set('dataRevision',REV)
           idx.write('index.xml',encoding='UTF-8',xml_declaration=True)
-
-          for path in ('Colonial Legion.cat','Warden Army.cat','Bolt Action - Foxhole.gst','index.xml'):
-              ET.parse(path)
+          for path in ('Colonial Legion.cat','Warden Army.cat','Bolt Action - Foxhole.gst','index.xml'): ET.parse(path)
           PY
       - name: Commit compatibility repair
         shell: bash
@@ -68,9 +52,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add 'Colonial Legion.cat' 'Warden Army.cat' 'Bolt Action - Foxhole.gst' index.xml
-          if git diff --cached --quiet; then
-            echo 'No compatibility changes needed.'
-            exit 0
-          fi
+          if git diff --cached --quiet; then echo 'No compatibility changes needed.'; exit 0; fi
           git commit -m 'Repair New Recruit repository compatibility'
           git push
