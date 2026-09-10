@@ -1,0 +1,195 @@
+name: Fix roster display and weapon profile propagation
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/fix-roster-display-and-profiles.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Fix model naming, sniper nesting, and visible weapon profiles
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import re, uuid, copy, xml.etree.ElementTree as ET
+          CAT='Colonial Legion.cat'; REV='29'
+          NS='http://www.battlescribe.net/schema/catalogueSchema'; PTS='b0e5f7a2-33c8-46ce-8f8f-148d8171da43'
+          ET.register_namespace('',NS); q=lambda t:f'{{{NS}}}{t}'
+          tree=ET.parse(CAT); root=tree.getroot()
+          def norm(s): return re.sub(r'[^a-z0-9]+',' ',(s or '').lower()).strip()
+          def sid(*parts): return str(uuid.uuid5(uuid.NAMESPACE_URL,'foxhole-display-fix|'+'|'.join(map(str,parts))))
+          def ensure(p,tag):
+              x=p.find(q(tag))
+              if x is None: x=ET.SubElement(p,q(tag))
+              return x
+          def set_rule(e,name,text):
+              rs=ensure(e,'rules')
+              r=next((x for x in rs.findall(q('rule')) if norm(x.get('name'))==norm(name)),None)
+              if r is None:
+                  r=ET.SubElement(rs,q('rule'),{'id':sid(e.get('id'),name),'name':name,'hidden':'false'})
+              d=r.find(q('description'))
+              if d is None:d=ET.SubElement(r,q('description'))
+              d.text=text
+          def get_rule_text(e,name):
+              rs=e.find(q('rules'))
+              if rs is None:return None
+              r=next((x for x in rs.findall(q('rule')) if norm(x.get('name'))==norm(name)),None)
+              if r is None:return None
+              d=r.find(q('description')); return d.text if d is not None else None
+          # Profiles supplied directly by the user from the BA3 weapons chart.
+          profiles={
+            'rifle':('24','1','-','-'), 'pistol':('6','1','-','Assault'),
+            'submachine gun':('12','2','-','Assault'), 'automatic rifle':('30','2','-','-'), 'assault rifle':('18','2','-','Assault'),
+            'light machine gun':('36','4','-','Team'), 'medium machine gun':('36','5','-','Team, Fixed'), 'heavy machine gun':('36','3','+1','Team, Fixed'),
+            'light automatic cannon':('48','2','+2','Team, Fixed, HE (1”)'), 'heavy automatic cannon':('72','2','+3','Team, Fixed, HE (1”)'),
+            'anti tank rifle':('36','1','+2','Team'),
+            'light anti tank gun':('48','1','+4','Team, Fixed, HE (1”)'), 'medium anti tank gun':('60','1','+5','Team, Fixed, HE (1”)'),
+            'heavy anti tank gun':('72','1','+6','Team, Fixed, HE (2”)'), 'super heavy anti tank gun':('84','1','+7','Team, Fixed, HE (3”)'),
+            'light mortar':('12-24','1','HE','Team, Indirect Fire, HE (1”)'), 'medium mortar':('12-60','1','HE','Team, Fixed, Indirect Fire, HE (2”)'),
+            'heavy mortar':('12-72','1','HE','Team, Fixed, Indirect Fire, HE (3”)'),
+            'light howitzer':('48 (or 24-60)','1','HE','Team, Fixed, Howitzer, HE (2”)'),
+            'medium howitzer':('60 (or 30-72)','1','HE','Team, Fixed, Howitzer, HE (3”)'),
+            'heavy howitzer':('72 (or 36-84)','1','HE','Team, Fixed, Howitzer, HE (4”)'),
+            'infantry flamethrower':('6','D6','+3','Team, Flamethrower'), 'vehicle flamethrower':('12','D6+1','+3','Flamethrower'),
+          }
+          aliases=[
+            ('94 5mm super heavy anti tank rifle','super heavy anti tank gun'),('94 5mm super heavy anti tank gun','super heavy anti tank gun'),
+            ('75mm heavy anti tank gun','heavy anti tank gun'),('68mm medium anti tank gun','medium anti tank gun'),
+            ('anti tank sniper rifle','anti tank rifle'),('mounted anti tank rifles','anti tank rifle'),('anti tank rifles','anti tank rifle'),
+            ('molten wind','infantry flamethrower'),('dawn ve ii anti tank rifle','anti tank rifle'),
+            ('catara mo ii','light machine gun'),('dusk ce iii','assault rifle'),('catena rt iv auto rifle','automatic rifle'),
+            ('lionclaw mc viii','submachine gun'),('ferro 879','pistol'),('cometa t2 9','pistol'),('argenti r ii rifle','rifle'),('volta repeater','rifle'),
+          ]
+          def find_classes(text):
+              n=norm(text); found=[]
+              for a,c in aliases:
+                  if norm(a) in n and c not in found:found.append(c)
+              for c in sorted(profiles,key=len,reverse=True):
+                  if norm(c) in n and c not in found:found.append(c)
+              return found
+          def profile_text(classes):
+              lines=[]
+              for c in classes:
+                  rng,shots,pen,special=profiles[c]
+                  lines.append(f'{c.title()}: Range {rng}”. Shots {shots}. Pen {pen}. Special Rules: {special}.')
+              return '\n'.join(lines)
+          # Correct named weapon upgrade profiles, including sniper choices.
+          for e in root.iter(q('selectionEntry')):
+              n=norm(e.get('name'))
+              if 'krr3 792 auger' in n:
+                  set_rule(e,'Weapon profile','Sniper scope: Range 12-36”. Shots 1. Under 12”, fire as a normal rifle: Range 24”. Shots 1.')
+              elif 'quickhatch' in n:
+                  set_rule(e,'Weapon profile','Anti-tank rifle: Range 36”. Shots 1. Pen +2. Special Rules: Team. Sniper scope use is governed by the Sniper rule.')
+              else:
+                  cls=find_classes(e.get('name',''))
+                  if cls:set_rule(e,'Weapon profile',profile_text(cls))
+          # Propagate the unit's Weapons and derived profile down onto its visible model child, because tabletop view renders the model.
+          propagated=0; renamed_artillery=0
+          FIELD_CAT='75cd78ea-f7b0-5366-b2b5-cfcaa6ba2fc6'
+          for unit in root.findall('.//'+q('selectionEntry')):
+              if unit.get('type')!='unit':continue
+              weapons=get_rule_text(unit,'Weapons')
+              cats=unit.find(q('categoryLinks'))
+              is_field=cats is not None and any(x.get('targetId')==FIELD_CAT for x in cats.findall(q('categoryLink')))
+              direct=unit.find(q('selectionEntries'))
+              if direct is None:continue
+              models=[m for m in direct.findall(q('selectionEntry')) if m.get('type')=='model']
+              if is_field:
+                  for m in models:
+                      if norm(m.get('name'))=='gun crew':
+                          m.set('name',unit.get('name')); renamed_artillery+=1
+              classes=find_classes(weapons or '')
+              # Explicitly correct Stygian/Hasta class from their weapon line, regardless of unit title wording.
+              if weapons and '94 5mm super heavy anti tank' in norm(weapons):classes=['super heavy anti tank gun']
+              ptxt=profile_text(classes) if classes else None
+              for m in models:
+                  if weapons:set_rule(m,'Weapons',weapons)
+                  if ptxt:set_rule(m,'Weapon profile',ptxt); propagated+=1
+          # Sniper team: replace 2x generic Sniper Team model with distinct Sniper and Spotter; nest weapon selector on Sniper.
+          sniper_fixed=0
+          for unit in root.findall('.//'+q('selectionEntry')):
+              if norm(unit.get('name'))!='sniper team' or unit.get('type')!='unit':continue
+              for exp in unit.findall('.//'+q('selectionEntry')):
+                  if exp.get('name') not in ('Regular','Veteran'):continue
+                  groups=exp.find(q('selectionEntryGroups'))
+                  wgroup=None
+                  if groups is not None:
+                      for g in list(groups.findall(q('selectionEntryGroup'))):
+                          if 'sniper weapon' in norm(g.get('name')):
+                              wgroup=g; groups.remove(g); break
+                  ses=ensure(exp,'selectionEntries')
+                  for old in list(ses.findall(q('selectionEntry'))):
+                      if old.get('type')=='model' and norm(old.get('name'))=='sniper team':ses.remove(old)
+                  sniper=next((x for x in ses.findall(q('selectionEntry')) if x.get('type')=='model' and norm(x.get('name'))=='sniper'),None)
+                  if sniper is None:
+                      sniper=ET.SubElement(ses,q('selectionEntry'),{'id':sid(exp.get('id'),'sniper'),'name':'Sniper','hidden':'false','collective':'false','import':'true','type':'model'})
+                      cs=ET.SubElement(sniper,q('constraints'))
+                      for typ in ('min','max'):ET.SubElement(cs,q('constraint'),{'field':'selections','scope':'parent','value':'1','percentValue':'false','shared':'false','includeChildSelections':'false','includeChildForces':'false','type':typ,'id':sid(sniper.get('id'),typ)})
+                  spotter=next((x for x in ses.findall(q('selectionEntry')) if x.get('type')=='model' and norm(x.get('name'))=='spotter'),None)
+                  if spotter is None:
+                      spotter=ET.SubElement(ses,q('selectionEntry'),{'id':sid(exp.get('id'),'spotter'),'name':'Spotter','hidden':'false','collective':'false','import':'true','type':'model'})
+                      cs=ET.SubElement(spotter,q('constraints'))
+                      for typ in ('min','max'):ET.SubElement(cs,q('constraint'),{'field':'selections','scope':'parent','value':'1','percentValue':'false','shared':'false','includeChildSelections':'false','includeChildForces':'false','type':typ,'id':sid(spotter.get('id'),typ)})
+                  if wgroup is not None:
+                      sgs=ensure(sniper,'selectionEntryGroups'); sgs.append(wgroup)
+                  set_rule(sniper,'Weapons','Selected sniper weapon plus pistol.')
+                  set_rule(sniper,'Weapon profile','Sniper scope: Range 12-36”. Shots 1. Under 12”, fire as a normal rifle: Range 24”. Shots 1. Pistol: Range 6”. Shots 1. Special Rules: Assault.')
+                  set_rule(spotter,'Weapons','Pistol.')
+                  set_rule(spotter,'Weapon profile','Pistol: Range 6”. Shots 1. Pen -. Special Rules: Assault.')
+                  sniper_fixed+=1
+          # True conditional Stubborn: hide the conditional rule when Fanatics is selected.
+          for unit in root.findall('.//'+q('selectionEntry')):
+              if norm(unit.get('name'))!='swords of maro squad':continue
+              fan=next((x for x in unit.findall('./'+q('selectionEntries')+'/'+q('selectionEntry')) if norm(x.get('name'))=='fanatics'),None)
+              if fan is None:continue
+              rs=unit.find(q('rules'))
+              if rs is not None:
+                  for r in rs.findall(q('rule')):
+                      if norm(r.get('name'))=='stubborn if fanatics not taken':
+                          mods=ensure(r,'modifiers')
+                          for old in list(mods):mods.remove(old)
+                          m=ET.SubElement(mods,q('modifier'),{'type':'set','field':'hidden','value':'true'})
+                          conds=ET.SubElement(m,q('conditions'))
+                          ET.SubElement(conds,q('condition'),{'field':'selections','scope':'parent','value':'1','percentValue':'false','shared':'true','includeChildSelections':'true','includeChildForces':'false','childId':fan.get('id'),'type':'atLeast'})
+          root.set('revision',REV); root.set('gameSystemRevision',REV)
+          tree.write(CAT,encoding='UTF-8',xml_declaration=True)
+          ET.parse(CAT)
+          print('ARTILLERY_MODELS_RENAMED',renamed_artillery)
+          print('MODEL_PROFILES_PROPAGATED',propagated)
+          print('SNIPER_EXPERIENCE_ENTRIES_FIXED',sniper_fixed)
+          PY
+      - name: Synchronize revision 29
+        shell: bash
+        run: |
+          python - <<'PY'
+          import xml.etree.ElementTree as ET
+          REV='29'; CAT='http://www.battlescribe.net/schema/catalogueSchema'; GST='http://www.battlescribe.net/schema/gameSystemSchema'; IDX='http://www.battlescribe.net/schema/dataIndexSchema'
+          ET.register_namespace('',CAT)
+          for p in ('Colonial Legion.cat','Warden Army.cat'):
+              t=ET.parse(p); t.getroot().set('revision',REV); t.getroot().set('gameSystemRevision',REV); t.write(p,encoding='UTF-8',xml_declaration=True)
+          ET.register_namespace('',GST); t=ET.parse('Bolt Action - Foxhole.gst'); t.getroot().set('revision',REV); t.write('Bolt Action - Foxhole.gst',encoding='UTF-8',xml_declaration=True)
+          ET.register_namespace('',IDX); t=ET.parse('index.xml')
+          for x in t.getroot().iter():
+              if x.tag.rsplit('}',1)[-1]=='dataIndexEntry':x.set('dataRevision',REV)
+          t.write('index.xml',encoding='UTF-8',xml_declaration=True)
+          for p in ('Colonial Legion.cat','Warden Army.cat','Bolt Action - Foxhole.gst','index.xml'):ET.parse(p)
+          PY
+      - name: Commit generated data
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add 'Colonial Legion.cat' 'Warden Army.cat' 'Bolt Action - Foxhole.gst' index.xml
+          git diff --cached --quiet && exit 0
+          git commit -m 'Fix visible weapon profiles and roster model names'
+          git push
