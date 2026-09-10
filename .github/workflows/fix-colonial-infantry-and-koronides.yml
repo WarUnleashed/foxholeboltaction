@@ -1,0 +1,207 @@
+name: Fix Colonial infantry rules and Koronides option costs
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/fix-colonial-infantry-and-koronides.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Apply Colonial fixes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import uuid
+          import xml.etree.ElementTree as ET
+
+          CAT='Colonial Legion.cat'
+          REV='25'
+          NS='http://www.battlescribe.net/schema/catalogueSchema'
+          GST_NS='http://www.battlescribe.net/schema/gameSystemSchema'
+          IDX_NS='http://www.battlescribe.net/schema/dataIndexSchema'
+          INF='1db0d511-ab38-5eb8-afa7-97cd18cf7d11'
+          PTS='b0e5f7a2-33c8-46ce-8f8f-148d8171da43'
+
+          ET.register_namespace('', NS)
+          q=lambda t:f'{{{NS}}}{t}'
+          tree=ET.parse(CAT)
+          root=tree.getroot()
+
+          def norm(s):
+              return ' '.join((s or '').lower().replace('“','"').replace('”','"').split())
+
+          def ensure(parent, tag):
+              x=parent.find(q(tag))
+              if x is None:
+                  x=ET.SubElement(parent,q(tag))
+              return x
+
+          def has_cat(entry, cid):
+              links=entry.find(q('categoryLinks'))
+              return links is not None and any(x.get('targetId')==cid for x in links.findall(q('categoryLink')))
+
+          def set_cost(entry, value):
+              costs=ensure(entry,'costs')
+              pts=[c for c in costs.findall(q('cost')) if c.get('typeId')==PTS or norm(c.get('name')) in ('pts','points')]
+              c=pts[0] if pts else ET.SubElement(costs,q('cost'))
+              c.set('name','pts'); c.set('typeId',PTS); c.set('value',str(value))
+              for extra in pts[1:]:
+                  costs.remove(extra)
+
+          def set_max(entry, value):
+              cons=ensure(entry,'constraints')
+              mx=next((c for c in cons.findall(q('constraint')) if c.get('type')=='max' and c.get('field')=='selections'),None)
+              if mx is None:
+                  mx=ET.SubElement(cons,q('constraint'),{
+                      'field':'selections','scope':'parent','value':str(value),'percentValue':'false','shared':'false',
+                      'includeChildSelections':'false','includeChildForces':'false','type':'max',
+                      'id':str(uuid.uuid5(uuid.NAMESPACE_URL,'foxhole:max:'+entry.get('id','')))
+                  })
+              else:
+                  mx.set('value',str(value))
+
+          # Shared rule IDs.
+          shared=root.find(q('sharedRules'))
+          rule_ids={norm(r.get('name')):r.get('id') for r in shared.findall(q('rule'))} if shared is not None else {}
+          green_id=rule_ids.get('green')
+          fanatics_id=rule_ids.get('fanatics')
+
+          # Swords of Maro: keep only Fanatics and Stubborn (if Fanatics not taken).
+          swords=[u for u in root.findall('.//'+q('selectionEntry')) if norm(u.get('name'))=='swords of maro squad']
+          if len(swords)!=1:
+              raise SystemExit(f'Expected one SWORDS OF MARO SQUAD, found {len(swords)}')
+          u=swords[0]
+          il=u.find(q('infoLinks'))
+          if il is not None:
+              for link in list(il.findall(q('infoLink'))):
+                  if norm(link.get('name'))=='stubborn':
+                      il.remove(link)
+          rules=u.find(q('rules'))
+          if rules is not None:
+              for r in list(rules.findall(q('rule'))):
+                  if norm(r.get('name')) in ('stubborn','fanatics'):
+                      rules.remove(r)
+          ses=ensure(u,'selectionEntries')
+          fan=next((x for x in ses.findall(q('selectionEntry')) if norm(x.get('name'))=='fanatics'),None)
+          if fan is None:
+              fan=ET.SubElement(ses,q('selectionEntry'),{
+                  'id':str(uuid.uuid5(uuid.NAMESPACE_URL,'foxhole:swords-of-maro:fanatics')),
+                  'name':'Fanatics','hidden':'false','collective':'false','import':'true','type':'upgrade'})
+          set_max(fan,1)
+          # Book cost: +2 points per man. Model it as a collective per-model upgrade.
+          fan.set('collective','true')
+          set_cost(fan,2)
+          if fanatics_id:
+              fil=ensure(fan,'infoLinks')
+              if not any(x.get('targetId')==fanatics_id for x in fil.findall(q('infoLink'))):
+                  ET.SubElement(fil,q('infoLink'),{
+                      'id':str(uuid.uuid5(uuid.NAMESPACE_URL,'foxhole:swords:fanatics:rule')),
+                      'name':'Fanatics','hidden':'false','targetId':fanatics_id,'type':'rule'})
+
+          # Infantry-wide fixes.
+          infantry_units=[u for u in root.findall('.//'+q('selectionEntry')) if u.get('type')=='unit' and has_cat(u,INF)]
+          if not infantry_units:
+              raise SystemExit('No infantry units found')
+
+          inexperienced_green=0
+          igni_count=0
+          sticky_count=0
+          paratrooper_groups_removed=0
+
+          for unit in infantry_units:
+              # Paratroopers cannot take attached transports/tows.
+              if 'paratrooper' in norm(unit.get('name')):
+                  for parent in unit.iter():
+                      for g in list(parent.findall(q('selectionEntryGroup'))):
+                          if norm(g.get('name'))=='attached transport / tow':
+                              parent.remove(g); paratrooper_groups_removed += 1
+
+              # Any selected Inexperienced infantry experience gains Green.
+              for e in unit.findall('.//'+q('selectionEntry')):
+                  if norm(e.get('name'))=='inexperienced' and green_id:
+                      links=ensure(e,'infoLinks')
+                      if not any(x.get('targetId')==green_id for x in links.findall(q('infoLink'))):
+                          ET.SubElement(links,q('infoLink'),{
+                              'id':str(uuid.uuid5(uuid.NAMESPACE_URL,'foxhole:green:'+e.get('id',''))),
+                              'name':'Green','hidden':'false','targetId':green_id,'type':'rule'})
+                          inexperienced_green += 1
+
+              # Existing anti-tank equipment options: Ignifists are +3 each, max 4; stickies are +10/unit, max 1.
+              for e in unit.findall('.//'+q('selectionEntry')):
+                  n=norm(e.get('name'))
+                  if 'ignifist' in n:
+                      set_cost(e,3); set_max(e,4); e.set('collective','false'); igni_count += 1
+                  elif 'sticky grenade' in n:
+                      set_cost(e,10); set_max(e,1); e.set('collective','false'); sticky_count += 1
+
+          # Koronides options had the wrong cost typeId, so New Recruit displayed them as free.
+          kor=[u for u in root.findall('.//'+q('selectionEntry')) if 'koronides' in norm(u.get('name'))]
+          if not kor:
+              raise SystemExit('Koronides entry not found')
+          kor_costs={'spotter':10,'anti-structure (2d6)':20,'apfa':45}
+          fixed_kor=0
+          for unit in kor:
+              for e in unit.findall('.//'+q('selectionEntry')):
+                  n=norm(e.get('name'))
+                  if n in kor_costs:
+                      set_cost(e,kor_costs[n]); set_max(e,1); fixed_kor += 1
+
+          if fixed_kor < 3:
+              raise SystemExit(f'Expected three Koronides paid options, fixed {fixed_kor}')
+          if paratrooper_groups_removed < 1:
+              raise SystemExit('No Paratrooper Attached Transport / Tow group removed')
+
+          root.set('revision',REV); root.set('gameSystemRevision',REV)
+          ET.register_namespace('',NS)
+          tree.write(CAT,encoding='UTF-8',xml_declaration=True)
+
+          # Keep all data revisions synchronized for New Recruit caching.
+          ET.register_namespace('',NS)
+          wt=ET.parse('Warden Army.cat'); wr=wt.getroot(); wr.set('revision',REV); wr.set('gameSystemRevision',REV)
+          wt.write('Warden Army.cat',encoding='UTF-8',xml_declaration=True)
+
+          ET.register_namespace('',GST_NS)
+          gt=ET.parse('Bolt Action - Foxhole.gst'); gt.getroot().set('revision',REV)
+          gt.write('Bolt Action - Foxhole.gst',encoding='UTF-8',xml_declaration=True)
+
+          ET.register_namespace('',IDX_NS)
+          it=ET.parse('index.xml')
+          for node in it.getroot().iter():
+              if node.tag.rsplit('}',1)[-1]=='dataIndexEntry':
+                  node.set('dataRevision',REV)
+          it.write('index.xml',encoding='UTF-8',xml_declaration=True)
+
+          for fn in [CAT,'Warden Army.cat','Bolt Action - Foxhole.gst','index.xml']:
+              ET.parse(fn)
+
+          print('infantry units:',len(infantry_units))
+          print('inexperienced Green links added:',inexperienced_green)
+          print('Ignifist options normalized:',igni_count)
+          print('Sticky grenade options normalized:',sticky_count)
+          print('Paratrooper transport groups removed:',paratrooper_groups_removed)
+          print('Koronides paid options fixed:',fixed_kor)
+          PY
+
+      - name: Commit generated data
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add 'Colonial Legion.cat' 'Warden Army.cat' 'Bolt Action - Foxhole.gst' index.xml
+          if git diff --cached --quiet; then
+            echo 'No generated changes needed.'
+            exit 0
+          fi
+          git commit -m 'Fix Colonial infantry rules and Koronides costs'
+          git push
