@@ -1,4 +1,4 @@
-name: Annotate model weapons for YellowScribe
+name: Build weapon-specific models for YellowScribe
 
 on:
   workflow_dispatch:
@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Add weapon-bearing model labels
+      - name: Build weapon-specific infantry model selections
         shell: bash
         run: |
           set -euo pipefail
@@ -25,23 +25,81 @@ jobs:
           import xml.etree.ElementTree as ET
 
           NS='http://www.battlescribe.net/schema/catalogueSchema'
+          GST_NS='http://www.battlescribe.net/schema/gameSystemSchema'
+          IDX_NS='http://www.battlescribe.net/schema/dataIndexSchema'
           INFANTRY_CAT='1db0d511-ab38-5eb8-afa7-97cd18cf7d11'
-          REVISION='6'
+          POINTS='b0e5f7a2-33c8-46ce-8f8f-148d8171da43'
+          REVISION='7'
           ET.register_namespace('',NS)
 
           def q(tag): return f'{{{NS}}}{tag}'
           def sid(*parts):
-              return str(uuid.uuid5(uuid.UUID('6ba7b810-9dad-11d1-80b4-00c04fd430c8'),'ys-weapons|'+'|'.join(map(str,parts))))
+              return str(uuid.uuid5(uuid.UUID('6ba7b810-9dad-11d1-80b4-00c04fd430c8'),'ys-loadouts|'+'|'.join(map(str,parts))))
           def has_category(unit,cid):
               cats=unit.find(q('categoryLinks'))
               return cats is not None and any(x.get('targetId')==cid for x in cats.findall(q('categoryLink')))
-          def ensure_constraints(el,minv=1,maxv=1):
+          def ensure_child(parent,tag):
+              el=parent.find(q(tag))
+              if el is None: el=ET.SubElement(parent,q(tag))
+              return el
+          def constraint_value(el,ctype,default=0):
               cs=el.find(q('constraints'))
-              if cs is None: cs=ET.SubElement(el,q('constraints'))
-              if not any(c.get('type')=='min' for c in cs.findall(q('constraint'))):
-                  ET.SubElement(cs,q('constraint'),{'field':'selections','scope':'parent','value':str(minv),'percentValue':'false','shared':'false','includeChildSelections':'false','includeChildForces':'false','type':'min','id':sid(el.get('id'),'min')})
-              if not any(c.get('type')=='max' for c in cs.findall(q('constraint'))):
-                  ET.SubElement(cs,q('constraint'),{'field':'selections','scope':'parent','value':str(maxv),'percentValue':'false','shared':'false','includeChildSelections':'false','includeChildForces':'false','type':'max','id':sid(el.get('id'),'max')})
+              if cs is None: return default
+              for c in cs.findall(q('constraint')):
+                  if c.get('type')==ctype:
+                      try: return int(float(c.get('value','0')))
+                      except: return default
+              return default
+          def cost_value(el):
+              costs=el.find(q('costs'))
+              if costs is None: return 0.0
+              for c in costs.findall(q('cost')):
+                  if c.get('typeId')==POINTS or c.get('name')=='pts':
+                      try: return float(c.get('value','0'))
+                      except: return 0.0
+              return 0.0
+          def add_constraint(el,ctype,value,key):
+              cs=ensure_child(el,'constraints')
+              cid=sid(el.get('id'),key,ctype)
+              ET.SubElement(cs,q('constraint'),{
+                  'field':'selections','scope':'parent','value':str(value),
+                  'percentValue':'false','shared':'false','includeChildSelections':'false',
+                  'includeChildForces':'false','type':ctype,'id':cid
+              })
+              return cid
+          def add_repeat_modifier(el,field_id,mtype,child_id):
+              mods=ensure_child(el,'modifiers')
+              mod=ET.SubElement(mods,q('modifier'),{'type':mtype,'field':field_id,'value':'1'})
+              reps=ET.SubElement(mod,q('repeats'))
+              ET.SubElement(reps,q('repeat'),{
+                  'field':'selections','scope':'parent','value':'1','percentValue':'false',
+                  'shared':'true','includeChildSelections':'true','includeChildForces':'false',
+                  'childId':child_id,'repeats':'1','roundUp':'false'
+              })
+          def add_model(entries,unit_id,name,max_count,pts=0):
+              m=ET.SubElement(entries,q('selectionEntry'),{
+                  'id':sid(unit_id,'loadout-model',name),'name':name,'hidden':'false',
+                  'collective':'false','import':'true','type':'model'
+              })
+              if max_count is not None:
+                  add_constraint(m,'max',max_count,name)
+              if pts:
+                  costs=ET.SubElement(m,q('costs'))
+                  ET.SubElement(costs,q('cost'),{'name':'pts','typeId':POINTS,'value':str(float(pts))})
+              return m
+
+          weapon_terms=(
+              'rifle','carbine','pistol','submachine','smg','shotgun','assault','automatic',
+              'machine gun','flamethrower','grenade launcher','ignifist','volta','malone','gast'
+          )
+          skip_terms=('sticky grenade','white ash','bicycle','motorbike','horse')
+
+          def clean_weapon(name):
+              text=name.replace('NCO — ','').replace('NCO ','')
+              text=text.replace(' (additional weapon)','')
+              text=text.replace(' (alongside rifle/carbine)',' + Rifle/Carbine')
+              text=text.replace(' (alongside rifle)',' + Rifle')
+              return text.strip()
 
           def base_weapon(faction,name):
               n=name.lower()
@@ -52,18 +110,49 @@ jobs:
               if 'drafted squad' in n: return 'Rifle'
               return 'Carbine'
 
-          weapon_terms=(
-              'rifle','carbine','pistol','submachine','smg','shotgun','assault','automatic',
-              'machine gun','flamethrower','grenade launcher','ignifist','volta','malone','gast'
-          )
-          skip_terms=('sticky grenade','white ash','bicycle','motorbike','horse','additional man','additional soldier')
+          def find_additional_counter(unit):
+              groups=unit.find(q('selectionEntryGroups'))
+              if groups is None: return None
+              for group in groups.findall(q('selectionEntryGroup')):
+                  entries=group.find(q('selectionEntries'))
+                  if entries is None: continue
+                  for child in entries.findall(q('selectionEntry')):
+                      n=child.get('name','').lower()
+                      if n.startswith('additional soldier') or n=='additional man' or n.startswith('additional man '):
+                          child.set('type','upgrade')
+                          child.set('name','Additional man (squad size)')
+                          return child
+              return None
 
-          def clean_weapon(name):
-              text=name.replace('NCO ','').replace('NCO — ','')
-              text=text.replace(' (additional weapon)','')
-              text=text.replace(' (alongside rifle/carbine)',' + rifle/carbine')
-              text=text.replace(' (alongside rifle)',' + rifle')
-              return text.strip()
+          def gather_weapon_upgrades(unit):
+              out=[]
+              groups=unit.find(q('selectionEntryGroups'))
+              if groups is None: return out
+              for group in list(groups.findall(q('selectionEntryGroup'))):
+                  if group.get('name') in ('Model Loadouts','NCO Loadout','Soldier Loadouts'):
+                      groups.remove(group); continue
+                  entries=group.find(q('selectionEntries'))
+                  if entries is None: continue
+                  for up in list(entries.findall(q('selectionEntry'))):
+                      if up.get('type')!='upgrade': continue
+                      uname=up.get('name',''); low=uname.lower()
+                      if low.startswith('additional man'): continue
+                      if any(x in low for x in skip_terms): continue
+                      if not any(x in low for x in weapon_terms): continue
+                      out.append((uname,cost_value(up),constraint_value(up,'max',1),'nco' in low))
+                      entries.remove(up)
+                  if len(entries)==0 and group.find(q('entryLinks')) is None:
+                      # Keep equipment groups that contain non-selection metadata; otherwise remove empty generated weapon groups.
+                      if 'weapon' in group.get('name','').lower():
+                          groups.remove(group)
+              return out
+
+          def clear_old_models(unit):
+              ses=unit.find(q('selectionEntries'))
+              if ses is None: return
+              for child in list(ses.findall(q('selectionEntry'))):
+                  if child.get('type')=='model':
+                      ses.remove(child)
 
           def process(path,faction):
               tree=ET.parse(path); root=tree.getroot(); changed=0
@@ -73,69 +162,99 @@ jobs:
               for unit in top.findall(q('selectionEntry')):
                   if unit.get('type')!='unit' or not has_category(unit,INFANTRY_CAT): continue
 
-                  # Label the generic YellowScribe models with their base weapon.
-                  ses=unit.find(q('selectionEntries'))
-                  if ses is not None:
-                      bw=base_weapon(faction,unit.get('name',''))
-                      for m in ses.findall(q('selectionEntry')):
-                          if m.get('type')!='model': continue
-                          mn=m.get('name','')
-                          if mn=='NCO': m.set('name',f'NCO — {bw}'); changed+=1
-                          elif mn=='Soldier': m.set('name',f'Soldier — {bw}'); changed+=1
-                          elif mn=='Additional Soldier': m.set('name',f'Additional Soldier — {bw}'); changed+=1
+                  add_counter=find_additional_counter(unit)
+                  weapon_specs=gather_weapon_upgrades(unit)
+                  clear_old_models(unit)
 
-                  groups=unit.find(q('selectionEntryGroups'))
-                  if groups is None: continue
-                  for group in groups.findall(q('selectionEntryGroup')):
-                      entries=group.find(q('selectionEntries'))
-                      if entries is None: continue
-                      for up in entries.findall(q('selectionEntry')):
-                          if up.get('type')!='upgrade': continue
-                          uname=up.get('name',''); low=uname.lower()
-                          if any(x in low for x in skip_terms): continue
-                          if not any(x in low for x in weapon_terms): continue
-                          child_entries=up.find(q('selectionEntries'))
-                          marker_name=('NCO — ' if 'nco' in low else 'Soldier — ')+clean_weapon(uname)
-                          marker_id=sid(up.get('id'),'model-label')
-                          if child_entries is not None and any(x.get('id')==marker_id for x in child_entries.findall(q('selectionEntry'))):
-                              continue
-                          if child_entries is None: child_entries=ET.SubElement(up,q('selectionEntries'))
-                          marker=ET.SubElement(child_entries,q('selectionEntry'),{
-                              'id':marker_id,'name':marker_name,'hidden':'false','collective':'false','import':'true','type':'model'
-                          })
-                          ensure_constraints(marker,1,1)
-                          changed+=1
+                  groups=ensure_child(unit,'selectionEntryGroups')
+                  loadouts=ET.SubElement(groups,q('selectionEntryGroup'),{
+                      'id':sid(unit.get('id'),'model-loadouts'),'name':'Model Loadouts','hidden':'false'
+                  })
+                  subgroups=ET.SubElement(loadouts,q('selectionEntryGroups'))
+
+                  bw=base_weapon(faction,unit.get('name',''))
+
+                  # NCO: exactly one model. NCO-specific replacements automatically replace the base NCO.
+                  ng=ET.SubElement(subgroups,q('selectionEntryGroup'),{
+                      'id':sid(unit.get('id'),'nco-loadout'),'name':'NCO Loadout','hidden':'false'
+                  })
+                  nentries=ET.SubElement(ng,q('selectionEntries'))
+                  base_nco=add_model(nentries,unit.get('id'),'NCO — '+bw,1,0)
+                  nmin=add_constraint(base_nco,'min',1,'base-nco')
+                  nmax=next(c.get('id') for c in base_nco.find(q('constraints')).findall(q('constraint')) if c.get('type')=='max')
+
+                  # Soldiers: the normal base squad count is represented by the existing
+                  # YellowScribe-generated Soldier quantity. Extra men remain a paid squad-size
+                  # counter, and dynamically add one base-weapon soldier each.
+                  sg=ET.SubElement(subgroups,q('selectionEntryGroup'),{
+                      'id':sid(unit.get('id'),'soldier-loadouts'),'name':'Soldier Loadouts','hidden':'false'
+                  })
+                  sentries=ET.SubElement(sg,q('selectionEntries'))
+
+                  # Infer base soldier count from the unit's previous direct models if possible;
+                  # otherwise use the standard composition rules used by the generator.
+                  name=unit.get('name','').lower()
+                  if 'hands squad' in name or 'the hands' in name: base_total=2
+                  elif 'reconnaissance squad' in name or 'partisan squad' in name: base_total=4
+                  elif 'cavalry squad' in name: base_total=5 if faction=='warden' else 3
+                  else: base_total=5
+                  base_soldiers=max(1,base_total-1)
+
+                  base_model=add_model(sentries,unit.get('id'),'Soldier — '+bw,30,0)
+                  smin=add_constraint(base_model,'min',base_soldiers,'base-soldiers')
+                  # Replace the generic max=30 with the exact dynamic starting quantity.
+                  cs=base_model.find(q('constraints'))
+                  for c in cs.findall(q('constraint')):
+                      if c.get('type')=='max': c.set('value',str(base_soldiers)); smax=c.get('id')
+
+                  if add_counter is not None:
+                      add_repeat_modifier(base_model,smin,'increment',add_counter.get('id'))
+                      add_repeat_modifier(base_model,smax,'increment',add_counter.get('id'))
+
+                  for uname,pts,max_count,is_nco in weapon_specs:
+                      weapon=clean_weapon(uname)
+                      if is_nco:
+                          wm=add_model(nentries,unit.get('id'),'NCO — '+weapon,max_count,pts)
+                          add_repeat_modifier(base_nco,nmin,'decrement',wm.get('id'))
+                          add_repeat_modifier(base_nco,nmax,'decrement',wm.get('id'))
+                      else:
+                          label='Soldier — '+weapon
+                          wm=add_model(sentries,unit.get('id'),label,max_count,pts)
+                          # Each selected special-weapon model replaces one otherwise generic
+                          # base-weapon soldier. This is what makes YellowScribe show the actual
+                          # breakdown instead of 4x Soldier plus abstract weapon upgrades.
+                          add_repeat_modifier(base_model,smin,'decrement',wm.get('id'))
+                          add_repeat_modifier(base_model,smax,'decrement',wm.get('id'))
+
+                  changed+=1
               tree.write(path,encoding='UTF-8',xml_declaration=True)
               return changed
 
           cc=process('Colonial Legion.cat','colonial')
           wc=process('Warden Army.cat','warden')
 
-          # Keep the shared game-system revision aligned.
-          GST='Bolt Action - Foxhole.gst'
-          GST_NS='http://www.battlescribe.net/schema/gameSystemSchema'
-          gt=ET.parse(GST); gr=gt.getroot(); gr.set('revision',REVISION)
-          ET.register_namespace('',GST_NS); gt.write(GST,encoding='UTF-8',xml_declaration=True)
+          gt=ET.parse('Bolt Action - Foxhole.gst'); gr=gt.getroot(); gr.set('revision',REVISION)
+          ET.register_namespace('',GST_NS); gt.write('Bolt Action - Foxhole.gst',encoding='UTF-8',xml_declaration=True)
 
-          IDX='index.xml'
-          it=ET.parse(IDX); ir=it.getroot()
+          it=ET.parse('index.xml'); ir=it.getroot()
           for el in ir.iter():
               if el.tag.rsplit('}',1)[-1]=='dataIndexEntry' and el.get('dataType') in ('gamesystem','catalogue'):
                   el.set('dataRevision',REVISION)
-          it.write(IDX,encoding='UTF-8',xml_declaration=True)
+          ET.register_namespace('',IDX_NS); it.write('index.xml',encoding='UTF-8',xml_declaration=True)
 
-          print('Weapon model labels added/renamed:',cc,'Colonial,',wc,'Warden')
-          for p in ('Colonial Legion.cat','Warden Army.cat',GST,IDX): ET.parse(p); print('XML OK:',p)
+          print('Weapon-specific infantry units rebuilt:',cc,'Colonial,',wc,'Warden')
+          for p in ('Colonial Legion.cat','Warden Army.cat','Bolt Action - Foxhole.gst','index.xml'):
+              ET.parse(p); print('XML OK:',p)
           PY
-      - name: Commit weapon model labels
+      - name: Commit weapon-specific model loadouts
         shell: bash
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add 'Colonial Legion.cat' 'Warden Army.cat' 'Bolt Action - Foxhole.gst' 'index.xml'
           if git diff --cached --quiet; then
-            echo 'Weapon model labels already present.'
+            echo 'Weapon-specific model loadouts already present.'
           else
-            git commit -m 'Show selected infantry weapons in YellowScribe'
+            git commit -m 'Break infantry into weapon-specific YellowScribe models'
             git push
           fi
