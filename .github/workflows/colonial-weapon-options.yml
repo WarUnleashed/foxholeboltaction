@@ -1,0 +1,242 @@
+name: Colonial weapon names and infantry options
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/colonial-weapon-options.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply Colonial weapon names and options
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import re
+          import uuid
+          import xml.etree.ElementTree as ET
+
+          CAT_NS='http://www.battlescribe.net/schema/catalogueSchema'
+          GST_NS='http://www.battlescribe.net/schema/gameSystemSchema'
+          IDX_NS='http://www.battlescribe.net/schema/dataIndexSchema'
+          REV='12'
+          INF='1db0d511-ab38-5eb8-afa7-97cd18cf7d11'
+          SNIPER='62025d03-4255-56ea-870e-c3399170789d'
+          PTS='b0e5f7a2-33c8-46ce-8f8f-148d8171da43'
+
+          def q(ns, tag): return f'{{{ns}}}{tag}'
+          def lname(tag): return tag.rsplit('}',1)[-1]
+          def child(parent, name): return next((x for x in parent if lname(x.tag)==name), None)
+          def ensure(parent, ns, name):
+              x=child(parent,name)
+              if x is None: x=ET.SubElement(parent,q(ns,name))
+              return x
+          def sid(*parts):
+              return str(uuid.uuid5(uuid.UUID('6ba7b810-9dad-11d1-80b4-00c04fd430c8'), 'foxhole-colonial-weapons|'+'|'.join(map(str,parts))))
+          def has_cat(se,cid):
+              cs=child(se,'categoryLinks')
+              return cs is not None and any(x.get('targetId')==cid for x in cs)
+          def constraints_of(se):
+              return [x for x in (child(se,'constraints') or []) if lname(x.tag)=='constraint']
+          def get_constraint(se, ctype):
+              return next((c for c in constraints_of(se) if c.get('type')==ctype),None)
+          def add_constraint(se, ctype, value, scope='parent'):
+              cs=ensure(se,CAT_NS,'constraints')
+              c=get_constraint(se,ctype)
+              if c is None:
+                  c=ET.SubElement(cs,q(CAT_NS,'constraint'),{
+                      'field':'selections','scope':scope,'value':str(value),'percentValue':'false','shared':'false',
+                      'includeChildSelections':'false','includeChildForces':'false','type':ctype,
+                      'id':sid(se.get('id'),ctype)})
+              else: c.set('value',str(value))
+              return c
+          def add_cost(se, value):
+              if value is None: return
+              costs=ensure(se,CAT_NS,'costs')
+              cost=next((x for x in costs if lname(x.tag)=='cost' and x.get('typeId')==PTS),None)
+              if cost is None:
+                  ET.SubElement(costs,q(CAT_NS,'cost'),{'name':'pts','typeId':PTS,'value':str(float(value))})
+              else: cost.set('value',str(float(value)))
+          def named_group(unit,name):
+              groups=ensure(unit,CAT_NS,'selectionEntryGroups')
+              return next((g for g in groups if lname(g.tag)=='selectionEntryGroup' and g.get('name')==name),None)
+          def find_group_recursive(unit,name):
+              for g in unit.iter(q(CAT_NS,'selectionEntryGroup')):
+                  if g.get('name')==name: return g
+              return None
+          def ensure_group(parent,name,key):
+              groups=ensure(parent,CAT_NS,'selectionEntryGroups')
+              g=next((x for x in groups if lname(x.tag)=='selectionEntryGroup' and x.get('name')==name),None)
+              if g is None:
+                  g=ET.SubElement(groups,q(CAT_NS,'selectionEntryGroup'),{'id':sid(parent.get('id'),key),'name':name,'hidden':'false'})
+              return g
+          def entries_container(group): return ensure(group,CAT_NS,'selectionEntries')
+          def add_model(group, unit, label, max_count=1, cost=None):
+              entries=entries_container(group)
+              existing=next((x for x in entries if lname(x.tag)=='selectionEntry' and x.get('name')==label),None)
+              if existing is not None: return existing,False
+              se=ET.SubElement(entries,q(CAT_NS,'selectionEntry'),{
+                  'id':sid(unit.get('id'),'model',label),'name':label,'hidden':'false','collective':'false','import':'true','type':'model'})
+              add_constraint(se,'max',max_count)
+              add_cost(se,cost)
+              return se,True
+          def add_upgrade(group, unit, label, max_count=1, cost=None):
+              entries=entries_container(group)
+              existing=next((x for x in entries if lname(x.tag)=='selectionEntry' and x.get('name')==label),None)
+              if existing is not None: return existing,False
+              se=ET.SubElement(entries,q(CAT_NS,'selectionEntry'),{
+                  'id':sid(unit.get('id'),'upgrade',label),'name':label,'hidden':'false','collective':'false','import':'true','type':'upgrade'})
+              add_constraint(se,'max',max_count)
+              add_cost(se,cost)
+              return se,True
+          def add_decrement(base, replacement):
+              minc=get_constraint(base,'min'); maxc=get_constraint(base,'max')
+              if minc is None or maxc is None: return
+              mods=ensure(base,CAT_NS,'modifiers')
+              for target in (minc,maxc):
+                  # idempotent: don't add the same replacement to this field twice.
+                  exists=False
+                  for m in mods:
+                      if lname(m.tag)!='modifier' or m.get('type')!='decrement' or m.get('field')!=target.get('id'): continue
+                      for rep in m.iter(q(CAT_NS,'repeat')):
+                          if rep.get('childId')==replacement.get('id'): exists=True
+                  if exists: continue
+                  m=ET.SubElement(mods,q(CAT_NS,'modifier'),{'type':'decrement','field':target.get('id'),'value':'1'})
+                  reps=ET.SubElement(m,q(CAT_NS,'repeats'))
+                  ET.SubElement(reps,q(CAT_NS,'repeat'),{
+                      'field':'selections','scope':'parent','value':'1','percentValue':'false','shared':'true',
+                      'includeChildSelections':'true','includeChildForces':'false','childId':replacement.get('id'),
+                      'repeats':'1','roundUp':'false'})
+
+          # Longest/specific names first so generic Pistol/Machine Gun replacements do not collide.
+          replacements=[
+              (r'\bMachine Pistol\b', '"The Pitch Gun" mc.V'),
+              (r'\bLight Machine Gun\b', 'Catara mo.II'),
+              (r'\bLight machine gun\b', 'Catara mo.II'),
+              (r'\bAssault Rifle\b', '"Dusk" ce.III'),
+              (r'\bAssault rifle\b', '"Dusk" ce.III'),
+              (r'\bLong Rifle\b', 'KRR2-790 Omen'),
+              (r'\bLong rifle\b', 'KRR2-790 Omen'),
+              (r'\bAuto-Rifle\b', 'Catena rt.IV Auto-Rifle'),
+              (r'\bAutorifle\b', 'Catena rt.IV Auto-Rifle'),
+              (r'\bAutomatic Rifle\b', 'Catena rt.IV Auto-Rifle'),
+              (r'\bAutomatic rifle\b', 'Catena rt.IV Auto-Rifle'),
+              (r'\bBurst Rifle\b', 'Fuscina pi.I'),
+              (r'\bBurst rifle\b', 'Fuscina pi.I'),
+              (r'\bSniper Rifle\b', 'KRR3-792 Auger'),
+              (r'\bSniper rifle\b', 'KRR3-792 Auger'),
+              (r'\bSubmachine gun\b', '"Lionclaw" mc.VIII'),
+              (r'\bsubmachine gun\b', '"Lionclaw" mc.VIII'),
+              (r'\bShotgun\b', 'KRF1-750 Dragonfly'),
+              (r'\bCarbine\b', 'Argenti r.II Rifle'),
+              (r'\bRevolver\b', 'Cometa T2-9'),
+              (r'\bPistol\b', 'Ferro 879'),
+              (r'\bMachine Gun\b', 'KRN886-127 Gast Machine Gun'),
+              (r'\bMachine gun\b', 'KRN886-127 Gast Machine Gun'),
+              (r'\bFlamethrower\b', '"Molten Wind" v.II Flame Torch'),
+          ]
+          def rename_weapon_text(text):
+              if not text: return text
+              out=text
+              for pat,repl in replacements:
+                  out=re.sub(pat,repl,out)
+              return out
+
+          ET.register_namespace('',CAT_NS)
+          tree=ET.parse('Colonial Legion.cat'); root=tree.getroot()
+
+          # Rename Colonial generic weapon labels wherever they appear in selectable entry names.
+          for se in root.iter(q(CAT_NS,'selectionEntry')):
+              old=se.get('name')
+              new=rename_weapon_text(old)
+              if new!=old: se.set('name',new)
+
+          for unit in root.iter(q(CAT_NS,'selectionEntry')):
+              if unit.get('type')!='unit': continue
+              uname=unit.get('name','')
+
+              if has_cat(unit,INF):
+                  is_recruit='RECRUIT' in uname.upper()
+                  # Bayonet is additional equipment, not a replacement weapon.
+                  eq=find_group_recursive(unit,'Squad Equipment')
+                  if eq is None: eq=ensure_group(unit,'Squad Equipment','squad-equipment')
+                  add_upgrade(eq,unit,'Buckhorn CCQ-18 Bayonet',1,None)
+
+                  if not is_recruit:
+                      soldier_group=find_group_recursive(unit,'Soldier Loadouts')
+                      if soldier_group is None:
+                          model_loadouts=ensure_group(unit,'Model Loadouts','model-loadouts')
+                          soldier_group=ensure_group(model_loadouts,'Soldier Loadouts','soldier-loadouts')
+
+                      # Identify the required/base soldier model so new replacement weapons continue to
+                      # reduce the ordinary soldier count in YellowScribe/New Recruit.
+                      entries=entries_container(soldier_group)
+                      base=None
+                      for candidate in entries:
+                          if lname(candidate.tag)!='selectionEntry' or candidate.get('type')!='model': continue
+                          if get_constraint(candidate,'min') is not None:
+                              base=candidate; break
+
+                      new_specs=[
+                          ('Soldier — KRN886-127 Gast Machine Gun',1,None),
+                          ('Soldier — Catena rt.IV Auto-Rifle',1,None),
+                          ('Soldier — Fuscina pi.I',1,None),
+                          ('Soldier — KRR2-790 Omen',1,None),
+                          ('Soldier — Cometa T2-9',1,None),
+                          ('Soldier — "Dawn" Ve.II anti tank rifle',1,None),
+                          ('Soldier — "Molten Wind" v.II Flame Torch',1,None),
+                      ]
+                      for label,mx,cost in new_specs:
+                          new,created=add_model(soldier_group,unit,label,mx,cost)
+                          if created and base is not None: add_decrement(base,new)
+
+              if has_cat(unit,SNIPER):
+                  # Sniper teams previously had no weapon selector at all. Add a required choice between
+                  # the standard Colonial sniper rifle and the requested anti-tank sniper rifle.
+                  g=ensure_group(unit,'Sniper Weapon (choose one)','sniper-weapon')
+                  add_constraint(g,'min',1)
+                  add_constraint(g,'max',1)
+                  add_upgrade(g,unit,'KRR3-792 Auger',1,None)
+                  add_upgrade(g,unit,'"Quickhatch" Rt.I anti tank sniper rifle',1,None)
+
+          root.set('revision',REV); root.set('gameSystemRevision',REV)
+          tree.write('Colonial Legion.cat',encoding='UTF-8',xml_declaration=True)
+
+          # Keep the other catalogue and game-system/index revisions synchronized for New Recruit caching.
+          ET.register_namespace('',CAT_NS)
+          wt=ET.parse('Warden Army.cat'); wr=wt.getroot(); wr.set('revision',REV); wr.set('gameSystemRevision',REV)
+          wt.write('Warden Army.cat',encoding='UTF-8',xml_declaration=True)
+
+          ET.register_namespace('',GST_NS)
+          gt=ET.parse('Bolt Action - Foxhole.gst'); gr=gt.getroot(); gr.set('revision',REV)
+          gt.write('Bolt Action - Foxhole.gst',encoding='UTF-8',xml_declaration=True)
+
+          ET.register_namespace('',IDX_NS)
+          it=ET.parse('index.xml'); ir=it.getroot()
+          for el in ir.iter():
+              if lname(el.tag)=='dataIndexEntry': el.set('dataRevision',REV)
+          it.write('index.xml',encoding='UTF-8',xml_declaration=True)
+
+          for p in ('Colonial Legion.cat','Warden Army.cat','Bolt Action - Foxhole.gst','index.xml'):
+              ET.parse(p)
+          PY
+      - name: Commit generated Colonial weapon updates
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add 'Colonial Legion.cat' 'Warden Army.cat' 'Bolt Action - Foxhole.gst' index.xml
+          if git diff --cached --quiet; then
+            echo 'No Colonial weapon changes needed.'
+            exit 0
+          fi
+          git commit -m 'Add Colonial weapon names and infantry options'
+          git push
