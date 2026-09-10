@@ -1,0 +1,145 @@
+name: Add Colonial vehicles and artillery
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/add-colonial-vehicles.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  add-vehicles:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Add requested Colonial entries
+        shell: python
+        run: |
+          import xml.etree.ElementTree as ET
+          import uuid
+
+          CAT = 'Colonial Legion.cat'
+          WARDEN = 'Warden Army.cat'
+          GST = 'Bolt Action - Foxhole.gst'
+          INDEX = 'index.xml'
+          REV = '13'
+
+          CAT_NS = 'http://www.battlescribe.net/schema/catalogueSchema'
+          GST_NS = 'http://www.battlescribe.net/schema/gameSystemSchema'
+          IDX_NS = 'http://www.battlescribe.net/schema/dataIndexSchema'
+          FIELD_CAT = '75cd78ea-f7b0-5366-b2b5-cfcaa6ba2fc6'
+          TANK_CAT = '0f9945cb-0ce1-521e-8f54-35857994efd8'
+          TRANSPORT_CAT = 'fc7f7f70-4bea-5d27-8b5e-cb2ac03797c7'
+          PTS = 'b0e5f7a2-33c8-46ce-8f8f-148d8171da43'
+
+          field_weapons = [
+              'GA6 "Cestus" Anti Tank Pushgun',
+              '945g "Stygian Bolt" Heavy Anti-Tank gun',
+              'DAE 1o-3 "Polybolos" Arc/RPG Anti-Tank gun',
+              'DAE 2a-1 "Ruptura" 75mm anti-tank gun',
+              'DAE 3b-2 "Hades" Rocket Artillery',
+          ]
+          tanks = [
+              'T20 “Ixion” Tankette',
+              'T13 “Deioneus” Rocket Battery',
+              'HH-d “Peltast” Mortar Half-Track',
+              '90T-v “Nemesis” Medium Tank',
+              '86K-a “Bardiche” Brawler Tank',
+              '85V-g “Talos” 75mm Heavy Tank',
+              '86K-c “Ranseur” RPG-Brawler Tank',
+              'Lance-25 “Hasta” Battle Tank Destroyer',
+              'R-17 “Retiarius” Skirmisher Rocket Artillery',
+          ]
+          transports = ['AU-A150 Taurine Rigger Heavy-Duty Truck']
+
+          def q(ns, tag):
+              return f'{{{ns}}}{tag}'
+
+          def uid(seed):
+              return str(uuid.uuid5(uuid.NAMESPACE_URL, 'foxholeboltaction:' + seed))
+
+          tree = ET.parse(CAT)
+          root = tree.getroot()
+          entries = root.find(q(CAT_NS, 'selectionEntries'))
+          if entries is None:
+              entries = ET.SubElement(root, q(CAT_NS, 'selectionEntries'))
+
+          existing = {e.get('name','').strip().lower() for e in entries.findall(q(CAT_NS, 'selectionEntry'))}
+
+          def add_unit(name, category_id, category_name, model_name):
+              if name.strip().lower() in existing:
+                  return False
+              eid = uid('entry:' + name)
+              e = ET.SubElement(entries, q(CAT_NS, 'selectionEntry'), {
+                  'id': eid, 'name': name, 'hidden': 'false', 'collective': 'false',
+                  'import': 'true', 'type': 'unit'
+              })
+              cls = ET.SubElement(e, q(CAT_NS, 'categoryLinks'))
+              ET.SubElement(cls, q(CAT_NS, 'categoryLink'), {
+                  'id': uid('catlink:' + name), 'name': category_name, 'hidden': 'false',
+                  'targetId': category_id, 'primary': 'true'
+              })
+              costs = ET.SubElement(e, q(CAT_NS, 'costs'))
+              ET.SubElement(costs, q(CAT_NS, 'cost'), {'name':'pts','typeId':PTS,'value':'0.0'})
+              sels = ET.SubElement(e, q(CAT_NS, 'selectionEntries'))
+              m = ET.SubElement(sels, q(CAT_NS, 'selectionEntry'), {
+                  'id': uid('model:' + name), 'name': model_name, 'hidden': 'false',
+                  'collective': 'false', 'import': 'true', 'type': 'model'
+              })
+              cs = ET.SubElement(m, q(CAT_NS, 'constraints'))
+              ET.SubElement(cs, q(CAT_NS, 'constraint'), {
+                  'field':'selections','scope':'parent','value':'1','percentValue':'false',
+                  'shared':'false','includeChildSelections':'false','includeChildForces':'false',
+                  'type':'min','id':uid('min:' + name)
+              })
+              ET.SubElement(cs, q(CAT_NS, 'constraint'), {
+                  'field':'selections','scope':'parent','value':'1','percentValue':'false',
+                  'shared':'false','includeChildSelections':'false','includeChildForces':'false',
+                  'type':'max','id':uid('max:' + name)
+              })
+              existing.add(name.strip().lower())
+              return True
+
+          added = 0
+          for n in field_weapons:
+              added += add_unit(n, FIELD_CAT, 'Field / Emplaced / Immobile Weapon', 'Gun Crew')
+          for n in tanks:
+              added += add_unit(n, TANK_CAT, 'Tank / SPG', 'Vehicle')
+          for n in transports:
+              added += add_unit(n, TRANSPORT_CAT, 'Transport / Tow', 'Vehicle')
+
+          root.set('revision', REV)
+          root.set('gameSystemRevision', REV)
+          ET.register_namespace('', CAT_NS)
+          tree.write(CAT, encoding='UTF-8', xml_declaration=True)
+
+          for path in [WARDEN]:
+              t = ET.parse(path); r = t.getroot(); r.set('revision', REV); r.set('gameSystemRevision', REV)
+              ET.register_namespace('', CAT_NS); t.write(path, encoding='UTF-8', xml_declaration=True)
+
+          t = ET.parse(GST); r = t.getroot(); r.set('revision', REV)
+          ET.register_namespace('', GST_NS); t.write(GST, encoding='UTF-8', xml_declaration=True)
+
+          t = ET.parse(INDEX); r = t.getroot()
+          for x in r.iter(q(IDX_NS, 'dataIndexEntry')):
+              x.set('dataRevision', REV)
+          ET.register_namespace('', IDX_NS); t.write(INDEX, encoding='UTF-8', xml_declaration=True)
+
+          for path in [CAT, WARDEN, GST, INDEX]:
+              ET.parse(path)
+          print(f'Added {added} new Colonial entries; revision {REV}')
+
+      - name: Commit generated data
+        run: |
+          if git diff --quiet; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add 'Colonial Legion.cat' 'Warden Army.cat' 'Bolt Action - Foxhole.gst' index.xml
+          git commit -m 'Add new Colonial vehicles and artillery'
+          git push
