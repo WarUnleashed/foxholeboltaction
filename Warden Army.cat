@@ -1,6 +1,182 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <catalogue xmlns="http://www.battlescribe.net/schema/catalogueSchema" id="8f43f0a9-20e0-52cf-b5c5-2f8a0c5d0001" name="Warden Army - Armies of Caoiva" revision="1" battleScribeVersion="2.03" gameSystemId="4c6f1c8a-9f4d-4e4d-b2f7-2d71860d3f21" gameSystemRevision="1" library="false" type="catalogue">
-  <selectionEntries>
+  <forceEntries><forceEntry id="04992577-e146-5453-afb1-457912d24c5b" name="Warden Reinforced Platoon" hidden="false">
+      <categoryLinks>
+        <categoryLink id="303dc0f4-f777-5b41-bbf6-d3f176ddb697" name="Lieutenant" hidden="false" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="min" id="12ca5a41-b950-5e09-bc86-49685603232b" />
+            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="88a5620e-9edf-555e-899a-3e5a67152b89" />
+          </constraints>
+        </categoryLink>
+        <categoryLink id="0148860a-1739-5678-9631-d9d401aa0ffe" name="Captain / Major" hidden="false" targetId="914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="a12e34ff-b5d9-5b8a-a1fd-8a9a747f5e29" />
+          </constraints>
+        </categoryLink>
+        <categoryLink id="9c065ccc-591d-54e0-99ad-f2ccb730ade4" name="Medic" hidden="false" targetId="4e0b9e1a-0360-51cc-a506-097a7efcd44e" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="f10af380-ec2e-58d1-8ee5-ddfa6081ff8c" />
+          </constraints>
+        </categoryLink>
+        <categoryLink id="785290c6-abc5-5560-9dd7-ec0751e97c21" name="Forward Observer" hidden="false" targetId="43e65105-60f7-5bb6-a4ac-02a433a791ee" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="c05735fd-f28e-5a50-873e-3b6779d16c97" />
+          </constraints>
+        </categoryLink>
+        <categoryLink id="2585309c-0e30-52fc-83c6-4340b0763435" name="Infantry Squad" hidden="false" targetId="1db0d511-ab38-5eb8-afa7-97cd18cf7d11" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="2" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="min" id="30c2c185-f211-576a-baee-606d84bc2ad7" />
+            <constraint field="selections" scope="force" value="5" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="ff9aa780-97e8-5518-9254-248e1c8e6a01" />
+          </constraints>
+        </categoryLink>
+        <categoryLink id="edf529a5-6807-5a77-af72-23d34d415344" name="Machine Gun Team" hidden="false" targetId="df95158d-692a-545b-b6da-9fc45eb1f7fa" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="cd2b416b-4a53-5885-9800-7eabf465e172" />
+          </constraints>
+        </categoryLink>
+        <categoryLink id="609a7b3d-4bbc-582c-8303-433da9a7a688" name="Mortar Team" hidden="false" targetId="f8cf368a-5e9a-5d56-8e8f-5a5e9a7977b4" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="a7751dfb-0c66-54fc-a92a-5964311b7b40" />
+          </constraints>
+        </categoryLink>
+        <categoryLink id="5f062391-8c6c-598f-9471-615367a7020f" name="Sniper Team" hidden="false" targetId="62025d03-4255-56ea-870e-c3399170789d" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="1468e891-4647-5df1-bb12-8005a17d1f4d" />
+          </constraints>
+        </categoryLink>
+        <categoryLink id="d7f95e61-0a4a-5b8d-99c0-c78cd0c38c2f" name="Anti-Tank Team" hidden="false" targetId="3cf48c43-9058-564e-901a-e3098be16d2f" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="b49c52eb-a378-552c-9400-d3a88d8ca02f" />
+          </constraints>
+        </categoryLink>
+        <categoryLink id="02894e5c-299d-5ef5-a118-2f4c463d1046" name="Field / Emplaced / Immobile Weapon" hidden="false" targetId="75cd78ea-f7b0-5366-b2b5-cfcaa6ba2fc6" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="6a522e36-f60d-5ff0-8efc-b67abc8c5819" />
+          </constraints>
+        </categoryLink>
+        <categoryLink id="9208e173-dc4f-52f2-a959-b05f51c81ab6" name="Armoured Car" hidden="false" targetId="6e1678b3-02f8-5430-9f5b-e3da292b8625" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="3a461e21-898a-5d09-9bb9-9c597dfe809f" />
+          </constraints>
+        </categoryLink>
+        <categoryLink id="24c482b6-cee3-5b31-b6cf-d951f712e998" name="Tank / SPG" hidden="false" targetId="0f9945cb-0ce1-521e-8f54-35857994efd8" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="7b25cb39-7165-58b0-9ef6-899c9908d7b9" />
+          </constraints>
+        </categoryLink>
+        <categoryLink id="558d792b-9d47-54fc-b5a7-cecd7ba81a3e" name="Transport / Tow" hidden="false" targetId="fc7f7f70-4bea-5d27-8b5e-cb2ac03797c7" primary="false" />
+      </categoryLinks>
+    </forceEntry>
+    <forceEntry id="b735a4f4-f8d0-540f-af55-9393dda50015" name="Warden Mechanized / Motorized Platoon" hidden="false">
+      <categoryLinks>
+        <categoryLink id="48f7fa2f-e82b-5495-94ab-70683cff50f7" name="Lieutenant" hidden="false" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="min" id="33de755d-8b13-5849-9e11-a72f1878e757" />
+            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="72bc62c4-05fb-54da-b21f-4a9f089faae5" />
+          </constraints>
+        </categoryLink>
+        <categoryLink id="b55a1742-3c08-54fc-b15f-a30440203051" name="Captain / Major" hidden="false" targetId="914d5c8b-ebd1-54ff-b0d6-23aa67ddef6a" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="321c7fe9-91da-5a3a-b786-a4ec868395bb" />
+          </constraints>
+        </categoryLink>
+        <categoryLink id="f3978ebc-1d39-54c3-b44a-437441a1ca72" name="Medic" hidden="false" targetId="4e0b9e1a-0360-51cc-a506-097a7efcd44e" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="43674cad-5e92-5d64-b3e4-19fab7f45c0a" />
+          </constraints>
+        </categoryLink>
+        <categoryLink id="4c75e505-5e4d-56da-be9c-bcd2689698a6" name="Forward Observer" hidden="false" targetId="43e65105-60f7-5bb6-a4ac-02a433a791ee" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="3aa29016-92e5-5e01-8a55-d0e73eb611a0" />
+          </constraints>
+        </categoryLink>
+        <categoryLink id="735ba906-e4c5-5dbe-a310-9990d5b69dc4" name="Infantry Squad" hidden="false" targetId="1db0d511-ab38-5eb8-afa7-97cd18cf7d11" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="2" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="min" id="32f137c7-ac84-5c47-83da-17ba420fb044" />
+            <constraint field="selections" scope="force" value="5" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="20d62309-6b22-54f6-af61-d8023108ce83" />
+          </constraints>
+        </categoryLink>
+        <categoryLink id="ec087789-ede8-5615-b83e-da5af0d438cc" name="Machine Gun Team" hidden="false" targetId="df95158d-692a-545b-b6da-9fc45eb1f7fa" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="1a4b8f55-0926-58ca-8c89-c6c812bbf63e" />
+          </constraints>
+        </categoryLink>
+        <categoryLink id="dd99973d-e71e-536b-afd1-a93a5214791c" name="Mortar Team" hidden="false" targetId="f8cf368a-5e9a-5d56-8e8f-5a5e9a7977b4" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="eab2d438-a60d-5677-b4b8-f4f070bedae2" />
+          </constraints>
+        </categoryLink>
+        <categoryLink id="40e4440c-ca26-5414-851f-31f435f26af4" name="Sniper Team" hidden="false" targetId="62025d03-4255-56ea-870e-c3399170789d" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="c022b48e-9dd9-5039-86c1-16c6e8c01106" />
+          </constraints>
+        </categoryLink>
+        <categoryLink id="87bf19f9-a1fe-5819-8898-9046045ad478" name="Anti-Tank Team" hidden="false" targetId="3cf48c43-9058-564e-901a-e3098be16d2f" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="712eb66a-036a-5237-80f3-6ce9191ce397" />
+          </constraints>
+        </categoryLink>
+        <categoryLink id="a49c135c-35e6-5d81-b7cc-89dd9e690735" name="Field / Emplaced / Immobile Weapon" hidden="false" targetId="75cd78ea-f7b0-5366-b2b5-cfcaa6ba2fc6" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="b6ebd636-4a9f-5fe1-98c8-74324b940754" />
+          </constraints>
+        </categoryLink>
+        <categoryLink id="7ee508c1-c868-57db-aca5-bdccc06b53f3" name="Armoured Car" hidden="false" targetId="6e1678b3-02f8-5430-9f5b-e3da292b8625" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="65197489-6ee1-5178-908b-36f371f6ae25" />
+          </constraints>
+        </categoryLink>
+        <categoryLink id="2b957339-d651-5186-9549-047f6431e04d" name="Tank / SPG" hidden="false" targetId="0f9945cb-0ce1-521e-8f54-35857994efd8" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="62eb435d-b4df-5485-a3a4-43c4ebc68fd7" />
+          </constraints>
+        </categoryLink>
+        <categoryLink id="176eb8ee-b263-5d61-89aa-bf96f6effbd9" name="Transport / Tow" hidden="false" targetId="fc7f7f70-4bea-5d27-8b5e-cb2ac03797c7" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="2" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="min" id="bb32f1fc-6f0e-535d-b7ae-7ce3ff29e579" />
+            <constraint field="selections" scope="force" value="8" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="c3f66ba0-485f-5133-9d60-528a9cd55229" />
+          </constraints>
+        </categoryLink>
+      </categoryLinks>
+    </forceEntry>
+    <forceEntry id="5514efbe-f782-5931-b014-0aac40cbc85e" name="Warden Armoured Platoon" hidden="false">
+      <categoryLinks>
+        <categoryLink id="81f3c43a-3629-5b92-a9aa-c75e1af5f3ac" name="Armoured Platoon Commander" hidden="false" targetId="5a76adff-513b-5d97-a775-aba4be508203" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="min" id="12ce0232-5115-580a-a646-0d06f7befcd1" />
+            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="9da22f8d-59db-5877-990f-95c3ca240a51" />
+          </constraints>
+        </categoryLink>
+        <categoryLink id="c87f6f87-e555-5ad0-99fa-a283b1f9ee8c" name="Forward Observer" hidden="false" targetId="43e65105-60f7-5bb6-a4ac-02a433a791ee" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="48eeb75e-760c-579f-bd1b-b96bd305fe19" />
+          </constraints>
+        </categoryLink>
+        <categoryLink id="62ff0437-5ba3-514e-abc8-39c1d5634675" name="Infantry Squad" hidden="false" targetId="1db0d511-ab38-5eb8-afa7-97cd18cf7d11" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="1" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="min" id="617c24af-7e12-5e96-80d5-9687bc6c07e8" />
+            <constraint field="selections" scope="force" value="2" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="06797e94-15a3-5343-898a-e8fb2b8ebea9" />
+          </constraints>
+        </categoryLink>
+        <categoryLink id="eab129bb-19fd-53d8-b9ef-cd0cdd29213b" name="Armoured Car" hidden="false" targetId="6e1678b3-02f8-5430-9f5b-e3da292b8625" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="2" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="1e6c4a9f-21ad-5ce6-9081-ce48d5a9f344" />
+          </constraints>
+        </categoryLink>
+        <categoryLink id="c37ca216-24ab-56d0-9f54-cfff4fc51827" name="Tank / SPG" hidden="false" targetId="0f9945cb-0ce1-521e-8f54-35857994efd8" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="3" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="min" id="3625a5a3-e97f-5de8-b730-054fc45b37f8" />
+            <constraint field="selections" scope="force" value="6" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="9cbfeb14-d255-50e9-9b27-07b4a0a01dbe" />
+          </constraints>
+        </categoryLink>
+        <categoryLink id="dd6ca5b1-3915-5947-b905-0764231a07bb" name="Transport / Tow" hidden="false" targetId="fc7f7f70-4bea-5d27-8b5e-cb2ac03797c7" primary="false">
+          <constraints>
+            <constraint field="selections" scope="force" value="2" percentValue="false" shared="false" includeChildSelections="true" includeChildForces="false" type="max" id="e270e461-face-51b7-b291-d54f53086732" />
+          </constraints>
+        </categoryLink>
+      </categoryLinks>
+    </forceEntry>
+  </forceEntries><selectionEntries>
     <selectionEntry id="9bfac0e3-d743-55da-80dd-f81c318b3b75" name="2nd Lieutenant (Inexperienced)" hidden="false" collective="false" import="true" type="unit">
       <categoryLinks>
         <categoryLink id="84b3919d-ecf9-5eb5-b307-f360fe39ab4f" name="Lieutenant" hidden="false" targetId="5b361517-ed58-5d60-a6fd-b00e15d7f574" primary="true" />
