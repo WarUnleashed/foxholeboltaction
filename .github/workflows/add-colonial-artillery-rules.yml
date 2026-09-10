@@ -1,0 +1,78 @@
+name: Add Colonial artillery options and special rules
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/add-colonial-artillery-rules.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply artillery rules
+        run: |
+          python - <<'PY'
+          import xml.etree.ElementTree as ET, uuid
+          CAT='Colonial Legion.cat'; REV='21'
+          NS='http://www.battlescribe.net/schema/catalogueSchema'
+          ET.register_namespace('',NS)
+          tree=ET.parse(CAT); root=tree.getroot(); q=lambda x:f'{{{NS}}}{x}'
+          def norm(s): return ' '.join((s or '').lower().replace('“','"').replace('”','"').split())
+          def child(parent,tag):
+              x=parent.find(q(tag))
+              if x is None: x=ET.SubElement(parent,q(tag))
+              return x
+          def rule(entry,name,text):
+              rs=child(entry,'rules')
+              if any(norm(r.get('name'))==norm(name) for r in rs.findall(q('rule'))): return
+              r=ET.SubElement(rs,q('rule'),{'id':str(uuid.uuid4()),'name':name})
+              ET.SubElement(r,q('description')).text=text
+          def option(entry,name,cost=0):
+              sg=child(entry,'selectionEntries')
+              if any(norm(x.get('name'))==norm(name) for x in sg.findall(q('selectionEntry'))): return
+              x=ET.SubElement(sg,q('selectionEntry'),{'id':str(uuid.uuid4()),'name':name,'hidden':'false','collective':'false','import':'true','type':'upgrade'})
+              cs=ET.SubElement(x,q('costs')); ET.SubElement(cs,q('cost'),{'name':'pts','typeId':'points','value':str(cost)})
+              cons=ET.SubElement(x,q('constraints')); ET.SubElement(cons,q('constraint'),{'field':'selections','scope':'parent','value':'1','percentValue':'false','shared':'false','includeChildSelections':'false','includeChildForces':'false','id':str(uuid.uuid4()),'type':'max'})
+          entries=root.findall('.//'+q('selectionEntry'))
+          for e in entries:
+              n=norm(e.get('name'))
+              if 'swords of maro' in n:
+                  option(e,'Fanatics',0); rule(e,'Stubborn','This unit has Stubborn unless the Fanatics option is selected.'); rule(e,'Fanatics','If the Fanatics option is selected, this unit has Fanatics instead of Stubborn.')
+              if 'koronides' in n:
+                  option(e,'Spotter',10); option(e,'Anti-Structure (2D6)',20); option(e,'APFA',45)
+                  for rn,tx in [('Gun shield','Gun shield.'),('Team weapon','Team weapon.'),('Fixed','Fixed.'),('Howitzer','Howitzer.')]: rule(e,rn,tx)
+              if 'sagittarii' in n:
+                  rule(e,'Light artillery movement','Treat as light artillery for the purposes of movement and towing.')
+                  for rn in ['Gun shield','Team weapon','Fixed']: rule(e,rn,rn+'.')
+              if 'battering ram' in n:
+                  for rn in ['Gun shield','Team weapon','Fixed']: rule(e,rn,rn+'.')
+              if 'smelter' in n:
+                  for rn in ['Gun shield','Team weapon','Fixed']: rule(e,rn,rn+'.')
+                  rule(e,'68mm HVAP','The 68mm HVAP medium anti-tank gun gets a +1 modifier to results rolled on the Damage Results table.')
+              if '12.7' in n and 'flak' in n:
+                  for rn,tx in [('Emplacement','Emplacement.'),('Immobile','This unit cannot move without being towed.'),('Gun shield','Gun shield.'),('Team weapon','Team weapon.'),('Flak','Flak.')]: rule(e,rn,tx)
+              if 'thunderbolt' in n:
+                  option(e,'Spotter',10)
+                  for rn,tx in [('Emplacement','Emplacement.'),('Immobile','This unit cannot move without being towed.'),('Team weapon','Team weapon.'),('Howitzer','Howitzer.')]: rule(e,rn,tx)
+          root.set('revision',REV); root.set('gameSystemRevision',REV)
+          ET.register_namespace('',NS); tree.write(CAT,encoding='UTF-8',xml_declaration=True)
+          # synchronized revision bump
+          for fn,ns in [('Warden Army.cat',NS),('Bolt Action - Foxhole.gst','http://www.battlescribe.net/schema/gameSystemSchema')]:
+              ET.register_namespace('',ns); t=ET.parse(fn); r=t.getroot(); r.set('revision',REV)
+              if fn.endswith('.cat'): r.set('gameSystemRevision',REV)
+              ET.register_namespace('',ns); t.write(fn,encoding='UTF-8',xml_declaration=True)
+          ins='http://www.battlescribe.net/schema/dataIndexSchema'; ET.register_namespace('',ins); t=ET.parse('index.xml'); r=t.getroot()
+          for x in r.findall('.//{'+ins+'}dataIndexEntry'): x.set('dataRevision',REV)
+          ET.register_namespace('',ins); t.write('index.xml',encoding='UTF-8',xml_declaration=True)
+          for fn in [CAT,'Warden Army.cat','Bolt Action - Foxhole.gst','index.xml']: ET.parse(fn)
+          PY
+      - name: Commit generated data
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add 'Colonial Legion.cat' 'Warden Army.cat' 'Bolt Action - Foxhole.gst' index.xml
+          git diff --cached --quiet && exit 0
+          git commit -m 'Add Colonial artillery options and special rules'
+          git push
