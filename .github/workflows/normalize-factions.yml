@@ -31,7 +31,7 @@ jobs:
           CAT_NS='http://www.battlescribe.net/schema/catalogueSchema'
           IDX_NS='http://www.battlescribe.net/schema/dataIndexSchema'
           POINTS='b0e5f7a2-33c8-46ce-8f8f-148d8171da43'
-          DATA_REVISION='3'
+          DATA_REVISION='4'
           INFANTRY_CAT='1db0d511-ab38-5eb8-afa7-97cd18cf7d11'
           MORTAR_CAT='f8cf368a-5e9a-5d56-8e8f-5a5e9a7977b4'
           FIELD_CAT='75cd78ea-f7b0-5366-b2b5-cfcaa6ba2fc6'
@@ -132,6 +132,26 @@ jobs:
                   if any(term in link.get('name','').lower() for term in excluded_transport_terms):
                       links.remove(link)
 
+          # Command vehicles are restricted to actual tank/SPG choices appropriate for an
+          # armoured commander. Remove the explicitly excluded light, static, transport,
+          # heavy-infantry and special-platform entries from commander pickers.
+          excluded_command_vehicle_terms=(
+              '93k-a','sica','agb.88','pilum','flatbed','gun turret','labrys',
+              'heavy infantry tank','onager','phalanx','type c','charon','danace',
+              'pugio','arbalest'
+          )
+          for cat_root in (c,w):
+              for group in cat_root.iter(q('selectionEntryGroup')):
+                  gname=group.get('name','').lower()
+                  if 'command tank' not in gname and 'armoured command vehicle' not in gname:
+                      continue
+                  links=group.find(q('entryLinks'))
+                  if links is None: continue
+                  for link in list(links):
+                      lname_text=link.get('name','').lower()
+                      if any(term in lname_text for term in excluded_command_vehicle_terms):
+                          links.remove(link)
+
           # Warden infantry gun selections from Armies of Caoiva. Values are per model;
           # maximums follow the individual squad entries in the PDF.
           def weapon_spec(name):
@@ -194,6 +214,6 @@ jobs:
           if git diff --cached --quiet; then
             echo 'Faction structure already normalized.'
           else
-            git commit -m 'Apply faction limits and Warden weapon selections'
+            git commit -m 'Filter armoured commander vehicle options'
             git push
           fi
