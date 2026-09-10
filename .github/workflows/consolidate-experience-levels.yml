@@ -15,86 +15,222 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
+
       - name: Rebuild Colonial units as single entries with experience choices
+        shell: bash
         run: |
+          set -euo pipefail
           python3 - <<'PY'
-          import copy, re, uuid, xml.etree.ElementTree as ET
-          CAT='Colonial Legion.cat'; GST='Bolt Action - Foxhole.gst'; IDX='index.xml'; REV='15'
-          NS='http://www.battlescribe.net/schema/catalogueSchema'; q=lambda t:f'{{{NS}}}{t}'
+          import copy
+          import re
+          import uuid
+          import xml.etree.ElementTree as ET
+
+          CAT='Colonial Legion.cat'
+          WARDEN='Warden Army.cat'
+          GST='Bolt Action - Foxhole.gst'
+          IDX='index.xml'
+          REV='17'
+          NS='http://www.battlescribe.net/schema/catalogueSchema'
+          q=lambda t:f'{{{NS}}}{t}'
           U=uuid.UUID('6b0b6908-2d5f-4b1a-8f8b-a8d28bcbdf41')
-          tree=ET.parse(CAT); root=tree.getroot(); top=root.find(q('selectionEntries'))
-          exp_re=re.compile(r'\s*\((Inexperienced|Regular|Veteran)\)\s*$',re.I)
-          era_re=re.compile(r'\s*\(GREAT WAR ERA\)\s*',re.I)
-          exps=['Inexperienced','Regular','Veteran']
-          def core(name): return era_re.sub('',exp_re.sub('',name)).strip()
+
+          exp_re=re.compile(r'\s*\((Inexperienced|Regular|Veteran)\)\s*$', re.I)
+          era_re=re.compile(r'\s*\(GREAT WAR ERA\)\s*', re.I)
+          generic_infantry={
+              'RECRUIT SQUAD':'INFANTRY SQUAD',
+              'REGULAR INFANTRY SQUAD':'INFANTRY SQUAD',
+              'VETERAN INFANTRY SQUAD':'INFANTRY SQUAD',
+          }
+          exp_order=['Inexperienced','Regular','Veteran']
+
           def expof(name):
-              m=exp_re.search(name); return m.group(1).title() if m else None
-          def is_gw(name): return bool(era_re.search(name))
-          def constraint(kind,val,seed):
-              return ET.Element(q('constraint'),{'field':'selections','scope':'parent','value':str(val),'percentValue':'false','shared':'false','includeChildSelections':'false','includeChildForces':'false','type':kind,'id':str(uuid.uuid5(U,seed))})
-          # Gather visible/hidden legacy experience variants. Prefer modern over Great War when both exist.
-          fam={}
-          for e in list(top):
-              if e.tag!=q('selectionEntry') or e.get('type')!='unit': continue
-              xp=expof(e.get('name',''))
-              if not xp: continue
-              b=core(e.get('name','')); key=(b,xp)
-              old=fam.setdefault(b,{}).get(xp)
-              if old is None or (is_gw(old.get('name','')) and not is_gw(e.get('name',''))): fam[b][xp]=e
+              m=exp_re.search(name or '')
+              return m.group(1).title() if m else None
+
+          def family_name(name):
+              s=exp_re.sub('', name or '').strip()
+              s=era_re.sub('', s).strip()
+              return generic_infantry.get(s.upper(), s)
+
+          def is_gw(name):
+              return bool(era_re.search(name or ''))
+
+          def constraint(kind, value, seed):
+              return ET.Element(q('constraint'), {
+                  'field':'selections','scope':'parent','value':str(value),
+                  'percentValue':'false','shared':'false',
+                  'includeChildSelections':'false','includeChildForces':'false',
+                  'type':kind,'id':str(uuid.uuid5(U, seed))
+              })
+
+          tree=ET.parse(CAT)
+          root=tree.getroot()
+          top=root.find(q('selectionEntries'))
+          if top is None:
+              raise SystemExit('Colonial catalogue has no top-level selectionEntries')
+
+          # Gather every legacy top-level experience variant. When modern and Great War
+          # copies describe the same family/experience, prefer the non-Great-War copy.
+          families={}
+          all_variants={}
+          for entry in list(top):
+              if entry.tag != q('selectionEntry') or entry.get('type') != 'unit':
+                  continue
+              xp=expof(entry.get('name',''))
+              if not xp:
+                  continue
+              fam=family_name(entry.get('name',''))
+              all_variants.setdefault(fam, []).append(entry)
+              old=families.setdefault(fam, {}).get(xp)
+              if old is None or (is_gw(old.get('name','')) and not is_gw(entry.get('name',''))):
+                  families[fam][xp]=entry
+
+          old_to_parent={}
+          stale_wrapper_ids={}
           rebuilt=0
-          for b,variants in fam.items():
-              # Remove every top-level experience/era duplicate for this core name.
-              matches=[e for e in list(top) if e.tag==q('selectionEntry') and e.get('type')=='unit' and expof(e.get('name','')) and core(e.get('name',''))==b]
-              if not matches: continue
-              pos=min(list(top).index(e) for e in matches)
+
+          for fam, variants in families.items():
+              matches=all_variants.get(fam, [])
+              if not matches:
+                  continue
+
+              # Also remove revision-14 wrapper units for this same family. Those wrappers
+              # are the reason New Recruit continued to surface old experience entries.
+              wrappers=[]
+              for entry in list(top):
+                  if entry.tag != q('selectionEntry') or entry.get('type') != 'unit' or expof(entry.get('name','')):
+                      continue
+                  if family_name(entry.get('name','')) != fam:
+                      continue
+                  groups=entry.findall('.//'+q('selectionEntryGroup'))
+                  if any((g.get('name') or '').startswith('Experience') for g in groups):
+                      wrappers.append(entry)
+
+              positions=[list(top).index(e) for e in matches+wrappers if e in list(top)]
+              pos=min(positions) if positions else len(list(top))
               template=variants.get('Regular') or variants.get('Inexperienced') or variants.get('Veteran')
-              parent=copy.deepcopy(template)
-              parent.set('id',str(uuid.uuid5(U,'single:'+b))); parent.set('name',b); parent.set('hidden','false')
-              # Parent carries no base cost: the selected experience child carries the original unit cost.
-              costs=parent.find(q('costs'))
-              if costs is not None: parent.remove(costs)
-              # Remove template-specific options/models; they live inside the chosen experience variant.
-              for tag in ['selectionEntries','selectionEntryGroups','entryLinks','profiles','infoLinks','modifiers','modifierGroups']:
-                  x=parent.find(q(tag))
-                  if x is not None: parent.remove(x)
-              groups=ET.SubElement(parent,q('selectionEntryGroups'))
-              g=ET.SubElement(groups,q('selectionEntryGroup'),{'id':str(uuid.uuid5(U,b+':experience')),'name':'Experience','hidden':'false'})
-              cs=ET.SubElement(g,q('constraints')); cs.append(constraint('min',1,b+':min')); cs.append(constraint('max',1,b+':max'))
-              ses=ET.SubElement(g,q('selectionEntries'))
-              for xp in exps:
+
+              parent=ET.Element(q('selectionEntry'), {
+                  'id':str(uuid.uuid5(U, 'single-unit:'+fam)),
+                  'name':fam,
+                  'hidden':'false','collective':'false','import':'true','type':'unit'
+              })
+              parent_id=parent.get('id')
+
+              cats=template.find(q('categoryLinks'))
+              if cats is not None:
+                  parent.append(copy.deepcopy(cats))
+
+              groups=ET.SubElement(parent, q('selectionEntryGroups'))
+              group=ET.SubElement(groups, q('selectionEntryGroup'), {
+                  'id':str(uuid.uuid5(U, fam+':experience-group')),
+                  'name':'Experience (choose one)','hidden':'false'
+              })
+              cons=ET.SubElement(group, q('constraints'))
+              cons.append(constraint('min',1,fam+':experience:min'))
+              cons.append(constraint('max',1,fam+':experience:max'))
+              choices=ET.SubElement(group, q('selectionEntries'))
+
+              for xp in exp_order:
                   src=variants.get(xp)
-                  if src is None: continue
-                  ch=copy.deepcopy(src); ch.set('id',str(uuid.uuid5(U,b+':'+xp)); ch.set('name',xp); ch.set('hidden','false'); ch.set('type','upgrade')
-                  # Remove category links from nested experience choices.
-                  c=ch.find(q('categoryLinks'))
-                  if c is not None: ch.remove(c)
-                  # Ensure each experience choice can only be selected once.
-                  cc=ch.find(q('constraints'))
-                  if cc is None: cc=ET.Element(q('constraints')); ch.insert(0,cc)
-                  cc.append(constraint('max',1,b+':'+xp+':max'))
-                  ses.append(ch)
-              for e in matches: top.remove(e)
-              top.insert(pos,parent); rebuilt+=1
-          # Existing revision-14 wrapper entries are now obsolete; remove wrappers with Experience (choose one)
-          # when another rebuilt unit with the same core name exists.
-          names={e.get('name','') for e in top if e.tag==q('selectionEntry') and e.get('type')=='unit'}
-          for e in list(top):
-              if e.tag!=q('selectionEntry') or e.get('type')!='unit': continue
-              gs=e.findall('.//'+q('selectionEntryGroup'))
-              if any((x.get('name') or '')=='Experience (choose one)' for x in gs) and e.get('name','') in names:
-                  # Keep new vehicle placeholders; only remove stale wrapper if it contains entryLinks to legacy units.
-                  if any(x.find(q('entryLinks')) is not None for x in gs): top.remove(e)
-          root.set('revision',REV); root.set('gameSystemRevision',REV); ET.register_namespace('',NS); tree.write(CAT,encoding='UTF-8',xml_declaration=True)
-          G='http://www.battlescribe.net/schema/gameSystemSchema'; gt=ET.parse(GST); gt.getroot().set('revision',REV); ET.register_namespace('',G); gt.write(GST,encoding='UTF-8',xml_declaration=True)
-          I='http://www.battlescribe.net/schema/dataIndexSchema'; it=ET.parse(IDX)
-          for d in it.getroot().iter(f'{{{I}}}dataIndexEntry'): d.set('dataRevision',REV)
+                  if src is None:
+                      continue
+                  child=copy.deepcopy(src)
+                  child.set('id',str(uuid.uuid5(U, fam+':experience:'+xp)))
+                  child.set('name',xp)
+                  child.set('hidden','false')
+                  child.set('type','upgrade')
+                  catlinks=child.find(q('categoryLinks'))
+                  if catlinks is not None:
+                      child.remove(catlinks)
+                  child_constraints=child.find(q('constraints'))
+                  if child_constraints is None:
+                      child_constraints=ET.Element(q('constraints'))
+                      child.insert(0, child_constraints)
+                  child_constraints.append(constraint('max',1,fam+':'+xp+':max'))
+                  choices.append(child)
+
+              # Preserve all original points by leaving each original variant's <costs>
+              # on its nested experience choice; the parent intentionally has no cost.
+              for old in matches:
+                  old_to_parent[old.get('id')]=parent_id
+              for wrapper in wrappers:
+                  stale_wrapper_ids[wrapper.get('id')]=parent_id
+
+              for old in matches+wrappers:
+                  if old in list(top):
+                      top.remove(old)
+              top.insert(pos, parent)
+              rebuilt += 1
+
+          redirect={**old_to_parent, **stale_wrapper_ids}
+
+          # Any selector/transport link that used to target an experience-specific unit
+          # now targets the single consolidated parent. Deduplicate links in each group.
+          for links in root.iter(q('entryLinks')):
+              for link in list(links):
+                  target=link.get('targetId')
+                  if target in redirect:
+                      link.set('targetId', redirect[target])
+                      # Find the consolidated unit name for this target.
+                      target_entry=next((e for e in list(top) if e.get('id')==redirect[target]), None)
+                      if target_entry is not None:
+                          link.set('name', target_entry.get('name',''))
+              seen=set()
+              for link in list(links):
+                  key=(link.get('targetId'), link.get('type'))
+                  if key in seen:
+                      links.remove(link)
+                  else:
+                      seen.add(key)
+
+          # Sanity checks: generic infantry must be one entry with all three choices,
+          # and no old generic experience-labelled infantry may remain at top level.
+          infantry=[e for e in list(top) if e.tag==q('selectionEntry') and e.get('type')=='unit' and e.get('name')=='INFANTRY SQUAD']
+          if len(infantry) != 1:
+              raise SystemExit(f'Expected one INFANTRY SQUAD, found {len(infantry)}')
+          xp_names={e.get('name') for e in infantry[0].findall('.//'+q('selectionEntryGroup')+'[@name="Experience (choose one)"]/'+q('selectionEntries')+'/'+q('selectionEntry'))}
+          if xp_names != set(exp_order):
+              raise SystemExit(f'INFANTRY SQUAD experience choices incorrect: {xp_names}')
+
+          root.set('revision',REV)
+          root.set('gameSystemRevision',REV)
+          ET.register_namespace('',NS)
+          tree.write(CAT,encoding='UTF-8',xml_declaration=True)
+
+          # Keep the Warden catalogue, GST, and index revisions synchronized so New Recruit
+          # cannot cache a mixed-revision repository.
+          wt=ET.parse(WARDEN); wr=wt.getroot(); wr.set('revision',REV); wr.set('gameSystemRevision',REV)
+          ET.register_namespace('',NS); wt.write(WARDEN,encoding='UTF-8',xml_declaration=True)
+
+          G='http://www.battlescribe.net/schema/gameSystemSchema'
+          gt=ET.parse(GST); gt.getroot().set('revision',REV)
+          ET.register_namespace('',G); gt.write(GST,encoding='UTF-8',xml_declaration=True)
+
+          I='http://www.battlescribe.net/schema/dataIndexSchema'
+          it=ET.parse(IDX)
+          for d in it.getroot().iter(f'{{{I}}}dataIndexEntry'):
+              d.set('dataRevision',REV)
           ET.register_namespace('',I); it.write(IDX,encoding='UTF-8',xml_declaration=True)
-          ET.parse(CAT); ET.parse(GST); ET.parse(IDX); print('rebuilt',rebuilt,'families at revision',REV)
+
+          for p in (CAT,WARDEN,GST,IDX):
+              ET.parse(p)
+          print(f'Rebuilt {rebuilt} Colonial families at revision {REV}; redirected {len(redirect)} old targets')
           PY
+
       - name: Commit generated data
+        shell: bash
         run: |
+          set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add 'Colonial Legion.cat' 'Bolt Action - Foxhole.gst' index.xml
-          if git diff --cached --quiet; then echo 'No generated changes.'; else git commit -m 'Fix Colonial experience selectors and points'; git push; fi
+          git add 'Colonial Legion.cat' 'Warden Army.cat' 'Bolt Action - Foxhole.gst' index.xml
+          if git diff --cached --quiet; then
+            echo 'No generated changes.'
+          else
+            git commit -m 'Consolidate Colonial units and preserve experience costs'
+            git push
+          fi
