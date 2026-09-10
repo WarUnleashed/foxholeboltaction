@@ -1,0 +1,148 @@
+name: Normalize Foxhole factions
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'Bolt Action - Foxhole.gst'
+      - 'Colonial Legion.cat'
+      - 'Warden Army.cat'
+      - 'index.xml'
+
+permissions:
+  contents: write
+
+jobs:
+  normalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Keep factions as separate catalogues under one game system
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import copy
+          import xml.etree.ElementTree as ET
+
+          GST_NS='http://www.battlescribe.net/schema/gameSystemSchema'
+          CAT_NS='http://www.battlescribe.net/schema/catalogueSchema'
+          IDX_NS='http://www.battlescribe.net/schema/dataIndexSchema'
+
+          def lname(tag):
+              return tag.rsplit('}',1)[-1]
+
+          def retag_tree(el, ns):
+              out=copy.deepcopy(el)
+              for node in out.iter():
+                  node.tag=f'{{{ns}}}{lname(node.tag)}'
+              return out
+
+          def get_child(root, local):
+              return next((c for c in root if lname(c.tag)==local), None)
+
+          def ensure_force_entries(cat_root):
+              existing=get_child(cat_root,'forceEntries')
+              if existing is not None:
+                  return existing
+              fe=ET.Element(f'{{{CAT_NS}}}forceEntries')
+              children=list(cat_root)
+              insert_at=next((i for i,c in enumerate(children) if lname(c.tag) in ('selectionEntries','entryLinks','sharedSelectionEntries','sharedSelectionEntryGroups','sharedRules')),len(children))
+              cat_root.insert(insert_at,fe)
+              return fe
+
+          def ensure_shared_rules(cat_root):
+              existing=get_child(cat_root,'sharedRules')
+              if existing is not None:
+                  return existing
+              sr=ET.Element(f'{{{CAT_NS}}}sharedRules')
+              cat_root.append(sr)
+              return sr
+
+          gst=ET.parse('Bolt Action - Foxhole.gst')
+          g=gst.getroot()
+          colonial=ET.parse('Colonial Legion.cat')
+          c=colonial.getroot()
+          warden=ET.parse('Warden Army.cat')
+          w=warden.getroot()
+
+          cforces=ensure_force_entries(c)
+          wforces=ensure_force_entries(w)
+
+          source_forces=get_child(g,'forceEntries')
+          if source_forces is not None:
+              for force in list(source_forces):
+                  name=force.get('name','')
+                  target=None
+                  if name.startswith('Colonial '): target=cforces
+                  elif name.startswith('Warden '): target=wforces
+                  if target is None:
+                      continue
+                  for old in list(target):
+                      if old.get('name')==name:
+                          target.remove(old)
+                  target.append(retag_tree(force,CAT_NS))
+                  source_forces.remove(force)
+              if len(source_forces)==0:
+                  g.remove(source_forces)
+
+          # Move faction-specific shared rules out of the shared game system too.
+          colonial_rule_names={
+              'Mechanized / Motorized Platoon','Armoured Platoon','Close Air Support',
+              'March of the Legion','Faith in Armour','Meticulous Assault (Great War Era)',
+              'Inspiring Courage (Modern Era)'
+          }
+          warden_rule_names={
+              'Warden Mechanized / Motorized Platoon','Warden Armoured Platoon','Large Batteries',
+              'Arsenal of the North','Caoivish Craftsmanship','Defence of Caoiva (Great War Era)',
+              'In the Name of Callahan! (Modern Era)','Powerful Anti-Tank Grenades'
+          }
+          shared=get_child(g,'sharedRules')
+          if shared is not None:
+              crules=ensure_shared_rules(c)
+              wrules=ensure_shared_rules(w)
+              for rule in list(shared):
+                  name=rule.get('name','')
+                  target=crules if name in colonial_rule_names else (wrules if name in warden_rule_names else None)
+                  if target is None:
+                      continue
+                  for old in list(target):
+                      if old.get('name')==name:
+                          target.remove(old)
+                  target.append(retag_tree(rule,CAT_NS))
+                  shared.remove(rule)
+
+          # The game system is shared by both factions and must not be faction-branded.
+          g.set('name','Bolt Action: Foxhole (Unofficial)')
+          g.set('authorName','Foxhole Bolt Action data')
+
+          ET.register_namespace('',GST_NS)
+          gst.write('Bolt Action - Foxhole.gst',encoding='UTF-8',xml_declaration=True)
+          ET.register_namespace('',CAT_NS)
+          colonial.write('Colonial Legion.cat',encoding='UTF-8',xml_declaration=True)
+          warden.write('Warden Army.cat',encoding='UTF-8',xml_declaration=True)
+
+          idx=ET.parse('index.xml')
+          ir=idx.getroot()
+          for e in ir.iter():
+              if lname(e.tag)=='dataIndexEntry' and e.get('dataType')=='gamesystem':
+                  e.set('dataName','Bolt Action: Foxhole (Unofficial)')
+          ET.register_namespace('',IDX_NS)
+          idx.write('index.xml',encoding='UTF-8',xml_declaration=True)
+
+          for path in ['Bolt Action - Foxhole.gst','Colonial Legion.cat','Warden Army.cat','index.xml']:
+              ET.parse(path)
+              print('XML OK:',path)
+          PY
+      - name: Commit normalized faction structure
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add 'Bolt Action - Foxhole.gst' 'Colonial Legion.cat' 'Warden Army.cat' 'index.xml'
+          if git diff --cached --quiet; then
+            echo 'Faction structure already normalized.'
+          else
+            git commit -m 'Separate Colonial and Warden factions'
+            git push
+          fi
